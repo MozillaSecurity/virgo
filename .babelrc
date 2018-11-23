@@ -1,0 +1,19 @@
+{
+  "presets": [
+    "@babel/preset-react",
+    "@babel/preset-flow",
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "electron": "3.0"
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    "babel-plugin-styled-components",
+    ["@babel/plugin-proposal-class-properties", { "loose": false }],
+    "dynamic-import-node"
+  ]
+}

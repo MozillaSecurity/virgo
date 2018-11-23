@@ -1,0 +1,35 @@
+# @format
+
+language: node_js
+node_js: node
+os: osx
+osx_image: xcode10
+env:
+  global:
+    - APP_NAME=virgo
+    - CSC_IDENTITY_AUTO_DISCOVERY=false
+before_install:
+  - brew update
+install:
+  - yarn install
+before_script:
+  - sudo Xvfb :99 -ac -screen 0 1920x1080x8 &
+script:
+  - yarn test --coverage
+before_deploy:
+  - yarn dist -mwl
+  - cd dist/win-unpacked && zip -9 -ry ${APP_NAME}-win-x64.zip . && cd ../..
+  - cd dist/mac && zip -9 -ry ${APP_NAME}-mac-x64.zip . && cd ../..
+  - cd dist/linux-unpacked && zip -9 -ry ${APP_NAME}-linux-x64.zip . && cd ../..
+deploy:
+  provider: releases
+  api_key:
+    ? secure
+  file:
+    - dist/win-unpacked/${APP_NAME}-win-x64.zip
+    - dist/mac/${APP_NAME}-mac-x64.zip
+    - dist/linux-unpacked/${APP_NAME}-linux-x64.zip
+  skip_cleanup: true
+  on:
+    tags: true
+    branch: master

@@ -1,0 +1,11 @@
+{
+  "productName": "Virgo",
+  "appId": "org.mozilla.${name}",
+  "copyright": "Copyright © 2018 ${author}",
+  "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
+  "files": ["dist/**", "!dist/renderer/development/**", "!dist/**/*.map", "build/**"],
+  "directories": {
+    "output": "dist",
+    "buildResources": "build/"
+  }
+}

@@ -1,0 +1,46 @@
+/** @format */
+
+/* Light and Light Italic */
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-Light-webfont.woff');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-LightItalic-webfont.woff');
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* Regular and Italic */
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-Regular-webfont.woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-Italic-webfont.woff');
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Medium and Italic */
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-Medium-webfont.woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-MediumItalic-webfont.woff');
+  font-weight: 500;
+  font-style: italic;
+}

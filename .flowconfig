@@ -1,0 +1,19 @@
+[ignore]
+.*/node_modules/.*/test
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+emoji=true
+module.file_ext=.js
+module.file_ext=.jsx
+module.file_ext=.css
+💩 https://github.com/facebook/flow/issues/338
+module.file_ext=.scss
+module.file_ext=.json
+
+[strict]

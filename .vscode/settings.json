@@ -1,0 +1,30 @@
+{
+  "files.exclude": {
+    "node_modules": true,
+    ".cache": true
+  },
+  "eslint.alwaysShowStatus": true,
+
+  // Save document when focus changed.
+  "files.autoSave": "onFocusChange",
+
+  // Tells Prettier to use prettier-eslint instead of Prettier.
+  "prettier.eslintIntegration": true,
+  // Tells Prettier to use prettier-stylelint instead of Prettier.
+  // Disabled because prettier-stylelint can not deal with styled-components additionally it does remove with formatOnSave the content of any .css file.
+  "prettier.stylelintIntegration": false,
+  // We don’t need ESLint to fix our code for us directly, since prettier-eslint will be running eslint --fix for us anyways.
+  "eslint.autoFixOnSave": false,
+  // Runs Prettier with the above options on every file save.
+  "editor.formatOnSave": true,
+
+  // Disable default JavaScript validation - for Flow.
+  "javascript.validate.enable": false,
+  // Disable default JavaScript formatter - for Prettier.
+  "javascript.format.enable": false,
+
+  "flow.pathToFlow": "${workspaceRoot}/node_modules/.bin/flow",
+  // Disable auto run of Jest cause of "jest-runner/electron" issues.
+  "jest.autoEnable": false,
+  "printcode.webServerPort": 8888
+}

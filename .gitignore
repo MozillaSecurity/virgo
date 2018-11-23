@@ -1,0 +1,14 @@
+# output
+/dist
+/.cache
+/coverage
+*.map
+
+# dependencies
+/node_modules
+
+# logs
+*.log
+
+# misc
+.DS_Store
