@@ -3,25 +3,14 @@ import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-
+/* Styles */
 import { withStyles } from '@material-ui/core/styles'
-import Paper from '@material-ui/core/Paper'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
-import Collapse from '@material-ui/core/Collapse'
-
 import Typography from '@material-ui/core/Typography'
-
-import * as actionCreators from '../../actions'
-
-import electronStore from 'electron-store'
-let store = new electronStore()
+import Avatar from '@material-ui/core/Avatar'
 
 const styles = theme => ({
   title: {
@@ -51,34 +40,33 @@ const styles = theme => ({
   }
 })
 
-const ContainerBox = props => {
+const ImageListItem = props => {
   return (
     <Card>
-      <CardHeader title={props.name} />
-      <CardContent />
+      <CardHeader title={props.tags} subheader={props.date} avatar={<Avatar aria-label="Recipe">I</Avatar>} />
+      <CardContent>
+        <Typography component="p">
+          Id: {props.id} Size: {props.size} Associated containers: {props.containers}
+        </Typography>
+      </CardContent>
       <CardActions disableActionSpacing />
-      <Collapse in={props.expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography primary="Id">{props.id}</Typography>
-        </CardContent>
-      </Collapse>
     </Card>
   )
 }
 
-class Overview extends React.Component {
+class ImageList extends React.Component {
   render() {
-    const { classes, containers } = this.props
+    const { classes, images } = this.props
     return (
       <div>
         <div className={classes.category}>
           <Typography color="primary" variant="body1" className={classes.title}>
-            Containers
+            Downloaded Images
           </Typography>
         </div>
-        {this.props.containers.length === 0 ? 'No containers' : ''}
-        {containers.map(c => (
-          <ContainerBox key={c.name} {...c} />
+        {this.props.images.length === 0 ? 'No images' : ''}
+        {images.map(image => (
+          <ImageListItem key={image.id} {...image} />
         ))}
       </div>
     )
@@ -86,8 +74,18 @@ class Overview extends React.Component {
 }
 
 /* Prop Types */
-Overview.propTypes = {
-  classes: PropTypes.object.isRequired
+ImageList.propTypes = {
+  classes: PropTypes.object.isRequired,
+  images: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired
+}
+
+ImageListItem.propTypes = {
+  containers: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
+  size: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  tags: PropTypes.array.isRequired
 }
 
 /* States */
@@ -104,4 +102,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(Overview))
+)(withStyles(styles)(ImageList))

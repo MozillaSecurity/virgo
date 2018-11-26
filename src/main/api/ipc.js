@@ -111,6 +111,28 @@ ipcMain.on('container.list', (event, args) => {
 })
 
 /**
+ * List downloaded images.
+ */
+ipcMain.on('image.list', (event, args) => {
+  docker.docker.listImages().then(images => {
+    event.sender.send('image.list', images)
+  })
+})
+
+/**
+ * Remove downloaded image.
+ */
+ipcMain.on('image.remove', (event, args) => {
+  const { name } = args
+  docker.docker
+    .getImage(name)
+    .remove()
+    .then(image => {
+      event.sender.send('image.remove', name)
+    })
+})
+
+/**
  * Update a running or paused container.
  */
 
