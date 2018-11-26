@@ -36,6 +36,11 @@ class PreferencesPage extends React.Component {
     store.set('darkMode', event.target.checked)
   }
 
+  handleVibrance = name => event => {
+    this.props.setVibrance(event.target.checked)
+    store.set('vibrance', event.target.checked)
+  }
+
   handleRestoreWindowSize = name => event => {
     this.props.setRestoreWindowSize(event.target.checked)
     store.set('restoreWindowSize', event.target.checked)
@@ -67,6 +72,15 @@ class PreferencesPage extends React.Component {
                 </ListItemSecondaryAction>
               </ListItem>
             </List>
+            <Divider />
+            <List>
+              <ListItem>
+                <ListItemText primary="Add Window Vibrance" primaryTypographyProps={{ variant: 'body2' }} />
+                <ListItemSecondaryAction>
+                  <Switch onChange={this.handleVibrance()} checked={this.props.vibrance} />
+                </ListItemSecondaryAction>
+              </ListItem>
+            </List>
           </Paper>
         </div>
       </div>
@@ -78,7 +92,9 @@ class PreferencesPage extends React.Component {
 PreferencesPage.propTypes = {
   classes: PropTypes.object.isRequired,
   setDarkMode: PropTypes.func.isRequired,
+  setVibrance: PropTypes.func.isRequired,
   darkMode: PropTypes.bool.isRequired,
+  vibrance: PropTypes.bool.isRequired,
   setRestoreWindowSize: PropTypes.func.isRequired,
   restoreWindowSize: PropTypes.bool.isRequired
 }
@@ -87,6 +103,7 @@ PreferencesPage.propTypes = {
 const mapStateToProps = state => {
   return {
     darkMode: state.darkMode,
+    vibrance: state.vibrance,
     restoreWindowSize: state.restoreWindowSize
   }
 }
@@ -96,6 +113,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
       setDarkMode: actionCreators.setDarkMode,
+      setVibrance: actionCreators.setVibrance,
       setRestoreWindowSize: actionCreators.setRestoreWindowSize
     },
     dispatch

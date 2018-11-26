@@ -2,7 +2,11 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
+/* Styles */
 import { Drawer, AppBar, Toolbar } from '@material-ui/core'
 import List from '@material-ui/core/List'
 import Typography from '@material-ui/core/Typography'
@@ -11,16 +15,10 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import Menu from '@material-ui/icons/Menu'
 import { withStyles } from '@material-ui/core/styles'
 
-import Paper from '@material-ui/core/Paper'
-
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import * as actionCreators from '../../actions'
-import { withRouter } from 'react-router-dom'
-
 import LogoIcon from '../../components/LogoIcon'
-
 import DarkmodeSwitch from '../../components/DarkmodeSwitch'
+
+import * as actionCreators from '../../actions'
 
 const styles = theme => ({
   appBar: {
@@ -39,7 +37,9 @@ const styles = theme => ({
   },
   drawerPaper: {
     position: 'relative',
-    width: 240
+    width: 240,
+    background:
+      theme.palette.type === 'dark' && theme.palette.background === 'transparent' ? 'rgba(0, 0, 0, 0.9)' : null
   },
   drawerHeader: {
     display: 'flex',
@@ -92,7 +92,7 @@ class OverlaySideDrawer extends React.Component {
     const brand = (
       <div className={classes.drawerHeader}>
         <IconButton onClick={this.handleDrawerClose} className={classes.icon} aria-label="Close Drawer">
-          <ChevronLeftIcon  fontSize="small"/>
+          <ChevronLeftIcon fontSize="small" />
         </IconButton>
       </div>
     )
@@ -123,7 +123,7 @@ class OverlaySideDrawer extends React.Component {
       <AppBar className={classes.appBar}>
         <Toolbar disableGutters={!open} className={classes.toolBar}>
           <LogoIcon hide={open} onClick={this.handleDrawerOpen} aria-label="Open Drawer">
-            <Menu fontSize="small"  />
+            <Menu fontSize="small" />
           </LogoIcon>
           <Typography variant="h6" color="inherit" noWrap />
         </Toolbar>

@@ -32,3 +32,9 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+process.on('uncaughtException', error => {
+  console.log('App crashed unexpectedly.')
+  console.log(`${error}`)
+  // Todo: Add a handler.
+})

@@ -106,11 +106,11 @@ class DashboardPage extends React.Component {
      *  IPC event handlers which communicate with the Docker API in the main process.
      */
     ipcRenderer.on('image.error', (event, error) => {
-      this.updateStatus(`Error: ${error.reason}`)
+      this.updateStatus(`Image error: ${error.reason}`)
     })
 
     ipcRenderer.on('container.error', (event, error) => {
-      this.updateStatus(`Error: ${error.reason}`)
+      this.updateStatus(`Container error: ${error.reason}`)
       clearInterval(this.refreshSheduler)
     })
 
@@ -171,46 +171,40 @@ class DashboardPage extends React.Component {
 
     if (this.state._isPaused) {
       const { id } = this.props.container
-      if (!id) {
+      if (id) {
+        this.updateStatus(`Unpausing container with ID: ${id}`)
+        ipcRenderer.send('container.unpause', { id: id })
+      } else {
         this.updateStatus('No container ID available.')
-        return
       }
-      this.updateStatus(`Unpausing container with ID: ${id}`)
-      ipcRenderer.send('container.unpause', { id: id })
-      return
-    }
-
-    if (this.state._isStopped && !this.state._isRunning) {
+    } else if (this.state._isStopped && !this.state._isRunning) {
       const image = this.props.imageDefinitions[0]
       this.updateStatus(`Initializing task.`)
       this.toggleSpinner()
       ipcRenderer.send('container.run', image)
-      return
     }
   }
 
   onStop = () => {
     const { id } = this.props.container
-    if (!id) {
+    if (id) {
+      this.updateStatus(`Stopping container with ID: ${id}`)
+      this.toggleSpinner()
+      ipcRenderer.send('container.stop', { id: id })
+    } else {
       this.updateStatus('No container ID available.')
-      return
     }
-    this.updateStatus(`Stopping container with ID: ${id}`)
-    this.toggleSpinner()
-    ipcRenderer.send('container.stop', { id: id })
   }
 
   onPause = () => {
     const { id } = this.props.container
-    if (!id) {
+    if (id) {
+      this.updateStatus(`Pausing container with ID: ${id}`)
+      ipcRenderer.send('container.pause', { id: id })
+    } else {
       this.updateStatus('No container ID available.')
-      return
     }
-    this.updateStatus(`Pausing container with ID: ${id}`)
-    ipcRenderer.send('container.pause', { id: id })
   }
-
-  onUnpause = () => {}
 
   render() {
     const { classes } = this.props
@@ -246,9 +240,11 @@ class DashboardPage extends React.Component {
                 )}
               </Grid>
               <Grid item>
-                <IconButton onClick={this.onStop}>
-                  <Stop className={classes.controlButton} />
-                </IconButton>
+                {this.state._isRunning || this.state._isPaused ? (
+                  <IconButton onClick={this.onStop}>
+                    <Stop className={classes.controlButton} />
+                  </IconButton>
+                ) : null}
               </Grid>
             </Grid>
           </Grid>

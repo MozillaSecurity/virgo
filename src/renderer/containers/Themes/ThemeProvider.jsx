@@ -9,7 +9,23 @@ import themeDark from './Dark'
 import themeLight from './Light'
 
 class ThemeProvider extends React.Component {
+  toggleVibrance(theme) {
+    if (this.props.darkMode && this.props.vibrance) {
+      theme.palette.background = 'transparent'
+      theme.overrides.MuiToolbar.root.background = 'transparent !important'
+      theme.overrides.MuiAppBar.colorPrimary.background = 'transparent !important'
+      import('electron').then(electron => {
+        electron.remote.getCurrentWindow().setVibrancy('dark')
+      })
+    } else {
+      delete theme.palette.background
+      delete theme.overrides.MuiToolbar.root.background
+      delete theme.overrides.MuiAppBar.colorPrimary.background
+    }
+  }
   render() {
+    this.toggleVibrance(themeDark)
+
     return (
       <MuiThemeProvider theme={createMuiTheme(this.props.darkMode ? themeDark : themeLight)}>
         {this.props.children}
@@ -20,11 +36,15 @@ class ThemeProvider extends React.Component {
 
 ThemeProvider.propTypes = {
   children: PropTypes.node.isRequired,
-  darkMode: PropTypes.bool.isRequired
+  darkMode: PropTypes.bool.isRequired,
+  vibrance: PropTypes.bool.isRequired
 }
 
 function mapStateToProps(state) {
-  return { darkMode: state.darkMode }
+  return {
+    darkMode: state.darkMode,
+    vibrance: state.vibrance
+  }
 }
 
 export default connect(mapStateToProps)(ThemeProvider)

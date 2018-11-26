@@ -9,6 +9,11 @@ const reducer = (state, action) => {
         ...state,
         darkMode: action.darkMode
       }
+    case 'PREF_VIBRANCE':
+      return {
+        ...state,
+        vibrance: action.vibrance
+      }
     case 'PREF_RESTORE_WINDOW_SIZE':
       return {
         ...state,

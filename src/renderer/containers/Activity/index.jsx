@@ -15,9 +15,9 @@ class ActivityPage extends React.Component {
   }
 
   componentDidMount() {
-    ipcRenderer.send('container.list')
+    ipcRenderer.send('image.list')
 
-    ipcRenderer.on('container.list', (evt, containers) => {
+    ipcRenderer.on('image.list', (evt, containers) => {
       const partitioned = _.partition(containers, c => c.State === 'running')
       this.setState({
         containers: partitioned[0].map(this.mapContainer),

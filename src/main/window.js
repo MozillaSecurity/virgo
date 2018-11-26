@@ -33,14 +33,13 @@ export default function createMainWindow() {
       })
 
   mainWindow.loadURL(appUrl)
-  /*
   if (isDevEnvironment()) {
     ;(async () => {
       const addons = await import('./addons')
       addons.installDeveloperTools(['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'])
     })()
   }
-*/
+
   mainWindow.on('close', () => {
     // Save window size and position.
     Store.set('winBounds', mainWindow.getBounds())
@@ -49,6 +48,16 @@ export default function createMainWindow() {
   mainWindow.on('closed', () => {
     // Dereference the window objects.
     mainWindow = null
+  })
+
+  mainWindow.on('unresponsive', () => {
+    console.log('App became unresponsive.')
+    // TODO: Add a handler.
+  })
+
+  mainWindow.webContents.on('crashed', () => {
+    console.log(`WebContents crashed.`)
+    // TODO: Add a handler.
   })
 
   return mainWindow
