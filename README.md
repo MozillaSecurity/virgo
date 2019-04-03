@@ -21,7 +21,7 @@
 
 ## What is Virgo?
 
-Virgo aims to be a concept for creating a cluster of fuzzers made by people who are willing to trade and contribute IDLE times of their workstations to a greater good.
+[Virgo](https://en.wikipedia.org/wiki/Virgo_Cluster) aims to be a concept for creating a cluster of fuzzers made by people who are willing to trade and contribute IDLE times of their workstations to a greater good.
 
 ## How does it work?
 
