@@ -48,7 +48,8 @@ class DashboardPage extends React.Component {
       name: 'python:slim',
       command: ['python', '-c', '"while True: pass"'],
       environment: {}
-    },
+    }
+    /*
     {
       name: 'mozillasecurity/libfuzzer',
       command: [],
@@ -61,7 +62,7 @@ class DashboardPage extends React.Component {
       mount: {
         '': '~/fuzzmanagerconf'
       }
-    }
+    }*/
   ]
 
   toggleTimer() {
