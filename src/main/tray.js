@@ -12,7 +12,7 @@ export default function createTray(window) {
       label: 'Settings'
     },
     {
-      label: 'Hide Window',
+      label: 'Toggle Window',
       click: () => {
         window.isVisible() ? window.hide() : window.show()
       }
