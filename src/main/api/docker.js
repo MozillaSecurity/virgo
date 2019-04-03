@@ -5,23 +5,31 @@ import Docker from 'dockerode'
 
 class DockerManager {
   constructor(userOptions = {}) {
+    let status
     let options = {}
+
+    console.log(`Initializing DockerManager for Platform: ${process.platform}`)
 
     if (process.platform === 'win32') {
       options = {
-        host: '127.0.0.1',
-        port: 2375
+        socketPath: '//./pipe/docker_engine'
       }
     } else {
       options = {
         socketPath: process.env.DOCKER_SOCKET || '/var/run/docker.sock'
       }
+    }
 
-      options = Object.assign(options, userOptions)
+    options = Object.assign(options, userOptions)
 
-      if (!fs.statSync(options.socketPath).isSocket()) {
-        throw new Error('Are you sure Docker is running?')
-      }
+    if (process.platform === 'win32') {
+      status = fs.statSync(options.socketPath).isFile()
+    } else {
+      status = fs.statSync(options.socketPath).isSocket()
+    }
+
+    if (!status) {
+      throw new Error('Are you sure Docker is running?')
     }
 
     this.docker = new Docker(options)

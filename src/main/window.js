@@ -13,6 +13,8 @@ export default function createMainWindow() {
 
   // Window options.
   let windowOpts = {
+    autoHideMenuBar: true,
+    frame: false,
     minWidth: 800,
     minHeight: 600,
     titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default'
