@@ -22,10 +22,14 @@ class DockerManager {
 
     options = Object.assign(options, userOptions)
 
-    if (process.platform === 'win32') {
-      status = fs.statSync(options.socketPath).isFile()
-    } else {
-      status = fs.statSync(options.socketPath).isSocket()
+    try {
+      if (process.platform === 'win32') {
+        status = fs.statSync(options.socketPath).isFile()
+      } else {
+        status = fs.statSync(options.socketPath).isSocket()
+      }
+    } catch (error) {
+      status = false
     }
 
     if (!status) {
