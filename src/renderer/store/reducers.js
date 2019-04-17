@@ -1,6 +1,7 @@
 /** @format */
 /*
  * The Reducer is the Redux dispatcher.
+ * The function executed when an action is dispatched.
  */
 const reducer = (state, action) => {
   switch (action.type) {

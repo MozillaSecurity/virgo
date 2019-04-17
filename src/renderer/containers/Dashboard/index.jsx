@@ -19,7 +19,7 @@ import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled'
 import Stop from '@material-ui/icons/Stop'
 
 import Logo from '../../images/virgo-full.svg'
-import * as actionCreators from '../../actions'
+import * as actionCreators from '../../store/actions'
 import TimeCounter from '../../components/TimeCounter'
 
 const styles = theme => ({
@@ -65,29 +65,34 @@ class DashboardPage extends React.Component {
     }*/
   ]
 
+  /* On pause */
   toggleTimer() {
     this.setState({ isRunning: !this.state.isRunning }, () => {
       this.state.isRunning ? this.startTimer() : clearInterval(this.timer)
     })
   }
 
+  /* On stop */
   resetTimer() {
     this.setState({ isRunning: false, timeElapsed: 0 }, () => {
       clearInterval(this.timer)
     })
   }
 
+  /* On start */
   startTimer() {
     this.startTime = Date.now()
     this.timer = setInterval(this.update, 1000)
   }
 
+  /* During run */
   update = () => {
     const delta = Date.now() - this.startTime
     this.setState({ timeElapsed: this.state.timeElapsed + delta })
     this.startTime = Date.now()
   }
 
+  /* During load */
   toggleSpinner = () => {
     this.setState({ showSpinner: !this.state.showSpinner })
   }

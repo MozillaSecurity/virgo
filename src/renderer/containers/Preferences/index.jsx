@@ -16,7 +16,7 @@ import Typography from '@material-ui/core/Typography'
 
 import DarkmodeSwitch from '../../components/DarkmodeSwitch'
 
-import * as actionCreators from '../../actions'
+import * as actionCreators from '../../store/actions'
 
 import electronStore from 'electron-store'
 let store = new electronStore()

@@ -2,15 +2,13 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-
 import { Provider } from 'react-redux'
 
 import { withStyles } from '@material-ui/core/styles'
 import './styles/fontface-roboto.css'
 
 import App from './containers/App'
-
-import store from './store'
+import GlobalStateStore from './store'
 
 const styles = theme => ({
   '@global': {
@@ -26,7 +24,7 @@ const AppWithStyles = withStyles(styles)(App)
 
 ReactDOM.render(
   //<React.StrictMode>
-  <Provider store={store}>
+  <Provider store={GlobalStateStore}>
     <AppWithStyles />
   </Provider>,
   //</React.StrictMode>,

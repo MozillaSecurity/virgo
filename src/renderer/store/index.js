@@ -6,7 +6,7 @@
 import { createStore } from 'redux'
 import electronStore from 'electron-store'
 
-import reducer from '../reducers'
+import reducer from './reducers'
 
 // Initialize the Redux store with the electron-store configuration.
 let electronPreferences = new electronStore()

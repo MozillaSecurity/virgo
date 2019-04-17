@@ -18,7 +18,7 @@ import { withStyles } from '@material-ui/core/styles'
 import LogoIcon from '../../components/LogoIcon'
 import DarkmodeSwitch from '../../components/DarkmodeSwitch'
 
-import * as actionCreators from '../../actions'
+import * as actionCreators from '../../store/actions'
 
 const styles = theme => ({
   appBar: {
