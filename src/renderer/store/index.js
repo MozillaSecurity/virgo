@@ -8,13 +8,43 @@ import electronStore from 'electron-store'
 
 import reducer from './reducers'
 
-// Initialize the Redux store with the electron-store configuration.
-let electronPreferences = new electronStore()
+export const loadState = (name = 'state') => {
+  try {
+    const serializeState = localStorage.getItem(name)
+    // Private Browsing
+    if (serializeState === null) {
+      return undefined
+    }
+    return JSON.parse(serializeState)
+  } catch (error) {
+    return undefined
+  }
+}
 
-let initialState = Object.assign(electronPreferences.store, {
-  imageDefinitions: []
-})
+export const saveState = (state, name = 'state') => {
+  try {
+    const serializedState = JSON.stringify(state)
+    localStorage.setItem(name, serializedState)
+  } catch (error) {
+    return false
+  }
+  return true
+}
 
-const store = createStore(reducer, initialState)
+export const initStore = () => {
+  // Initialize the Redux store with the electron-store configuration.
+  const electronPreferences = new electronStore()
+  let initialState = Object.assign(electronPreferences.store, {
+    imageDefinitions: []
+  })
 
-export default store
+  const persistedState = loadState()
+  initialState = Object.assign(initialState, persistedState)
+
+  const store = createStore(reducer, initialState)
+
+  store.subscribe(() => {
+    saveState(store.getState())
+  })
+  return store
+}

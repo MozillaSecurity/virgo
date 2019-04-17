@@ -8,7 +8,7 @@ import { withStyles } from '@material-ui/core/styles'
 import './styles/fontface-roboto.css'
 
 import App from './containers/App'
-import GlobalStateStore from './store'
+import { initStore } from './store'
 
 const styles = theme => ({
   '@global': {
@@ -24,7 +24,7 @@ const AppWithStyles = withStyles(styles)(App)
 
 ReactDOM.render(
   //<React.StrictMode>
-  <Provider store={GlobalStateStore}>
+  <Provider store={initStore()}>
     <AppWithStyles />
   </Provider>,
   //</React.StrictMode>,
