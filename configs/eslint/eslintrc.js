@@ -1,6 +1,6 @@
 /** @format */
 
-const pkg = require('./package.json')
+const pkg = require('../../package.json')
 
 const version = dependency => {
   if (pkg.dependencies && pkg.dependencies[dependency]) {
@@ -11,34 +11,41 @@ const version = dependency => {
   }
 }
 
+/* New base configuration. */
 module.exports = {
   parserOptions: {
-    ecmaVersion: 7,
+    ecmaVersion: 2018,
+    sourceType: 'module',
     ecmaFeatures: {
       jsx: true
     }
   },
   env: {
     jest: true,
-    node: true
+    node: true,
+    browser: true
   },
   parser: 'babel-eslint',
   extends: [
-    'react-app',
+    // Base configuration.
+    'airbnb',
+    'plugin:jest/recommended',
     'plugin:flowtype/recommended',
-    'plugin:react/recommended',
     'plugin:prettier/recommended',
     'prettier/flowtype',
     'prettier/react'
   ],
-  plugins: ['flowtype', 'react', 'prettier'],
+  plugins: ['react', 'jest', 'flowtype', 'prettier'],
   settings: {
     flowtype: {
       onlyFilesWithFlowAnnotation: false
     },
     react: {
-      version: version('react'),
+      version: 'detect',
       flowVersion: version('flow-bin')
     }
+  },
+  rules: {
+    // Add rules for above plugins.
   }
 }

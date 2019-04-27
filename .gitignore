@@ -1,14 +1,12 @@
-# output
+# Dependencies
+/node_modules
+
+# Generated
 /dist
 /.cache
 /coverage
 *.map
-
-# dependencies
-/node_modules
-
-# logs
 *.log
 
-# misc
+# Misc
 .DS_Store
