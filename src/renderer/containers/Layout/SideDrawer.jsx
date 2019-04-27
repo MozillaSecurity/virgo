@@ -152,13 +152,13 @@ OverlaySideDrawer.propTypes = {
   setDarkMode: PropTypes.func.isRequired
 }
 
-const mapStateToProps = function(state) {
+const mapStateToProps = state => {
   return {
-    darkMode: state.darkMode
+    darkMode: state.preferences.darkMode
   }
 }
 
-const mapDispatchToProps = function(dispatch) {
+const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
       setDarkMode: actionCreators.setDarkMode

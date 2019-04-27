@@ -61,7 +61,7 @@ class DashboardPage extends React.Component {
       mount: {
         '': '~/fuzzmanagerconf'
       }
-    }*/
+    } */
   ]
 
   /* On pause */
@@ -178,7 +178,7 @@ class DashboardPage extends React.Component {
       const { id } = this.props.container
       if (id) {
         this.updateStatus(`Unpausing container with ID: ${id}`)
-        ipcRenderer.send('container.unpause', { id: id })
+        ipcRenderer.send('container.unpause', { id })
       } else {
         this.updateStatus('No container ID available.')
       }
@@ -195,7 +195,7 @@ class DashboardPage extends React.Component {
     if (id) {
       this.updateStatus(`Stopping container with ID: ${id}`)
       this.toggleSpinner()
-      ipcRenderer.send('container.stop', { id: id })
+      ipcRenderer.send('container.stop', { id })
     } else {
       this.updateStatus('No container ID available.')
     }
@@ -205,7 +205,7 @@ class DashboardPage extends React.Component {
     const { id } = this.props.container
     if (id) {
       this.updateStatus(`Pausing container with ID: ${id}`)
-      ipcRenderer.send('container.pause', { id: id })
+      ipcRenderer.send('container.pause', { id })
     } else {
       this.updateStatus('No container ID available.')
     }
@@ -285,11 +285,11 @@ DashboardPage.propTypes = {
 /* States */
 const mapStateToProps = state => {
   return {
-    imageDefinitions: state.imageDefinitions,
-    imageError: state.imageError,
-    containerError: state.containerError,
-    containerData: state.containerData,
-    container: state.container
+    imageDefinitions: state.docker.imageDefinitions,
+    imageError: state.docker.imageError,
+    containerError: state.docker.containerError,
+    containerData: state.docker.containerData,
+    container: state.docker.container
   }
 }
 

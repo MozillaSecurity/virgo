@@ -33,17 +33,32 @@ export const saveState = (state, name = 'state') => {
 
 export const initStore = () => {
   // Initialize the Redux store with the electron-store configuration.
-  const electronPreferences = new electronStore()
-  let initialState = Object.assign(electronPreferences.store, {
-    imageDefinitions: []
-  })
 
-  const persistedState = loadState()
-  initialState = Object.assign(initialState, persistedState)
+  /*  const electronPreferences = new electronStore()
+  let initialState = Object.assign(electronPreferences.store, {
+    docker: { imageDefinitions: [] },
+    preferences: {}
+  })
+*/
+  //const persistedState = loadState()
+  //initialState = Object.assign(initialState, persistedState)
+
+  let initialState = {
+    docker: {
+      imageDefinitions: []
+    },
+    preferences: {
+      darkMode: true,
+      vibrance: true,
+      restoreWindowSize: true
+    }
+  }
 
   const store = createStore(reducer, initialState)
+  console.log('Initial state:', store.getState())
 
   store.subscribe(() => {
+    console.log('Store updated!', store.getState())
     saveState(store.getState())
   })
   return store

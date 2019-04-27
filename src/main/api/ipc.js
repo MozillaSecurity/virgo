@@ -4,13 +4,13 @@ import { ipcMain } from 'electron'
 
 import DockerManager from './docker'
 
-//try {
-let docker = new DockerManager()
-//} catch (error) {
+// try {
+const docker = new DockerManager()
+// } catch (error) {
 // Error: ENOENT: no such file or directory, stat '/var/run/docker.sock'
 // Call setup routines for Docker engine.
-//console.log(error)
-//}
+// console.log(error)
+// }
 
 /**
  * Pull an image, create a container and start that container.

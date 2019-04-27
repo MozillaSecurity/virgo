@@ -42,8 +42,8 @@ ThemeProvider.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    darkMode: state.darkMode,
-    vibrance: state.vibrance
+    darkMode: state.preferences.darkMode,
+    vibrance: state.preferences.vibrance
   }
 }
 
