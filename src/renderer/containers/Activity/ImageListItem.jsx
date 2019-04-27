@@ -41,12 +41,13 @@ const styles = theme => ({
 })
 
 const ImageListItem = props => {
+  const { tags, date, containers, id, size } = props
   return (
     <Card>
-      <CardHeader title={props.tags} subheader={props.date} avatar={<Avatar aria-label="Recipe">I</Avatar>} />
+      <CardHeader title={tags} subheader={date} avatar={<Avatar aria-label="Recipe">I</Avatar>} />
       <CardContent>
         <Typography component="p">
-          Id: {props.id} Size: {props.size} Associated containers: {props.containers}
+          Id: {id} Size: {size} Associated containers: {containers}
         </Typography>
       </CardContent>
       <CardActions disableActionSpacing />
