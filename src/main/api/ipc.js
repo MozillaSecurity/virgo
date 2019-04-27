@@ -26,7 +26,11 @@ ipcMain.on('container.run', (event, args) => {
        * Create a container of the pulled image. Each container removes itself on error or on stop.
        */
       docker.docker
-        .createContainer({ Image: name, Tty: true, HostConfig: { AutoRemove: true } })
+        .createContainer({
+          Image: name,
+          Tty: true,
+          HostConfig: { AutoRemove: true }
+        })
         .then(container => {
           return container.start()
         })

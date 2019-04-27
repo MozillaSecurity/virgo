@@ -1,11 +1,12 @@
 /** @format */
+
 import { Tray, Menu } from 'electron'
 import { resolve } from 'app-root-path'
 
 const isMacOS = process.platform === 'darwin'
 
 export default function createTray(window) {
-  let tray = new Tray(resolve('build/icons/16x16.png'))
+  const tray = new Tray(resolve('resources/build/icons/16x16.png'))
 
   const trayMenu = Menu.buildFromTemplate([
     {

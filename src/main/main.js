@@ -1,4 +1,5 @@
 /** @format */
+
 import { app } from 'electron'
 
 import { appDefinition } from './common'
