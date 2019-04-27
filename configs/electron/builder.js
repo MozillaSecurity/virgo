@@ -3,14 +3,15 @@
 const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
 const builder = require('electron-builder')
+
 const { Platform, Arch } = builder
 const appRoot = require('app-root-path')
 
 const build = async (targets, config) => {
   console.log(`Building on platform ${process.platform} in ${process.env.NODE_ENV} mode.`)
-  for (let target of targets) {
+  for (const target of targets) {
     await builder
-      .build({ targets: target, config: config })
+      .build({ targets: target, config })
       .then(files => {
         console.log('🙌   Build is OK!')
         files.map(file => console.log(`• ${file}`))
@@ -69,7 +70,7 @@ const main = async () => {
     win: {},
     mac: {
       bundleVersion: buildVersion,
-      bundleShortVersion: bundleShortVersion,
+      bundleShortVersion,
       category: 'public.app-category.security'
     },
     linux: {
