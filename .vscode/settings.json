@@ -4,7 +4,9 @@
     "node_modules": true,
     ".cache": true,
     "**/.DS_Store": true,
-    "**/.git": true
+    "**/.git": true,
+    "CODE_OF_CONDUCT.md": true,
+    "LICENSE.md": true
   },
   "files.associations": {
     "*.jsx": "javascriptreact"
