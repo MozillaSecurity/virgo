@@ -1,5 +1,5 @@
 {
-  // Hide items in VSCode Explorer.
+  /* Hide items in VSCode Explorer. */
   "files.exclude": {
     "node_modules": true,
     ".cache": true,
@@ -9,41 +9,42 @@
   "files.associations": {
     "*.jsx": "javascriptreact"
   },
-
-  // Prettier & ESLint
-  "prettier.ignorePath": "configs/prettier/prettierignore",
-  // Disable default JavaScript formatter - for Prettier.
-  "javascript.format.enable": false,
-  // Tells Prettier to use prettier-eslint instead of Prettier.
-  "prettier.eslintIntegration": true,
-  // Tells Prettier to use prettier-stylelint instead of Prettier.
-  // Disabled because prettier-stylelint can not deal with styled-components additionally it does remove with formatOnSave the content of any .css file.
-  "prettier.stylelintIntegration": false,
-  // We don’t need ESLint to fix our code for us directly, since prettier-eslint will be running eslint --fix for us.
-  "eslint.autoFixOnSave": false,
-  // Save document when focus changed.
   "files.autoSave": "onFocusChange",
-  // Runs Prettier with the above options on every file save.
-  "editor.formatOnSave": true,
-  "eslint.alwaysShowStatus": true,
+
+  /* Prettier */
+  "prettier.ignorePath": "configs/prettier/prettierignore",
+  "prettier.disableLanguages": ["javascript", "javascriptreact"],
+
+  /* ESLint */
   "eslint.options": {
     "configFile": "configs/eslint/eslintrc.js",
     "ignorePath": "configs/eslint/eslintignore"
   },
+  "eslint.autoFixOnSave": true,
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": false
+  },
+  "eslint.validate": ["javascript", "javascriptreact"],
+  "eslint.alwaysShowStatus": true,
   "eslint.packageManager": "npm",
 
-  // General JavaScript
+  /* JavaScript */
+  "javascript.format.enable": false, // Disable default JavaScript formatter in favour of ESLint --fix.
   "javascript.suggest.completeFunctionCalls": true,
   "javascript.referencesCodeLens.enabled": true,
-  "debug.inlineValues": false,
-  "search.runInExtensionHost": true,
 
-  // Flow
+  /* Flow */
   "flow.pathToFlow": "node_modules/.bin/flow",
-  // Disable default JavaScript validation - for Flow.
-  "javascript.validate.enable": true,
+  "javascript.validate.enable": false, // Disable default JavaScript validation in favour of Flow.
 
-  // Jest
-  // Disable auto-run of Jest cause of "jest-runner/electron" issues.
-  "jest.autoEnable": false
+  /* Jest */
+  "jest.autoEnable": false, // Disable auto-run of Jest cause of "jest-runner/electron" issues.
+
+  /* Misc */
+  "debug.inlineValues": false,
+  "search.runInExtensionHost": true
 }

@@ -2,6 +2,7 @@
   "recommendations": [
     "msjsdiag.debugger-for-chrome",
     "dbaeumer.vscode-eslint",
+    "shinnn.stylelint",
     "donjayamanne.githistory",
     "ms-vscode.github-issues-prs",
     "eamodio.gitlens",
