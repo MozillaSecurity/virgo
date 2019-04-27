@@ -23,10 +23,8 @@ const styles = theme => ({
 const AppWithStyles = withStyles(styles)(App)
 
 ReactDOM.render(
-  //<React.StrictMode>
   <Provider store={initStore()}>
     <AppWithStyles />
   </Provider>,
-  //</React.StrictMode>,
   document.getElementById('parcel-root')
 )
