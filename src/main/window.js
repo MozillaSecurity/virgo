@@ -1,9 +1,10 @@
 /** @format */
+
 import * as url from 'url'
 import { BrowserWindow } from 'electron'
 import { resolve } from 'app-root-path'
 
-import { isDevEnvironment } from './common'
+import { Environment } from './common'
 import Store from './store'
 
 export default function createMainWindow() {
@@ -17,8 +18,12 @@ export default function createMainWindow() {
     frame: false,
     minWidth: 800,
     minHeight: 600,
-    titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default'
+    titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
+    webPreferences: {
+      nodeIntegration: true
+    }
   }
+
   // Restore window size and position.
   if (Store.get('restoreWindowSize') === true) {
     windowOpts = Object.assign(windowOpts, Store.get('winBounds'))
@@ -26,29 +31,27 @@ export default function createMainWindow() {
 
   let mainWindow = new BrowserWindow(windowOpts)
 
-  const appUrl = isDevEnvironment()
-    ? `${PROTOCOL}://${HOST}:${PORT}`
-    : url.format({
-        pathname: resolve('dist/renderer/production/index.html'),
-        protocol: 'file:',
-        slashes: true
-      })
+  const appUrl =
+    Environment.isPackaged() || Environment.isTest()
+      ? url.format({
+          pathname: resolve('dist/renderer/production/index.html'),
+          protocol: 'file:',
+          slashes: true
+        })
+      : `${PROTOCOL}://${HOST}:${PORT}`
 
   mainWindow.loadURL(appUrl)
-  if (isDevEnvironment()) {
+
+  if (Environment.isDevelopment()) {
     ;(async () => {
       const addons = await import('./addons')
       addons.installDeveloperTools(['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'])
     })()
   }
 
-  mainWindow.on('close', () => {
+  mainWindow.on('close', event => {
     // Save window size and position.
     Store.set('winBounds', mainWindow.getBounds())
-  })
-
-  mainWindow.on('closed', () => {
-    // Dereference the window objects.
     mainWindow = null
   })
 
