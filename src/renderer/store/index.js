@@ -40,10 +40,10 @@ export const initStore = () => {
     preferences: {}
   })
 */
-  //const persistedState = loadState()
-  //initialState = Object.assign(initialState, persistedState)
+  // const persistedState = loadState()
+  // initialState = Object.assign(initialState, persistedState)
 
-  let initialState = {
+  const initialState = {
     docker: {
       imageDefinitions: []
     },

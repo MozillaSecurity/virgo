@@ -82,7 +82,7 @@ class OverlaySideDrawer extends React.Component {
   }
 
   handleDarkMode = name => event => {
-    this.props.setDarkMode(event.target.checked ? true : false)
+    this.props.setDarkMode(!!event.target.checked)
   }
 
   render() {
@@ -103,7 +103,8 @@ class OverlaySideDrawer extends React.Component {
         anchor={anchor}
         open={open}
         classes={{ paper: classes.drawerPaper }}
-        ModalProps={{ onBackdropClick: this.handleDrawerClose }}>
+        ModalProps={{ onBackdropClick: this.handleDrawerClose }}
+      >
         {brand}
         <div onClick={this.handleDrawerClose}>{items}</div>
         <div className={classes.drawerFooter}>

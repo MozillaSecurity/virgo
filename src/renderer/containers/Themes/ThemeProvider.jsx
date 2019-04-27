@@ -23,6 +23,7 @@ class ThemeProvider extends React.Component {
       delete theme.overrides.MuiAppBar.colorPrimary.background
     }
   }
+
   render() {
     this.toggleVibrance(themeDark)
 
