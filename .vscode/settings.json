@@ -1,30 +1,49 @@
 {
+  // Hide items in VSCode Explorer.
   "files.exclude": {
     "node_modules": true,
-    ".cache": true
+    ".cache": true,
+    "**/.DS_Store": true,
+    "**/.git": true
   },
-  "eslint.alwaysShowStatus": true,
+  "files.associations": {
+    "*.jsx": "javascriptreact"
+  },
 
-  // Save document when focus changed.
-  "files.autoSave": "onFocusChange",
-
+  // Prettier & ESLint
+  "prettier.ignorePath": "configs/prettier/prettierignore",
+  // Disable default JavaScript formatter - for Prettier.
+  "javascript.format.enable": false,
   // Tells Prettier to use prettier-eslint instead of Prettier.
   "prettier.eslintIntegration": true,
   // Tells Prettier to use prettier-stylelint instead of Prettier.
   // Disabled because prettier-stylelint can not deal with styled-components additionally it does remove with formatOnSave the content of any .css file.
   "prettier.stylelintIntegration": false,
-  // We don’t need ESLint to fix our code for us directly, since prettier-eslint will be running eslint --fix for us anyways.
+  // We don’t need ESLint to fix our code for us directly, since prettier-eslint will be running eslint --fix for us.
   "eslint.autoFixOnSave": false,
+  // Save document when focus changed.
+  "files.autoSave": "onFocusChange",
   // Runs Prettier with the above options on every file save.
   "editor.formatOnSave": true,
+  "eslint.alwaysShowStatus": true,
+  "eslint.options": {
+    "configFile": "configs/eslint/eslintrc.js",
+    "ignorePath": "configs/eslint/eslintignore"
+  },
+  "eslint.packageManager": "npm",
 
+  // General JavaScript
+  "javascript.suggest.completeFunctionCalls": true,
+  "javascript.referencesCodeLens.enabled": true,
+  "debug.inlineValues": false,
+  "search.runInExtensionHost": true,
+
+  // Flow
+  "flow.pathToFlow": "node_modules/.bin/flow",
   // Disable default JavaScript validation - for Flow.
-  "javascript.validate.enable": false,
-  // Disable default JavaScript formatter - for Prettier.
-  "javascript.format.enable": false,
+  "javascript.validate.enable": true,
 
-  "flow.pathToFlow": "${workspaceRoot}/node_modules/.bin/flow",
-  // Disable auto run of Jest cause of "jest-runner/electron" issues.
-  "jest.autoEnable": false,
-  "printcode.webServerPort": 8888
+  // Jest
+  // Disable auto-run of Jest cause of "jest-runner/electron" issues.
+  "jest.autoEnable": false
 }

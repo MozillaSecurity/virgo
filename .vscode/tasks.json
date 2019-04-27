@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build and Launch Parcel Server",
+      "type": "shell",
+      "command": "npm run parcel:main && npm run parcel:launch",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": ""
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "",
+          "endsPattern": ""
+        }
+      }
+    }
+  ]
+}

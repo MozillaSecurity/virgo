@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "msjsdiag.debugger-for-chrome",
+    "dbaeumer.vscode-eslint",
+    "donjayamanne.githistory",
+    "ms-vscode.github-issues-prs",
+    "eamodio.gitlens",
+    "wix.vscode-import-cost",
+    "eg2.vscode-npm-script",
+    "esbenp.prettier-vscode",
+    "christian-kohler.npm-intellisense",
+    "pflannery.vscode-versionlens",
+    "vsmobile.vscode-react-native",
+    "alefragnani.project-manager",
+    "formulahendry.code-runner"
+  ]
+}
