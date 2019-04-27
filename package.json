@@ -3,15 +3,11 @@
   "version": "0.1.0",
   "description": "Virgo - A crowdfuzz approach for the desktop.",
   "keywords": [
-    "electron",
-    "react",
-    "parcel",
-    "jest",
-    "eslint",
-    "prettier",
-    "flow",
-    "styled-components",
-    "material"
+    "cluster",
+    "fuzzing",
+    "utility",
+    "bounty",
+    "bugs"
   ],
   "homepage": "https://github.com/mozillasecurity/virgo",
   "bugs": {
@@ -22,48 +18,66 @@
   "repository": "github:mozillasecurity/virgo",
   "private": true,
   "engines": {
-    "node": ">=10"
+    "node": ">=11"
   },
   "main": "dist/main/main.js",
   "scripts": {
-    "start": "run-p -r parcel:launch electron:launch",
-    "dist": "run-s parcel:build electron:build",
+    "\n# Build": "",
+    "start": "cross-env NODE_ENV=development run-p -r parcel:launch electron:launch",
+    "dist": "cross-env NODE_ENV=production run-s parcel:build electron:build",
+    "\n# Intermediate": "",
     "dist-universal": "run-s parcel:build electron:build:universal",
     "electron:launch": "run-s parcel:main electron:start",
-    "electron:start": "cross-env ELECTRON_START_URL=http://localhost:3000 electron .",
-    "electron:build": "build --dir --x64 --publish=never",
-    "electron:build:universal": "build --dir --x64 --publish=never -mwl",
-    "parcel:launch": "node parcel-bundler.js",
+    "electron:start": "cross-env ELECTRON_START_URL=http://localhost:3000 electron --enable-logging --remote-debugging-port=9223 .",
+    "electron:build": "node configs/electron/builder.js macos linux64",
+    "parcel:launch": "node configs/parcel/bundler.js",
     "parcel:build": "run-s parcel:main parcel:renderer",
     "parcel:main": "parcel build src/main/main.js --out-dir dist/main --out-file=main --target=electron",
     "parcel:renderer": "parcel build src/renderer/index.html --log-level 3 --no-cache --public-url ./ --out-dir dist/renderer/production --target=electron",
-    "test": "run-s parcel:build test:jest",
-    "test:jest": "cross-env CI=true jest --colors",
-    "test:update": "npm test:jest -u",
-    "test:coverage": "npm test:jest --silent --coverage",
-    "typecheck": "flow check --quiet --color=always",
+    "\n# Debug": "",
+    "debug:electron": "electron --inspect-brk=9222 --enable-logging --remote-debugging-port=9223 .",
+    "debug:launch": "run-p parcel:main parcel:launch debug:electron",
+    "\n# Test": "",
+    "test": "cross-env run-s parcel:build test:jest",
+    "test:jest": "cross-env CI=true jest --config configs/jest/jest.config.js --colors",
+    "test:update": "npm run test:jest -u",
+    "test:coverage": "npm run test:jest -- --coverage",
+    "\n# Lint": "",
+    "eslint": "eslint --config configs/eslint/eslintrc.js --ignore-path configs/eslint/eslintignore",
+    "stylelint": "stylelint --config configs/stylelint/stylelint.config.js --formatter=verbose",
+    "lint": "run-s -c typecheck lint:js lint:css",
+    "lint:js": "npm run eslint -- --fix 'src/**/*.{js,jsx}'",
+    "lint:css": "npm run stylelint -- 'src/**/*.jsx' --fix",
+    "\n# Format": "",
+    "prettier": "prettier --config prettier.config.js --ignore-path configs/prettier/prettierignore",
+    "format": "run-s -c format:js format:css",
+    "format:js": "npm run prettier -- --write 'src/**/*.{js,jsx}'",
+    "format:css": "npm run prettier -- --write './src/**/*.{js,jsx}'",
+    "\n# Documentation": "",
+    "docs": "esdoc -c configs/esdoc/esdoc.json",
+    "\n# Flow": "",
+    "typecheck": "flow check --quiet --color=always --flowconfig-name configs/flow/flowconfig",
     "typecheck:init": "flow-typed install --overwrite",
     "typecheck:update": "flow-typed update",
     "typecheck:upgrade": "flow-upgrade",
-    "typecheck:coverage": "flow-coverage-report --config=./.flowcoverage.json",
-    "lint": "run-s -c typecheck lint:js lint:css",
-    "lint:js": "eslint . --ext .js,.jsx --fix",
-    "lint:css": "stylelint --formatter=verbose './src/**/*.jsx' --fix",
-    "format": "run-s -c format:js format:css format:other",
-    "format:js": "prettier-eslint --write './src/**/*.{js,jsx}'",
-    "format:css": "prettier --write './src/**/*.{js,jsx}'",
-    "docs": "esdoc",
+    "typecheck:coverage": "flow-coverage-report --config configs/flow/flowcoverage.json",
+    "\n# Packages": "",
     "updates": "ncu -t"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "linters": {
       "*.{js,jsx}": [
-        "prettier --write",
-        "eslint --fix",
+        "npm run prettier -- --write",
+        "npm run eslint -- --fix",
         "git add"
       ],
       "*.{json,md}": [
-        "prettier --write",
+        "npm run prettier -- --write",
         "git add"
       ]
     }
@@ -83,25 +97,27 @@
     "babel-plugin-styled-components": "^1.10.0",
     "cross-env": "^5.2.0",
     "devtron": "^1.4.0",
-    "electron": "^4.1.4",
+    "electron": "^5.0.0",
     "electron-builder": "^20.39.0",
     "electron-devtools-installer": "^2.2.4",
     "esdoc": "^1.1.0",
+    "esdoc-ecmascript-proposal-plugin": "^1.0.0",
     "esdoc-jsx-plugin": "^1.0.0",
     "esdoc-node": "^1.0.4",
     "esdoc-standard-plugin": "^1.0.0",
     "eslint": "5.16.0",
-    "eslint-config-prettier": "^4.1.0",
-    "eslint-config-react-app": "^3.0.8",
+    "eslint-config-prettier": "^4.2.0",
+    "eslint-config-react-app": "^4.0.0",
     "eslint-plugin-flowtype": "^3.6.1",
     "eslint-plugin-import": "^2.17.2",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react-hooks": "^1.6.0",
     "flow-bin": "^0.97.0",
     "flow-coverage-report": "^0.6.1",
     "flow-typed": "^2.5.1",
-    "husky": "^1.3.1",
+    "husky": "^2.1.0",
     "jest": "^24.7.1",
     "jest-config": "^24.7.1",
     "lint-staged": "^8.1.5",
@@ -115,7 +131,7 @@
     "regenerator-runtime": "^0.13.2",
     "spectron": "^5.0.0",
     "stylelint": "^10.0.1",
-    "stylelint-config-prettier": "^5.0.0",
+    "stylelint-config-prettier": "^5.1.0",
     "stylelint-config-recommended": "^2.2.0",
     "stylelint-config-styled-components": "^0.1.1",
     "stylelint-processor-styled-components": "^1.6.0"
@@ -137,8 +153,5 @@
     "react-router-dom": "^5.0.0",
     "redux": "^4.0.1",
     "styled-components": "^4.2.0"
-  },
-  "resolutions": {
-    "babel-core": "7.0.0-bridge.0"
   }
 }
