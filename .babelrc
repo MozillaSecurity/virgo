@@ -6,7 +6,7 @@
       "@babel/preset-env",
       {
         "targets": {
-          "electron": "4.0"
+          "electron": "5.0"
         }
       }
     ]
@@ -15,5 +15,19 @@
     "babel-plugin-styled-components",
     ["@babel/plugin-proposal-class-properties", { "loose": false }],
     "dynamic-import-node"
-  ]
+  ],
+  "env": {
+    "production": {
+      "sourceMaps": false,
+      "retainLines": false
+    },
+    "development": {
+      "sourceMaps": true,
+      "retainLines": true
+    },
+    "test": {
+      "sourceMaps": true,
+      "retainLines": true
+    }
+  }
 }
