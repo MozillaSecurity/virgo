@@ -51,7 +51,7 @@ const main = async () => {
   }
 
   const config = {
-    productName: 'Virgo',
+    productName: process.platform === 'linux' ? 'virgo' : 'Virgo',
     appId: 'org.mozilla.${name}',
     copyright: 'Copyright © 2019 ${author}',
     artifactName: '${name}-${version}-${os}-${arch}.${ext}',
