@@ -3,7 +3,10 @@
 const { defaults } = require('jest-config')
 
 module.exports = {
-  // See `@jest/types/build/Config.d.ts` for what is valid in global & project config.
+  /* See `@jest/types/build/Config.d.ts` for what is valid in global & project config or
+   * provide references to separate configuration files to the project's array rather than
+   * an array of configuration objects.
+   */
   verbose: true,
   rootDir: '../../',
   coverageDirectory: '<rootDir>/../../dist/coverage',
