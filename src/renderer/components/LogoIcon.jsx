@@ -16,11 +16,11 @@ const styles = theme => ({
 })
 
 const LogoIcon = props => {
-  const { classes, hide, ...other } = props
+  const { classes, hide, children, ...other } = props
 
   return (
     <IconButton className={`${classes.root} ${hide && classes.hide}`} {...other}>
-      {props.children}
+      {children}
     </IconButton>
   )
 }
