@@ -43,7 +43,8 @@ module.exports = {
     react: {
       version: 'detect',
       flowVersion: version('flow-bin')
-    }
+    },
+    'import/core-modules': ['electron']
   },
   rules: {
     // Add rules for above plugins.
