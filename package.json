@@ -47,12 +47,12 @@
     "stylelint": "stylelint --config configs/stylelint/stylelint.config.js --formatter=verbose",
     "lint": "run-s -c typecheck lint:js lint:css",
     "lint:js": "npm run eslint -- --fix 'src/**/*.{js,jsx}'",
-    "lint:css": "npm run stylelint -- 'src/**/*.jsx' --fix",
+    "lint:css": "npm run stylelint -- 'src/**/*.{css,scss}' --fix",
     "\n# Format": "",
     "prettier": "prettier --config prettier.config.js --ignore-path configs/prettier/prettierignore",
     "format": "run-s -c format:js format:css",
     "format:js": "npm run prettier -- --write 'src/**/*.{js,jsx}'",
-    "format:css": "npm run prettier -- --write './src/**/*.{js,jsx}'",
+    "format:css": "npm run prettier -- --write './src/**/*.{css,scss}'",
     "\n# Documentation": "",
     "docs": "esdoc -c configs/esdoc/esdoc.json",
     "\n# Flow": "",
@@ -72,8 +72,11 @@
   "lint-staged": {
     "linters": {
       "*.{js,jsx}": [
-        "npm run prettier -- --write",
         "npm run eslint -- --fix",
+        "git add"
+      ],
+      "*.{css,scss}": [
+        "npm run stylelint -- --fix",
         "git add"
       ],
       "*.{json,md}": [
@@ -131,8 +134,7 @@
     "stylelint": "^10.0.1",
     "stylelint-config-prettier": "^5.1.0",
     "stylelint-config-recommended": "^2.2.0",
-    "stylelint-config-styled-components": "^0.1.1",
-    "stylelint-processor-styled-components": "^1.6.0"
+    "stylelint-prettier": "^1.0.6"
   },
   "dependencies": {
     "@material-ui/core": "^3.9.3",

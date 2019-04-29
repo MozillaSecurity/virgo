@@ -30,12 +30,21 @@
   "[javascriptreact]": {
     "editor.formatOnSave": false
   },
+  "javascript.format.enable": false, // Disable default JavaScript formatter in favour of ESLint --fix.
   "eslint.validate": ["javascript", "javascriptreact"],
   "eslint.alwaysShowStatus": true,
   "eslint.packageManager": "npm",
 
+  /* Stylelint */
+  "stylelint.enable": true,
+  "stylelint.config": {
+    "extends": ["./configs/stylelint/stylelint.config.js"]
+  },
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+
   /* JavaScript */
-  "javascript.format.enable": false, // Disable default JavaScript formatter in favour of ESLint --fix.
   "javascript.suggest.completeFunctionCalls": true,
   "javascript.referencesCodeLens.enabled": true,
 
