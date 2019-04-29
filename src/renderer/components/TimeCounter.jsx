@@ -7,14 +7,6 @@ import { withStyles } from '@material-ui/core/styles'
 const styles = theme => ({})
 
 class TimeCounter extends React.Component {
-  leftPad = (width, n) => {
-    if ((n + '').length > width) {
-      return n
-    }
-    const padding = new Array(width).join('0')
-    return (padding + n).slice(-width)
-  }
-
   getUnits(timeElapsed) {
     const seconds = timeElapsed / 1000
     return {
@@ -23,8 +15,18 @@ class TimeCounter extends React.Component {
       sec: Math.floor(seconds % 60).toString()
     }
   }
+
+  leftPad = (width, n) => {
+    if (`${n}`.length > width) {
+      return n
+    }
+    const padding = new Array(width).join('0')
+    return (padding + n).slice(-width)
+  }
+
   render() {
-    const units = this.getUnits(this.props.timeElapsed)
+    const { timeElapsed } = this.props
+    const units = this.getUnits(timeElapsed)
 
     return (
       <div>
