@@ -55,23 +55,21 @@ const ImageListItem = props => {
   )
 }
 
-class ImageList extends React.Component {
-  render() {
-    const { classes, images } = this.props
-    return (
-      <div>
-        <div className={classes.category}>
-          <Typography color="primary" variant="body1" className={classes.title}>
-            Downloaded Images
-          </Typography>
-        </div>
-        {this.props.images.length === 0 ? 'No images' : ''}
-        {images.map(image => (
-          <ImageListItem key={image.id} {...image} />
-        ))}
+const ImageList = props => {
+  const { classes, images } = props
+  return (
+    <div>
+      <div className={classes.category}>
+        <Typography color="primary" variant="body1" className={classes.title}>
+          Downloaded Images
+        </Typography>
       </div>
-    )
-  }
+      {images.length === 0 ? 'No images' : ''}
+      {images.map(image => (
+        <ImageListItem key={image.id} {...image} />
+      ))}
+    </div>
+  )
 }
 
 /* Prop Types */
