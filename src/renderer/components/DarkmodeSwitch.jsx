@@ -14,19 +14,17 @@ import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({})
 
-class DarkmodeSwitch extends React.Component {
-  render() {
-    const { label1, label2, checked, onChange } = this.props
-    return (
-      <ListItem>
-        <ListItemIcon>{checked ? <LightIcon /> : <DarkIcon />}</ListItemIcon>
-        <ListItemText primary={checked ? label1 : label2} primaryTypographyProps={{ variant: 'body2' }} />
-        <ListItemSecondaryAction>
-          <Switch checked={checked} onChange={onChange()} />
-        </ListItemSecondaryAction>
-      </ListItem>
-    )
-  }
+const DarkmodeSwitch = props => {
+  const { label1, label2, checked, onChange } = props
+  return (
+    <ListItem>
+      <ListItemIcon>{checked ? <LightIcon /> : <DarkIcon />}</ListItemIcon>
+      <ListItemText primary={checked ? label1 : label2} primaryTypographyProps={{ variant: 'body2' }} />
+      <ListItemSecondaryAction>
+        <Switch checked={checked} onChange={onChange()} />
+      </ListItemSecondaryAction>
+    </ListItem>
+  )
 }
 
 DarkmodeSwitch.propTypes = {
