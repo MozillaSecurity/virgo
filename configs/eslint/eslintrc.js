@@ -48,5 +48,6 @@ module.exports = {
   },
   rules: {
     // Add rules for above plugins.
+    'no-console': 0
   }
 }
