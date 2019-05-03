@@ -12,7 +12,7 @@ class ActivityPage extends React.Component {
   }
 
   componentDidMount() {
-    ipcRenderer.on('image.list', (event, images) => this.listImages(event, images))
+    ipcRenderer.on('image.list', this.listImages)
     ipcRenderer.send('image.list')
   }
 
@@ -42,7 +42,7 @@ class ActivityPage extends React.Component {
       size: this.formatBytes(image.Size),
       date: new Date(image.Created * 1000).toLocaleDateString(),
       containers: image.Containers === -1 ? 0 : image.Containers,
-      tags: image.RepoTags
+      tags: image.RepoTags === null ? ['N/A'] : image.RepoTags
     }
   }
 

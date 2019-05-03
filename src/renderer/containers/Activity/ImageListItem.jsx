@@ -56,8 +56,7 @@ const ImageListItem = props => {
   )
 }
 
-const ImageList = props => {
-  const { classes, images } = props
+const ImageList = ({ classes, images }) => {
   return (
     <div>
       <div className={classes.category}>
@@ -76,8 +75,7 @@ const ImageList = props => {
 /* Prop Types */
 ImageList.propTypes = {
   classes: PropTypes.object.isRequired,
-  images: PropTypes.number.isRequired,
-  id: PropTypes.string.isRequired
+  images: PropTypes.array.isRequired
 }
 
 ImageListItem.propTypes = {
