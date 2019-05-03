@@ -29,6 +29,11 @@ const DarkmodeSwitch = props => {
   )
 }
 
+DarkmodeSwitch.defaultProps = {
+  label1: 'Light Mode',
+  label2: 'Dark Mode'
+}
+
 DarkmodeSwitch.propTypes = {
   label1: PropTypes.string,
   label2: PropTypes.string,

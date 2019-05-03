@@ -2,11 +2,14 @@
 
 import React from 'react'
 import { Link } from 'react-router-dom'
+
+/* Styles */
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-/* ListItemIcons */
+
+/* Custom UI */
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import ActivityIcon from '@material-ui/icons/Report'
 import SettingsIcon from '@material-ui/icons/Build'
@@ -15,7 +18,7 @@ const DashboardLink = props => <Link to="/" {...props} />
 const ActivityLink = props => <Link to="/activity" {...props} />
 const PreferencesLink = props => <Link to="/preferences" {...props} />
 
-const SideDrawerList = props => {
+const SideDrawerList = () => {
   return (
     <List>
       <ListItem button component={DashboardLink}>

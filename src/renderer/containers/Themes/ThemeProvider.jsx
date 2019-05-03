@@ -3,10 +3,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { remote } from 'electron'
+
 /* Styles */
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
-
-import { remote } from 'electron'
 
 import themeDark from './Dark'
 import themeLight from './Light'

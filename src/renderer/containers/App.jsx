@@ -3,10 +3,12 @@
 import React from 'react'
 import { HashRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
+
 /* Styles */
 import Reset from '@material-ui/core/CssBaseline'
 import { withStyles } from '@material-ui/core/styles'
 import '../styles/fontface-roboto.css'
+
 /* Custom UI */
 import ContentRoutes from './ContentRoutes'
 import SideDrawer from './Layout/SideDrawer'

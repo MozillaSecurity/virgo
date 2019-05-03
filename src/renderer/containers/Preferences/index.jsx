@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
+/* Styles */
 import { withStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import List from '@material-ui/core/List'
@@ -15,10 +16,12 @@ import Divider from '@material-ui/core/Divider'
 import Switch from '@material-ui/core/Switch'
 import Typography from '@material-ui/core/Typography'
 
+/* Custom UI */
 import DarkmodeSwitch from '../../components/DarkmodeSwitch'
 
 import * as actionCreators from '../../store/actions'
 
+// eslint-disable-next-line no-unused-vars
 const styles = theme => ({
   title: {
     paddingBottom: '5px'
@@ -97,9 +100,9 @@ PreferencesPage.propTypes = {
 /* States */
 const mapStateToProps = state => {
   return {
-    darkMode: state.darkMode,
-    vibrance: state.vibrance,
-    restoreWindowSize: state.restoreWindowSize
+    darkMode: state.preferences.darkMode,
+    vibrance: state.preferences.vibrance,
+    restoreWindowSize: state.preferences.restoreWindowSize
   }
 }
 

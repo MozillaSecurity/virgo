@@ -11,3 +11,8 @@ export const setVibrance = value => ({
   type: 'PREF_VIBRANCE',
   vibrance: value
 })
+
+export const setRestoreWindowSize = value => ({
+  type: 'PREF_RESTORE_WINDOW_SIZE',
+  restoreWindowSize: value
+})

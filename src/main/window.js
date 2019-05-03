@@ -26,7 +26,7 @@ export default function createMainWindow() {
   }
 
   // Restore window size and position.
-  if (Store.get('restoreWindowSize') === true) {
+  if (Store.get('preferences.restoreWindowSize') === true) {
     windowOpts = Object.assign(windowOpts, Store.get('preferences.winBounds'))
   }
 

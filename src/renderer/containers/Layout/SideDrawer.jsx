@@ -15,6 +15,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import Menu from '@material-ui/icons/Menu'
 import { withStyles } from '@material-ui/core/styles'
 
+/* Custom UI */
 import LogoIcon from '../../components/LogoIcon'
 import DarkmodeSwitch from '../../components/DarkmodeSwitch'
 
@@ -81,12 +82,12 @@ class OverlaySideDrawer extends React.Component {
     this.setState({ open: false })
   }
 
-  handleDarkMode = name => event => {
+  handleDarkMode = () => event => {
     this.props.setDarkMode(!!event.target.checked)
   }
 
   render() {
-    const { classes, items } = this.props
+    const { classes, items, children, darkMode } = this.props
     const { anchor, open } = this.state
 
     const brand = (
@@ -109,12 +110,7 @@ class OverlaySideDrawer extends React.Component {
         <div onClick={this.handleDrawerClose}>{items}</div>
         <div className={classes.drawerFooter}>
           <List>
-            <DarkmodeSwitch
-              label1="Light Mode"
-              label2="Dark Mode"
-              onChange={this.handleDarkMode}
-              checked={this.props.darkMode}
-            />
+            <DarkmodeSwitch onChange={this.handleDarkMode} checked={darkMode} />
           </List>
         </div>
       </Drawer>
@@ -137,7 +133,7 @@ class OverlaySideDrawer extends React.Component {
         {appbar}
         {drawer}
         <main className={classes.content} onClick={this.handleDrawerClose}>
-          {this.props.children}
+          {children}
         </main>
       </div>
     )
@@ -146,7 +142,6 @@ class OverlaySideDrawer extends React.Component {
 
 OverlaySideDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
   items: PropTypes.node.isRequired,
   children: PropTypes.node.isRequired,
   darkMode: PropTypes.bool.isRequired,
