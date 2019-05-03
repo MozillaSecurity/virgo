@@ -2,19 +2,26 @@
 
 language: node_js
 node_js: node
-os: osx
-osx_image: xcode10
 env:
   global:
     - APP_NAME=virgo
-before_install:
-  - brew update
+    - ELECTRON_CACHE=$HOME/.cache/electron
+    - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+addons:
+  apt:
+    packages:
+      - xvfb
+cache:
+  directories:
+    - node_modules
+    - $HOME/.cache/
 install:
   - npm install
 before_script:
-  - sudo Xvfb :99 -ac -screen 0 1920x1080x8 &
+  - export DISPLAY=':99.0'
+  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 script:
-  - npm test --coverage
+  - npm run test:coverage
 before_deploy:
   - npm dist macos linux64 windows64
 deploy:
