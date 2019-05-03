@@ -40,7 +40,7 @@ const styles = theme => ({
     position: 'relative',
     width: 240,
     background:
-      theme.palette.type === 'dark' && theme.palette.background === 'transparent' ? 'rgba(0, 0, 0, 0.9)' : null
+      theme.palette.type === 'dark' && theme.palette.background === 'transparent' ? 'rgba(40, 44, 52, 0.8)' : null
   },
   drawerHeader: {
     display: 'flex',
