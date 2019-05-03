@@ -1,5 +1,7 @@
 /** @format */
 
+/* Redux Reducers */
+
 const preferences = (state = {}, action) => {
   switch (action.type) {
     case 'PREF_DARKMODE':

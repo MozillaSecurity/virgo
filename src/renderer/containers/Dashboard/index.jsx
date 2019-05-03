@@ -10,17 +10,19 @@ import { ipcRenderer } from 'electron'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { withStyles } from '@material-ui/core/styles'
-
 import IconButton from '@material-ui/core/IconButton'
 import PlayCircleFilled from '@material-ui/icons/PlayCircleFilled'
 import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled'
 import Stop from '@material-ui/icons/Stop'
+import { withStyles } from '@material-ui/core/styles'
 
+/* Custom UI */
+import axios from 'axios'
 import Logo from '../../images/virgo-full.svg'
 import * as actionCreators from '../../store/actions'
 import TimeCounter from '../../components/TimeCounter'
 
+// eslint-disable-next-line no-unused-vars
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -32,187 +34,165 @@ const styles = theme => ({
 })
 
 class DashboardPage extends React.Component {
-  state = {
-    timeElapsed: 0,
-    isRunning: false,
-    _isRunning: false,
-    _isPaused: false,
-    _isStopped: true,
-    status: '',
-    showSpinner: false
+  async componentDidMount() {
+    await this.fetchTaskDefinitions()
+
+    /* IPC event handlers which communicate with the Docker API in the main process. */
+    ipcRenderer.on('image.pull', (event, data) => this.pullImage(event, data))
+    ipcRenderer.on('container.run', (event, data) => this.runContainer(event, data))
+    ipcRenderer.on('container.inspect', (event, data) => this.inspectContainer(event, data))
+    ipcRenderer.on('container.stop', (event, data) => this.stopContainer(event, data))
+    ipcRenderer.on('container.pause', (event, data) => this.pauseContainer(event, data))
+    ipcRenderer.on('container.unpause', (event, data) => this.unpauseContainer(event, data))
+    ipcRenderer.on('image.error', (event, data) => this.imageError(event, data))
+    ipcRenderer.on('container.error', (event, data) => this.containerError(event, data))
   }
 
-  definitions = [
-    {
-      name: 'python:slim',
-      command: ['python', '-c', '"while True: pass"'],
-      environment: {}
-    }
-    /*
-    {
-      name: 'mozillasecurity/libfuzzer',
-      command: [],
-      environment: {
-        TOKENS: 'dicts/sdp.dict',
-        CORPORA: 'samples/sdp/',
-        FUZZER: 'SdpParser',
-        LIBFUZZER_ARGS: '-use_value_profile=1 -max_total_time=180'
-      },
-      mount: {
-        '': '~/fuzzmanagerconf'
-      }
-    } */
-  ]
-
-  /* On pause */
-  toggleTimer() {
-    this.setState({ isRunning: !this.state.isRunning }, () => {
-      this.state.isRunning ? this.startTimer() : clearInterval(this.timer)
-    })
+  pullImage = (event, data) => {
+    this.props.setStatus({ text: `Downloading task: ${data}` })
   }
 
-  /* On stop */
-  resetTimer() {
-    this.setState({ isRunning: false, timeElapsed: 0 }, () => {
-      clearInterval(this.timer)
-    })
+  runContainer = (event, container) => {
+    this.props.setContainer(container)
+    this.refreshSheduler = setInterval(() => ipcRenderer.send('container.inspect', container), 10000)
+    this.props.setStatus({ text: `Task is running`, state: 0 })
+    this.toggleTimer()
+    this.toggleSpinner()
   }
 
-  /* On start */
-  startTimer() {
-    this.startTime = Date.now()
-    this.timer = setInterval(this.update, 1000)
+  inspectContainer = (event, data) => {
+    this.props.setContainerData(data)
   }
 
-  /* During run */
-  update = () => {
-    const delta = Date.now() - this.startTime
-    this.setState({ timeElapsed: this.state.timeElapsed + delta })
-    this.startTime = Date.now()
+  stopContainer = (event, id) => {
+    clearInterval(this.refreshSheduler)
+    this.props.setContainerData([])
+    this.props.setContainer({})
+    this.props.setStatus({ text: `Container ${id} stopped successfully.`, state: 2 })
+    this.resetTimer()
+    this.toggleSpinner()
   }
 
-  /* During load */
-  toggleSpinner = () => {
-    this.setState({ showSpinner: !this.state.showSpinner })
+  pauseContainer = (event, id) => {
+    this.props.setStatus({ text: `Container ${id} paused successfully.`, state: 1 })
+    this.toggleTimer()
   }
 
-  componentDidMount() {
-    this.props.setImageDefinitions(this.definitions)
-
-    /**
-     * TODO:
-     * 1) Send host preferences to remote server.
-     * 2) Remote sends back a task list of images suitable to run on this host.
-     * 3) Host stores this list in the local state.
-     * 4) Repeat with interval of N minutes, defineable in the Preference section.
-     */
-
-    /**
-     *  IPC event handlers which communicate with the Docker API in the main process.
-     */
-    ipcRenderer.on('image.error', (event, error) => {
-      this.updateStatus(`Image error: ${error.reason}`)
-    })
-
-    ipcRenderer.on('container.error', (event, error) => {
-      this.updateStatus(`Container error: ${error.reason}`)
-      clearInterval(this.refreshSheduler)
-    })
-
-    ipcRenderer.on('image.pull', (event, data) => {
-      this.updateStatus(`Downloading task: ${data}`)
-    })
-
-    ipcRenderer.on('container.run', (event, container) => {
-      this.props.setContainer(container)
-      this.refreshSheduler = setInterval(() => ipcRenderer.send('container.inspect', container), 5000)
-      this.updateStatus(`Task is running.`)
-      this.setState({ _isRunning: true, _isPaused: false, _isStopped: false })
-      this.toggleTimer()
-      this.toggleSpinner()
-    })
-
-    ipcRenderer.on('container.inspect', (event, data) => {
-      this.props.setContainerData(data)
-    })
-
-    ipcRenderer.on('container.stop', (event, id) => {
-      this.updateStatus(`Container ${id} stopped successfully.`)
-      clearInterval(this.refreshSheduler)
-      this.props.setContainerData([]) && this.props.setContainer({})
-      this.setState({ _isRunning: false, _isPaused: false, _isStopped: true })
-      this.resetTimer()
-      this.toggleSpinner()
-    })
-
-    ipcRenderer.on('container.pause', (event, id) => {
-      this.updateStatus(`Container ${id} paused successfully.`)
-      this.setState({ _isRunning: false, _isPaused: true, _isStopped: false })
-      this.toggleTimer()
-    })
-
-    ipcRenderer.on('container.unpause', (event, id) => {
-      this.updateStatus(`Container ${id} unpaused successfully.`)
-      this.setState({ _isRunning: true, _isPaused: false, _isStopped: false })
-      this.toggleTimer()
-    })
+  unpauseContainer = (event, id) => {
+    this.props.setStatus({ text: `Container ${id} unpaused successfully.`, state: 0 })
+    this.toggleTimer()
   }
 
-  updateStatus(text) {
-    this.setState({ status: text })
+  imageError = (event, error) => {
+    this.props.setStatus({ text: `Image error: ${error.reason}` })
   }
 
-  containerStatus() {
-    if (this.props.container !== undefined && this.props.containerData !== undefined) {
-      return this.props.containerData.State.Status
-    }
+  containerError = (event, error) => {
+    this.props.setStatus({ text: `Container error: ${error.reason}` })
+    clearInterval(this.refreshSheduler)
   }
 
   onStart = () => {
-    if (this.props.imageDefinitions.length === 0) {
-      this.updateStatus('No remote tasks available.')
+    const { imageDefinitions, container, setStatus, status } = this.props
+
+    if (imageDefinitions.length === 0) {
+      setStatus({ text: 'No remote tasks available.' })
       return
     }
 
-    if (this.state._isPaused) {
-      const { id } = this.props.container
+    if (status.state === 1) {
+      const { id } = container
       if (id) {
-        this.updateStatus(`Unpausing container with ID: ${id}`)
+        setStatus({ text: `Unpausing container with ID: ${id}` })
         ipcRenderer.send('container.unpause', { id })
       } else {
-        this.updateStatus('No container ID available.')
+        setStatus({ text: `No container ID available.` })
       }
-    } else if (this.state._isStopped && !this.state._isRunning) {
-      const image = this.props.imageDefinitions[0]
-      this.updateStatus(`Initializing task.`)
+    } else if (status.state === 2 || status.state !== 0) {
+      const image = imageDefinitions[0]
+      setStatus({ text: `Initializing task.` })
       this.toggleSpinner()
       ipcRenderer.send('container.run', image)
     }
   }
 
   onStop = () => {
-    const { id } = this.props.container
+    const { container, setStatus } = this.props
+    const { id } = container
     if (id) {
-      this.updateStatus(`Stopping container with ID: ${id}`)
+      setStatus({ text: `Stopping container with ID: ${id}` })
       this.toggleSpinner()
       ipcRenderer.send('container.stop', { id })
     } else {
-      this.updateStatus('No container ID available.')
+      setStatus({ text: `No container ID available.` })
     }
   }
 
   onPause = () => {
-    const { id } = this.props.container
+    const { container, setStatus } = this.props
+    const { id } = container
     if (id) {
-      this.updateStatus(`Pausing container with ID: ${id}`)
+      setStatus({ text: `Pausing container with ID: ${id}` })
       ipcRenderer.send('container.pause', { id })
     } else {
-      this.updateStatus('No container ID available.')
+      setStatus({ text: `No container ID available.` })
     }
   }
 
+  /* During load */
+  toggleSpinner = () => {
+    this.props.setStatus({ showSpinner: !this.props.status.showSpinner })
+  }
+
+  /* During run */
+  update = () => {
+    const delta = Date.now() - this.props.status.startTime
+    this.props.setStatus({ timeElapsed: this.props.status.timeElapsed + delta, startTime: Date.now() })
+  }
+
+  /* On pause */
+  toggleTimer() {
+    this.props.status.state == 0 ? this.startTimer() : clearInterval(this.timer)
+  }
+
+  /* On start */
+  startTimer() {
+    this.props.setStatus({ startTime: Date.now() })
+    this.timer = setInterval(this.update, 1000)
+  }
+
+  /* On stop */
+  resetTimer() {
+    this.props.setStatus({ state: -1, timeElapsed: 0 })
+    clearInterval(this.timer)
+  }
+
+  containerStatus() {
+    const { container, containerData } = this.props
+    if (container !== undefined && containerData !== undefined) {
+      return containerData.State.Status
+    }
+  }
+
+  fetchTaskDefinitions() {
+    const { taskURL, setImageDefinitions } = this.props
+    axios
+      .get(taskURL)
+      .then(response => {
+        setImageDefinitions(response.data)
+      })
+      .catch(error => {
+        console.log(error)
+        console.log('error fetching task definitions')
+      })
+  }
+
   render() {
-    const { classes } = this.props
+    const { classes, imageDefinitions, status } = this.props
+
+    const isRunning = status.state === 0
+    const isPaused = status.state === 1
+    const isStopped = status.state === 2
 
     return (
       <div className={classes.root}>
@@ -221,20 +201,20 @@ class DashboardPage extends React.Component {
             <img src={Logo} alt="Virgo" />
           </Grid>
           <Grid item xs={12}>
-            {this.state._isRunning || this.state._isPaused ? (
+            {isRunning || isPaused ? (
               <Typography color="textPrimary" variant="h3">
-                <TimeCounter timeElapsed={this.state.timeElapsed} />
+                <TimeCounter timeElapsed={status.timeElapsed} />
               </Typography>
             ) : (
               <Typography color="textPrimary" variant="body1">
-                {this.props.imageDefinitions.length} Tasks available.
+                {imageDefinitions.length} Tasks available.
               </Typography>
             )}
           </Grid>
           <Grid item xs={12}>
             <Grid container spacing={8} justify="center">
               <Grid item>
-                {!this.state._isRunning || this.state._isStopped || this.state._isPaused ? (
+                {!isRunning || isStopped || isPaused ? (
                   <IconButton onClick={this.onStart}>
                     <PlayCircleFilled className={classes.controlButton} />
                   </IconButton>
@@ -245,7 +225,7 @@ class DashboardPage extends React.Component {
                 )}
               </Grid>
               <Grid item>
-                {this.state._isRunning || this.state._isPaused ? (
+                {isRunning || isPaused ? (
                   <IconButton onClick={this.onStop}>
                     <Stop className={classes.controlButton} />
                   </IconButton>
@@ -254,11 +234,11 @@ class DashboardPage extends React.Component {
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            {this.state.showSpinner ? <CircularProgress className={classes.progress} /> : null}
+            {status.showSpinner ? <CircularProgress className={classes.progress} /> : null}
           </Grid>
           <Grid item xs={12}>
             <Typography color="textPrimary" variant="body2">
-              {this.state.status}
+              {status.text}
             </Typography>
           </Grid>
         </Grid>
@@ -273,13 +253,14 @@ DashboardPage.propTypes = {
   setImageDefinitions: PropTypes.func.isRequired,
   setImageError: PropTypes.func.isRequired,
   setContainerError: PropTypes.func.isRequired,
-  imageDefinitions: PropTypes.array.isRequired,
+  // imageDefinitions: PropTypes.array.isRequired,
   setContainer: PropTypes.func.isRequired,
   setContainerData: PropTypes.func.isRequired,
   container: PropTypes.object,
-  containerData: PropTypes.object,
+  containerData: PropTypes.any,
   imageError: PropTypes.object,
-  containerError: PropTypes.object
+  containerError: PropTypes.object,
+  taskURL: PropTypes.string.isRequired
 }
 
 /* States */
@@ -289,7 +270,9 @@ const mapStateToProps = state => {
     imageError: state.docker.imageError,
     containerError: state.docker.containerError,
     containerData: state.docker.containerData,
-    container: state.docker.container
+    container: state.docker.container,
+    taskURL: state.preferences.taskURL,
+    status: state.docker.status
   }
 }
 
@@ -301,7 +284,8 @@ const mapDispatchToProps = dispatch => {
       setImageError: actionCreators.setImageError,
       setContainerError: actionCreators.setContainerError,
       setContainerData: actionCreators.setContainerData,
-      setContainer: actionCreators.setContainer
+      setContainer: actionCreators.setContainer,
+      setStatus: actionCreators.setStatus
     },
     dispatch
   )

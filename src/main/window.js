@@ -18,6 +18,7 @@ export default function createMainWindow() {
     frame: false,
     minWidth: 800,
     minHeight: 600,
+    alwaysOnTop: Store.get('alwaysOnTop'),
     titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
     webPreferences: {
       nodeIntegration: true
@@ -26,7 +27,7 @@ export default function createMainWindow() {
 
   // Restore window size and position.
   if (Store.get('restoreWindowSize') === true) {
-    windowOpts = Object.assign(windowOpts, Store.get('winBounds'))
+    windowOpts = Object.assign(windowOpts, Store.get('preferences.winBounds'))
   }
 
   let mainWindow = new BrowserWindow(windowOpts)
@@ -43,15 +44,16 @@ export default function createMainWindow() {
   mainWindow.loadURL(appUrl)
 
   if (Environment.isDevelopment()) {
+    process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
     ;(async () => {
       const addons = await import('./addons')
       addons.installDeveloperTools(['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'])
     })()
   }
 
-  mainWindow.on('close', event => {
+  mainWindow.on('close', () => {
     // Save window size and position.
-    Store.set('winBounds', mainWindow.getBounds())
+    Store.set('preferences.winBounds', mainWindow.getBounds())
     mainWindow = null
   })
 

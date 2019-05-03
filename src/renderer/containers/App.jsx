@@ -13,7 +13,7 @@ import SideDrawerList from './Layout/SideDrawerList'
 import ThemeProvider from './Themes/ThemeProvider'
 
 import ContentRoutes from '../ContentRoutes'
-import { initStore } from '../store'
+import { initState } from '../store'
 
 // eslint-disable-next-line no-unused-vars
 const styles = theme => ({
@@ -28,7 +28,7 @@ const styles = theme => ({
 
 const App = () => {
   return (
-    <Provider store={initStore()}>
+    <Provider store={initState()}>
       <ThemeProvider>
         <Reset />
         <HashRouter>

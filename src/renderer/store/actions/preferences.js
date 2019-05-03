@@ -1,5 +1,7 @@
 /** @format */
 
+/* Redux Actions */
+
 export const setDarkMode = value => ({
   type: 'PREF_DARKMODE',
   darkMode: value

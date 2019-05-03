@@ -1,6 +1,21 @@
 /** @format */
 
-const docker = (state = {}, action) => {
+/* Redux Reducers */
+
+const initialState = {
+  imageDefinitions: [],
+  container: {},
+  containerData: [],
+  status: {
+    state: -1,
+    text: 'Launch me!',
+    showSpinner: false,
+    startTime: 0,
+    timeElapsed: 0
+  }
+}
+
+const docker = (state = initialState, action) => {
   switch (action.type) {
     case 'IMAGE_DEFINITIONS':
       return {
@@ -27,6 +42,16 @@ const docker = (state = {}, action) => {
         ...state,
         container: action.container
       }
+    case 'SET_STATUS':
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          ...action.status
+        }
+      }
+    case 'RESET':
+      return initialState
     case 'SET_VISIBILITY_FILTER':
       return action.filter
     default:

@@ -1,4 +1,5 @@
 /** @format */
+
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -18,9 +19,6 @@ import DarkmodeSwitch from '../../components/DarkmodeSwitch'
 
 import * as actionCreators from '../../store/actions'
 
-import electronStore from 'electron-store'
-let store = new electronStore()
-
 const styles = theme => ({
   title: {
     paddingBottom: '5px'
@@ -33,17 +31,14 @@ const styles = theme => ({
 class PreferencesPage extends React.Component {
   handleDarkMode = name => event => {
     this.props.setDarkMode(event.target.checked)
-    store.set('darkMode', event.target.checked)
   }
 
   handleVibrance = name => event => {
     this.props.setVibrance(event.target.checked)
-    store.set('vibrance', event.target.checked)
   }
 
   handleRestoreWindowSize = name => event => {
     this.props.setRestoreWindowSize(event.target.checked)
-    store.set('restoreWindowSize', event.target.checked)
   }
 
   render() {

@@ -1,5 +1,7 @@
 /** @format */
 
+/* Redux Actions */
+
 export const setImageError = value => ({
   type: 'IMAGE_ERROR',
   error: value
@@ -23,6 +25,15 @@ export const setContainerData = value => ({
 export const setContainer = value => ({
   type: 'CONTAINER',
   container: value
+})
+
+export const setStatus = value => ({
+  type: 'SET_STATUS',
+  status: value
+})
+
+export const reset = () => ({
+  type: 'RESET'
 })
 
 export const setVisibilityFilter = filter => ({
