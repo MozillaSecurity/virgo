@@ -41,6 +41,8 @@ npm install --silent
 
 You have now successfully checked-out Virgo. To run the development version use `npm start` and to produce a production build run `npm dist`.
 
+> Developer extensions are enabled in non-production builds, except Devtron for analyzing IPC traffic. You can enable it by entering `require('devtron').install()` in the Developer Console.
+
 ## Commands
 
 For a detailed list of commands run `npm run`
