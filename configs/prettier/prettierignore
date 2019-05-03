@@ -2,3 +2,4 @@ packages-lock.json
 flow-typed/
 .cache/
 dist/
+.github/
