@@ -1,9 +1,9 @@
 /** @format */
-import _ from 'lodash'
+import { merge } from 'lodash'
 
 import themeBase from './Base'
 
-const themeLight = _.merge(
+const themeLight = merge(
   {
     palette: {
       type: 'light',

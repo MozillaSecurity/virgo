@@ -1,8 +1,7 @@
 /** @format */
 
 import React from 'react'
-import * as _ from 'lodash'
-
+import { chain } from 'lodash'
 import { ipcRenderer } from 'electron'
 
 import ImageList from './ImageListItem'
@@ -13,18 +12,19 @@ class ActivityPage extends React.Component {
   }
 
   componentDidMount() {
-    ipcRenderer.on('image.list', (evt, images) => {
-      this.setState({ images: images.map(image => this.mapImage(image)) })
-    })
-
+    ipcRenderer.on('image.list', (event, images) => this.listImages(event, images))
     ipcRenderer.send('image.list')
   }
 
   componentWillUnmount() {
-    // removeEventListener('image.list', ipcRenderer)
+    ipcRenderer.removeListener('image.list', this.listImages)
   }
 
-  formatBytes(bytes, decimals = 2) {
+  listImages = (event, images) => {
+    this.setState({ images: images.map(image => this.mapImage(image)) })
+  }
+
+  formatBytes = (bytes, decimals = 2) => {
     if (bytes === 0) {
       return '0 Bytes'
     }
@@ -33,10 +33,10 @@ class ActivityPage extends React.Component {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
 
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+    return `${parseFloat((bytes / k ** i).toFixed(dm))} ${sizes[i]}`
   }
 
-  mapImage(image) {
+  mapImage = image => {
     return {
       id: image.Id.substr(7, 12),
       size: this.formatBytes(image.Size),
@@ -46,10 +46,10 @@ class ActivityPage extends React.Component {
     }
   }
 
-  mapContainer(container) {
+  mapContainer = container => {
     return {
       id: container.Id,
-      name: _.chain(container.Names)
+      name: chain(container.Names)
         .map(n => n.substr(1))
         .join(', ')
         .value(),

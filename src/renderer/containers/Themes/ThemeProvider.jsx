@@ -3,20 +3,22 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+/* Styles */
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+
+import { remote } from 'electron'
 
 import themeDark from './Dark'
 import themeLight from './Light'
 
 class ThemeProvider extends React.Component {
-  toggleVibrance(theme) {
-    if (this.props.darkMode && this.props.vibrance) {
+  adjustIfVibrance = (theme, darkMode, vibrance) => {
+    /* eslint-disable no-param-reassign */
+    if (darkMode && vibrance) {
       theme.palette.background = 'transparent'
       theme.overrides.MuiToolbar.root.background = 'transparent !important'
       theme.overrides.MuiAppBar.colorPrimary.background = 'transparent !important'
-      import('electron').then(electron => {
-        electron.remote.getCurrentWindow().setVibrancy('dark')
-      })
+      remote.getCurrentWindow().setVibrancy('dark')
     } else {
       delete theme.palette.background
       delete theme.overrides.MuiToolbar.root.background
@@ -25,13 +27,11 @@ class ThemeProvider extends React.Component {
   }
 
   render() {
-    this.toggleVibrance(themeDark)
+    const { darkMode, vibrance, children } = this.props
 
-    return (
-      <MuiThemeProvider theme={createMuiTheme(this.props.darkMode ? themeDark : themeLight)}>
-        {this.props.children}
-      </MuiThemeProvider>
-    )
+    this.adjustIfVibrance(themeDark, darkMode, vibrance)
+
+    return <MuiThemeProvider theme={createMuiTheme(darkMode ? themeDark : themeLight)}>{children}</MuiThemeProvider>
   }
 }
 

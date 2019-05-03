@@ -2,12 +2,15 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
+
+/* Styles */
 import { withStyles } from '@material-ui/core/styles'
 
+// eslint-disable-next-line no-unused-vars
 const styles = theme => ({})
 
 class TimeCounter extends React.Component {
-  getUnits(timeElapsed) {
+  getUnits = timeElapsed => {
     const seconds = timeElapsed / 1000
     return {
       hh: Math.floor(seconds / 60 / 60).toString(),
@@ -16,7 +19,7 @@ class TimeCounter extends React.Component {
     }
   }
 
-  leftPad = (width, n) => {
+  leftPad = (n, width = 2) => {
     if (`${n}`.length > width) {
       return n
     }
@@ -30,7 +33,7 @@ class TimeCounter extends React.Component {
 
     return (
       <div>
-        {this.leftPad(2, units.hh)}:{this.leftPad(2, units.min)}:{this.leftPad(2, units.sec)}
+        {this.leftPad(units.hh)}:{this.leftPad(units.min)}:{this.leftPad(units.sec)}
       </div>
     )
   }

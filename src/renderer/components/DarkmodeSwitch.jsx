@@ -3,6 +3,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+/* Styles */
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import DarkIcon from '@material-ui/icons/Brightness2'
@@ -12,6 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Switch from '@material-ui/core/Switch'
 import { withStyles } from '@material-ui/core/styles'
 
+// eslint-disable-next-line no-unused-vars
 const styles = theme => ({})
 
 const DarkmodeSwitch = props => {
