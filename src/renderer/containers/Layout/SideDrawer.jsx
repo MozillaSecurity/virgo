@@ -68,9 +68,9 @@ const styles = theme => ({
   }
 })
 
-// const SideDrawer = ({ classes, items, children, toggleDarkMode, darkMode }) => {
 const SideDrawer = props => {
   const { classes, children, items, toggleDarkMode, darkMode } = props
+
   const [isOpen, setIsOpen] = useState(false)
   const toggleDrawer = () => setIsOpen(!isOpen)
 
