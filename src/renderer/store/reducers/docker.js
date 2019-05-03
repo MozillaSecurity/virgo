@@ -3,7 +3,7 @@
 /* Redux Reducers */
 
 const initialState = {
-  imageDefinitions: [],
+  definitions: [],
   container: {},
   containerData: [],
   status: {
@@ -20,7 +20,7 @@ const docker = (state = initialState, action) => {
     case 'IMAGE_DEFINITIONS':
       return {
         ...state,
-        imageDefinitions: action.imageDefinitions
+        definitions: action.definitions
       }
     case 'IMAGE_ERROR':
       return {

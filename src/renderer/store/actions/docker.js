@@ -14,7 +14,7 @@ export const setContainerError = value => ({
 
 export const setImageDefinitions = value => ({
   type: 'IMAGE_DEFINITIONS',
-  imageDefinitions: value
+  definitions: value
 })
 
 export const setContainerData = value => ({

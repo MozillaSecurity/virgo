@@ -30,7 +30,6 @@ export default function createMainWindow() {
     windowOpts = Object.assign(windowOpts, Store.get('preferences.winBounds'))
   }
 
-  console.log(windowOpts)
   let mainWindow = new BrowserWindow(windowOpts)
 
   const appUrl =
