@@ -31,70 +31,51 @@ const styles = theme => ({
   }
 })
 
-class PreferencesPage extends React.Component {
-  handleDarkMode = name => event => {
-    this.props.setDarkMode(event.target.checked)
-  }
-
-  handleVibrance = name => event => {
-    this.props.setVibrance(event.target.checked)
-  }
-
-  handleRestoreWindowSize = name => event => {
-    this.props.setRestoreWindowSize(event.target.checked)
-  }
-
-  render() {
-    const { classes } = this.props
-    return (
-      <div>
-        <div className={classes.category}>
-          <Typography color="primary" variant="body1" className={classes.title}>
-            Appearance
-          </Typography>
-          <Paper>
-            <List>
-              <DarkmodeSwitch
-                label1="Light Mode"
-                label2="Dark Mode"
-                onChange={this.handleDarkMode}
-                checked={this.props.darkMode}
-              />
-            </List>
-            <Divider />
-            <List>
-              <ListItem>
-                <ListItemText primary="Restore Window Size & Position" primaryTypographyProps={{ variant: 'body2' }} />
-                <ListItemSecondaryAction>
-                  <Switch onChange={this.handleRestoreWindowSize()} checked={this.props.restoreWindowSize} />
-                </ListItemSecondaryAction>
-              </ListItem>
-            </List>
-            <Divider />
-            <List>
-              <ListItem>
-                <ListItemText primary="Add Window Vibrance" primaryTypographyProps={{ variant: 'body2' }} />
-                <ListItemSecondaryAction>
-                  <Switch onChange={this.handleVibrance()} checked={this.props.vibrance} />
-                </ListItemSecondaryAction>
-              </ListItem>
-            </List>
-          </Paper>
-        </div>
+const PreferencesPage = props => {
+  const { classes } = props
+  return (
+    <div>
+      <div className={classes.category}>
+        <Typography color="primary" variant="body1" className={classes.title}>
+          Appearance
+        </Typography>
+        <Paper>
+          <List>
+            <DarkmodeSwitch onChange={props.toggleDarkMode} checked={props.darkMode} />
+          </List>
+          <Divider />
+          <List>
+            <ListItem>
+              <ListItemText primary="Restore Window Size & Position" primaryTypographyProps={{ variant: 'body2' }} />
+              <ListItemSecondaryAction>
+                <Switch onChange={props.toggleRestoreWindowSize} checked={props.restoreWindowSize} />
+              </ListItemSecondaryAction>
+            </ListItem>
+          </List>
+          <Divider />
+          <List>
+            <ListItem>
+              <ListItemText primary="Add Window Vibrance" primaryTypographyProps={{ variant: 'body2' }} />
+              <ListItemSecondaryAction>
+                <Switch onChange={props.toggleVibrance} checked={props.vibrance} />
+              </ListItemSecondaryAction>
+            </ListItem>
+          </List>
+        </Paper>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 /* Prop Types */
 PreferencesPage.propTypes = {
   classes: PropTypes.object.isRequired,
-  setDarkMode: PropTypes.func.isRequired,
-  setVibrance: PropTypes.func.isRequired,
   darkMode: PropTypes.bool.isRequired,
   vibrance: PropTypes.bool.isRequired,
-  setRestoreWindowSize: PropTypes.func.isRequired,
-  restoreWindowSize: PropTypes.bool.isRequired
+  restoreWindowSize: PropTypes.bool.isRequired,
+  toggleDarkMode: PropTypes.func.isRequired,
+  toggleVibrance: PropTypes.func.isRequired,
+  toggleRestoreWindowSize: PropTypes.func.isRequired
 }
 
 /* States */
@@ -110,9 +91,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      setDarkMode: actionCreators.setDarkMode,
-      setVibrance: actionCreators.setVibrance,
-      setRestoreWindowSize: actionCreators.setRestoreWindowSize
+      toggleDarkMode: actionCreators.toggleDarkMode,
+      toggleVibrance: actionCreators.toggleVibrance,
+      toggleRestoreWindowSize: actionCreators.toggleRestoreWindowSize
     },
     dispatch
   )

@@ -82,10 +82,6 @@ class OverlaySideDrawer extends React.Component {
     this.setState({ open: false })
   }
 
-  handleDarkMode = () => event => {
-    this.props.setDarkMode(!!event.target.checked)
-  }
-
   render() {
     const { classes, items, children, darkMode } = this.props
     const { anchor, open } = this.state
@@ -110,7 +106,7 @@ class OverlaySideDrawer extends React.Component {
         <div onClick={this.handleDrawerClose}>{items}</div>
         <div className={classes.drawerFooter}>
           <List>
-            <DarkmodeSwitch onChange={this.handleDarkMode} checked={darkMode} />
+            <DarkmodeSwitch onChange={this.props.toggleDarkMode} checked={darkMode} />
           </List>
         </div>
       </Drawer>
@@ -145,7 +141,7 @@ OverlaySideDrawer.propTypes = {
   items: PropTypes.node.isRequired,
   children: PropTypes.node.isRequired,
   darkMode: PropTypes.bool.isRequired,
-  setDarkMode: PropTypes.func.isRequired
+  toggleDarkMode: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
@@ -157,7 +153,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      setDarkMode: actionCreators.setDarkMode
+      toggleDarkMode: actionCreators.toggleDarkMode
     },
     dispatch
   )

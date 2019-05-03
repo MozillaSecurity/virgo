@@ -7,17 +7,17 @@ const preferences = (state = {}, action) => {
     case 'PREF_DARKMODE':
       return {
         ...state,
-        darkMode: action.darkMode
+        darkMode: !state.darkMode
       }
     case 'PREF_VIBRANCE':
       return {
         ...state,
-        vibrance: action.vibrance
+        vibrance: !state.vibrance
       }
     case 'PREF_RESTORE_WINDOW_SIZE':
       return {
         ...state,
-        restoreWindowSize: action.restoreWindowSize
+        restoreWindowSize: !state.restoreWindowSize
       }
     default:
       return state
