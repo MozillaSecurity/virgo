@@ -13,3 +13,7 @@ export const toggleVibrance = () => ({
 export const toggleRestoreWindowSize = () => ({
   type: 'PREF_RESTORE_WINDOW_SIZE'
 })
+
+export const toggleAlwaysOnTop = () => ({
+  type: 'PREF_ALWAYS_ON_TOP'
+})

@@ -19,6 +19,11 @@ const preferences = (state = {}, action) => {
         ...state,
         restoreWindowSize: !state.restoreWindowSize
       }
+    case 'PREF_ALWAYS_ON_TOP':
+      return {
+        ...state,
+        alwaysOnTop: !state.alwaysOnTop
+      }
     default:
       return state
   }

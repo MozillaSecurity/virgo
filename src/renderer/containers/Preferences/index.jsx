@@ -61,6 +61,15 @@ const PreferencesPage = props => {
               </ListItemSecondaryAction>
             </ListItem>
           </List>
+          <Divider />
+          <List>
+            <ListItem>
+              <ListItemText primary="Always on Top" primaryTypographyProps={{ variant: 'body2' }} />
+              <ListItemSecondaryAction>
+                <Switch onChange={props.toggleAlwaysOnTop} checked={props.alwaysOnTop} />
+              </ListItemSecondaryAction>
+            </ListItem>
+          </List>
         </Paper>
       </div>
     </div>
@@ -75,7 +84,8 @@ PreferencesPage.propTypes = {
   restoreWindowSize: PropTypes.bool.isRequired,
   toggleDarkMode: PropTypes.func.isRequired,
   toggleVibrance: PropTypes.func.isRequired,
-  toggleRestoreWindowSize: PropTypes.func.isRequired
+  toggleRestoreWindowSize: PropTypes.func.isRequired,
+  toggleAlwaysOnTop: PropTypes.func.isRequired
 }
 
 /* States */
@@ -83,7 +93,8 @@ const mapStateToProps = state => {
   return {
     darkMode: state.preferences.darkMode,
     vibrance: state.preferences.vibrance,
-    restoreWindowSize: state.preferences.restoreWindowSize
+    restoreWindowSize: state.preferences.restoreWindowSize,
+    alwaysOnTop: state.preferences.alwaysOnTop
   }
 }
 
@@ -93,7 +104,8 @@ const mapDispatchToProps = dispatch => {
     {
       toggleDarkMode: actionCreators.toggleDarkMode,
       toggleVibrance: actionCreators.toggleVibrance,
-      toggleRestoreWindowSize: actionCreators.toggleRestoreWindowSize
+      toggleRestoreWindowSize: actionCreators.toggleRestoreWindowSize,
+      toggleAlwaysOnTop: actionCreators.toggleAlwaysOnTop
     },
     dispatch
   )

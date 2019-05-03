@@ -18,7 +18,7 @@ export default function createMainWindow() {
     frame: false,
     minWidth: 800,
     minHeight: 600,
-    alwaysOnTop: Store.get('alwaysOnTop'),
+    alwaysOnTop: Store.get('preferences.alwaysOnTop'),
     titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
     webPreferences: {
       nodeIntegration: true
@@ -30,6 +30,7 @@ export default function createMainWindow() {
     windowOpts = Object.assign(windowOpts, Store.get('preferences.winBounds'))
   }
 
+  console.log(windowOpts)
   let mainWindow = new BrowserWindow(windowOpts)
 
   const appUrl =
