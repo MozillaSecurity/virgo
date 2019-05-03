@@ -8,11 +8,11 @@ import Reset from '@material-ui/core/CssBaseline'
 import { withStyles } from '@material-ui/core/styles'
 import '../styles/fontface-roboto.css'
 /* Custom UI */
+import ContentRoutes from './ContentRoutes'
 import SideDrawer from './Layout/SideDrawer'
 import SideDrawerList from './Layout/SideDrawerList'
 import ThemeProvider from './Themes/ThemeProvider'
 
-import ContentRoutes from '../ContentRoutes'
 import { initState } from '../store'
 
 // eslint-disable-next-line no-unused-vars

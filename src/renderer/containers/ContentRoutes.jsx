@@ -4,9 +4,9 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
 /* Pages */
-import DashboardPage from './containers/Dashboard'
-import ActivityPage from './containers/Activity'
-import PreferencesPage from './containers/Preferences'
+import DashboardPage from './Dashboard'
+import ActivityPage from './Activity'
+import PreferencesPage from './Preferences'
 
 export const ROUTES_ITEMS = [
   {
