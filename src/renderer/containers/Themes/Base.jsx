@@ -2,7 +2,7 @@
 
 const themeBase = {
   typography: {
-    fontSize: 14,
+    fontSize: 13,
     useNextVariants: true
   }
 }
