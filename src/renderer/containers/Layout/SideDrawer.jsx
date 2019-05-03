@@ -1,10 +1,10 @@
 /** @format */
 
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { useState } from 'react'
+import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 /* Styles */
 import { Drawer, AppBar, Toolbar } from '@material-ui/core'
@@ -68,75 +68,60 @@ const styles = theme => ({
   }
 })
 
-class OverlaySideDrawer extends React.Component {
-  state = {
-    open: false,
-    anchor: 'left'
-  }
+// const SideDrawer = ({ classes, items, children, toggleDarkMode, darkMode }) => {
+const SideDrawer = props => {
+  const { classes, children, items, toggleDarkMode, darkMode } = props
+  const [isOpen, setIsOpen] = useState(false)
+  const toggleDrawer = () => setIsOpen(!isOpen)
 
-  handleDrawerOpen = () => {
-    this.setState({ open: true })
-  }
+  const brand = (
+    <div className={classes.drawerHeader}>
+      <IconButton onClick={toggleDrawer} className={classes.icon} aria-label="Close Drawer">
+        <ChevronLeftIcon fontSize="small" />
+      </IconButton>
+    </div>
+  )
 
-  handleDrawerClose = () => {
-    this.setState({ open: false })
-  }
-
-  render() {
-    const { classes, items, children, darkMode } = this.props
-    const { anchor, open } = this.state
-
-    const brand = (
-      <div className={classes.drawerHeader}>
-        <IconButton onClick={this.handleDrawerClose} className={classes.icon} aria-label="Close Drawer">
-          <ChevronLeftIcon fontSize="small" />
-        </IconButton>
+  const drawer = (
+    <Drawer
+      variant="temporary"
+      anchor="left"
+      open={isOpen}
+      classes={{ paper: classes.drawerPaper }}
+      ModalProps={{ onBackdropClick: toggleDrawer }}
+    >
+      {brand}
+      <div onClick={toggleDrawer}>{items}</div>
+      <div className={classes.drawerFooter}>
+        <List>
+          <DarkmodeSwitch onChange={toggleDarkMode} checked={darkMode} />
+        </List>
       </div>
-    )
+    </Drawer>
+  )
 
-    const drawer = (
-      <Drawer
-        variant="temporary"
-        anchor={anchor}
-        open={open}
-        classes={{ paper: classes.drawerPaper }}
-        ModalProps={{ onBackdropClick: this.handleDrawerClose }}
-      >
-        {brand}
-        <div onClick={this.handleDrawerClose}>{items}</div>
-        <div className={classes.drawerFooter}>
-          <List>
-            <DarkmodeSwitch onChange={this.props.toggleDarkMode} checked={darkMode} />
-          </List>
-        </div>
-      </Drawer>
-    )
+  const appbar = (
+    <AppBar className={classes.appBar}>
+      <Toolbar disableGutters={!isOpen} className={classes.toolBar}>
+        <LogoIcon hide={isOpen} onClick={toggleDrawer} aria-label="Open Drawer">
+          <Menu fontSize="small" />
+        </LogoIcon>
+        <Typography variant="h6" color="inherit" noWrap />
+      </Toolbar>
+    </AppBar>
+  )
 
-    const appbar = (
-      <AppBar className={classes.appBar}>
-        <Toolbar disableGutters={!open} className={classes.toolBar}>
-          <LogoIcon hide={open} onClick={this.handleDrawerOpen} aria-label="Open Drawer">
-            <Menu fontSize="small" />
-          </LogoIcon>
-          <Typography variant="h6" color="inherit" noWrap />
-        </Toolbar>
-      </AppBar>
-    )
-
-    return (
-      <div>
-        <div className={classes.titleBar} />
-        {appbar}
-        {drawer}
-        <main className={classes.content} onClick={this.handleDrawerClose}>
-          {children}
-        </main>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <div className={classes.titleBar} />
+      {appbar}
+      {drawer}
+      <main className={classes.content}>{children}</main>
+    </div>
+  )
 }
 
-OverlaySideDrawer.propTypes = {
+SideDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
   items: PropTypes.node.isRequired,
   children: PropTypes.node.isRequired,
@@ -164,5 +149,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(withStyles(styles, { withTheme: true })(OverlaySideDrawer))
+  )(withStyles(styles, { withTheme: true })(SideDrawer))
 )
