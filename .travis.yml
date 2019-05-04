@@ -1,5 +1,6 @@
 # @format
-
+os: osx
+osx_image: xcode10.2
 language: node_js
 node_js: node
 env:
@@ -7,31 +8,23 @@ env:
     - APP_NAME=virgo
     - ELECTRON_CACHE=$HOME/.cache/electron
     - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-addons:
-  apt:
-    packages:
-      - xvfb
 cache:
   directories:
     - node_modules
-    - $HOME/.cache/
-install:
-  - npm install
-before_script:
-  - export DISPLAY=':99.0'
-  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+    - '$HOME/.cache/electron'
+    - '$HOME/.cache/electron-builder'
 script:
-  - npm run test:coverage
+  - npm install --silent
 before_deploy:
-  - npm dist macos linux64 windows64
+  - npm run release
 deploy:
   provider: releases
   api_key:
-    secure:
+    secure: 'EluJm/ndc85dkqEB3FOL9IJNJ+dURRW7UOsL+AJa+71IOqsoUGu7tflq71rG+AOyZPWR8Vb4RRllMueDPNrpdbUMbuQOSWWBHmuGaUjMaNjscHDh7kb9MQu+CCnpTj8WeSWJBAa9CiOFeo6wAvFnPEoqbOIGw854WYvHvj0/mLX/wKyLZgG6xgFbQX9rYkzzQkNmfheb/xpHPNAeUp71fX8zisJk91RsubggbzPHSpzW9Ey70FeRzFWHBlJ67J5riMis/xNKdenhacuPAY9bXg3tFa0xA4CZAqHAdhG/2szSLeYtYEnHehJxsdm8+REHWF814RqVJ4rHMH9mCDkY5CAtEBTSsDtqA/bSmHPbm/n0WgF3h4IHomXsYL/8CttxorObNLACeyMYa1FLZe8q+dHs9TF9GZ889HzvWD1aMVU3U814+jIuJSav1JqQQq4pFHHkZW1VEQBzPOGgXGjzAE1u/K3LaQpTuP9AFgQsAcu5svCTAgnyEkhwgLUKs/BtwCQuzrb7vVdeExxPggnYlumww5oDL0kqei+DO+J2Qnpw1nT/VgFuZTp77IfS9Sm2MDaAbU8ABnq8dWeO9xwoBWWCoyjAVpy0UmL/y9xohuv4PkI/zFODwYYjjgeyPRR1Yt1QGhYPu048QeVYJNilFYbIC1BXlNZAQIRvS6IhUxU='
   file:
-    - dist/releases/windows/${APP_NAME}-win-x64.zip
-    - dist/releases/mac/${APP_NAME}-mac-x64.zip
-    - dist/releases/linux/${APP_NAME}-linux-x64.zip
+    - dist/releases/win/x64/${APP_NAME}-*-win-x64.zip
+    - dist/releases/mac/x64/${APP_NAME}-*-mac-x64.dmg
+    - dist/releases/linux/x64/${APP_NAME}-*-linux-x86_64.AppImage
   skip_cleanup: true
   on:
     tags: true
