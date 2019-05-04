@@ -1,5 +1,6 @@
 /** @format */
 import electron from 'electron'
+
 export const appDefinition = require('../../package.json')
 
 export class Environment {
