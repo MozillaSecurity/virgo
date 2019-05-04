@@ -1,35 +1,39 @@
 /** @format */
 
-const { promisify } = require('util')
-const exec = promisify(require('child_process').exec)
 const builder = require('electron-builder')
-
-const { Platform, Arch } = builder
 const appRoot = require('app-root-path')
 
-const build = async (targets, config) => {
-  console.log(`Building on platform ${process.platform} in ${process.env.NODE_ENV} mode.`)
-  // eslint-disable-next-line no-restricted-syntax
-  for (const target of targets) {
-    // eslint-disable-next-line no-await-in-loop
-    await builder
-      .build({ targets: target, config })
-      .then(files => {
-        console.log('🙌   Build is OK!')
-        files.map(file => console.log(`• ${file}`))
-      })
-      .catch(error => {
-        console.log(`🔥   Build is toast!\n${error}`)
-      })
+const appInfo = require(appRoot.resolve('./package.json'))
+
+const { Platform, Arch } = builder
+const config = {
+  /* eslint-disable no-template-curly-in-string */
+  productName: process.platform === 'linux' ? appInfo.name.toLowerCase() : appInfo.name,
+  appId: `org.mozilla.${appInfo.name.toLowerCase()}`,
+  copyright: 'Copyright © 2019 ${author}',
+  artifactName: '${name}-${version}-${os}-${arch}.${ext}',
+  files: ['dist/main/main.js', { from: 'dist/renderer/production' }, { from: 'resources/build' }, '!**/*.map'],
+  directories: {
+    output: 'dist/releases/${os}/${arch}',
+    buildResources: 'resources/build'
+  },
+  compression: 'normal',
+  nsis: {
+    oneClick: false,
+    perMachine: true,
+    allowToChangeInstallationDirectory: true,
+    createDesktopShortcut: 'always'
+  },
+  win: {},
+  mac: {
+    category: 'public.app-category.security'
+  },
+  linux: {
+    category: 'Security'
   }
 }
 
 const main = async () => {
-  const commitNumber = (await exec('git rev-list HEAD --count')).stdout.trim()
-  const commitHash = (await exec("git log --pretty=format:'%h' -n 1")).stdout.trim()
-  const buildVersion = `${commitNumber} - ${commitHash}`
-  const bundleShortVersion = require(appRoot.resolve('./package.json')).version
-
   let targetArgs
   if (process.env.NODE_ENV === 'production') {
     targetArgs = {
@@ -50,36 +54,20 @@ const main = async () => {
     targets = Object.keys(targetArgs).map(arg => targetArgs[arg])
   }
 
-  const config = {
-    /* eslint-disable no-template-curly-in-string */
-    productName: process.platform === 'linux' ? 'virgo' : 'Virgo',
-    appId: 'org.mozilla.${name}',
-    copyright: 'Copyright © 2019 ${author}',
-    artifactName: '${name}-${version}-${os}-${arch}.${ext}',
-    files: ['dist/main/main.js', { from: 'dist/renderer/production' }, { from: 'resources/build' }, '!**/*.map'],
-    directories: {
-      output: 'dist/releases/${os}/${arch}',
-      buildResources: 'resources/build'
-    },
-    compression: 'normal',
-    nsis: {
-      oneClick: false,
-      perMachine: true,
-      allowToChangeInstallationDirectory: true,
-      createDesktopShortcut: 'always'
-    },
-    win: {},
-    mac: {
-      bundleVersion: buildVersion,
-      bundleShortVersion,
-      category: 'public.app-category.security'
-    },
-    linux: {
-      category: 'Security'
-    }
+  console.log(`Building on platform ${process.platform} in ${process.env.NODE_ENV} mode.`)
+  // eslint-disable-next-line no-restricted-syntax
+  for (const target of targets) {
+    // eslint-disable-next-line no-await-in-loop
+    await builder
+      .build({ targets: target, config })
+      .then(files => {
+        console.log('🙌   Build is OK!')
+        files.map(file => console.log(`• ${file}`))
+      })
+      .catch(error => {
+        console.log(`🔥   Build is toast!\n${error}`)
+      })
   }
-
-  build(targets, config)
 }
 
 main()
