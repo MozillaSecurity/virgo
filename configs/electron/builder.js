@@ -33,15 +33,15 @@ const main = async () => {
   let targetArgs
   if (process.env.NODE_ENV === 'production') {
     targetArgs = {
-      win64: Platform.WINDOWS.createTarget(['zip'], Arch.x64),
+      windows64: Platform.WINDOWS.createTarget(['nsis', 'portable'], Arch.x64),
       linux64: Platform.LINUX.createTarget(['AppImage'], Arch.x64),
-      macos: Platform.MAC.createTarget(['dmg'], Arch.x64)
+      macos64: Platform.MAC.createTarget(['dmg'], Arch.x64)
     }
   } else {
     targetArgs = {
-      win64: Platform.WINDOWS.createTarget(['dir'], Arch.x64),
+      windows64: Platform.WINDOWS.createTarget(['dir'], Arch.x64),
       linux64: Platform.LINUX.createTarget(['dir'], Arch.x64),
-      macos: Platform.MAC.createTarget(['dir'], Arch.x64)
+      macos64: Platform.MAC.createTarget(['dir'], Arch.x64)
     }
   }
 

@@ -44,7 +44,7 @@ module.exports = {
       version: 'detect',
       flowVersion: version('flow-bin')
     },
-    'import/core-modules': ['electron']
+    'import/core-modules': ['electron', 'electron-builder']
   },
   rules: {
     // Add rules for above plugins.

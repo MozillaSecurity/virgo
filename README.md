@@ -39,7 +39,13 @@ cd <project-name>
 npm install --silent
 ```
 
-You have now successfully checked-out Virgo. To run the development version use `npm start` and to produce a production build run `npm dist`.
+### Task Definition Server
+
+```
+json-server -p 8081 --watch tasks.json
+```
+
+You have now successfully checked-out Virgo. To run the development version use `npm start` and to produce a production build run first `npm run build` and optionally `npm run release <platform>`. Where platform can be `macos64`, `windows64`, `linux64` or empty to create a release for all platforms.
 
 > Developer extensions are enabled in non-production builds, except Devtron for analyzing IPC traffic. You can enable it by entering `require('devtron').install()` in the Developer Console.
 
