@@ -1,6 +1,4 @@
 # @format
-# MacOS code signing works only on MacOS
-# If native dependencies exist and pre-builts do not, it must be built on the corresponding platform.
 language: node_js
 node_js: node
 env:
@@ -15,11 +13,16 @@ cache:
     - '$HOME/.cache/electron-builder'
 install:
   - npm install --silent
+# MacOS code signing works only on MacOS. If native dependencies exist and
+# pre-builts do not, it must be built on each platform separately.
 jobs:
   include:
     - stage: Build
       script:
         - NODE_ENV=production npm run build
+    - stage: Test
+      script:
+        - xvfb-run npm run test:coverage
     - stage: Deploy
       if: tag IS present
       os: osx
