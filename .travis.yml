@@ -7,25 +7,24 @@ env:
     - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
     - secure: MRXzOvCnUCgXZbjwR6M9AMtZfWmMfflgwsHfufzBlNAZzQHWkSpfjI7AnWC5Sr8+FvOCfnvOld2sk+1FO6gsxAJ0GQmNVr2G4CEP7WFwh/zbEAwWfHzD3/jIFc6NDOC71ft6JMxYIVWzqUWNEm0dGOfj01iB8EKtvWV0z5NRL3YhSChi5yUnK40CJvVlM32Dv9tX1mGM6iYct/aZTAUgYSKuYVnd4GB/jBUUxrUkJI8643+nWOCVLdKX8MCTAqvBKhYUlH3BTiGeXlSU8scyEXOgpP2U27TRX5gLNhi67TH3sO15v1OgJ2N5bHCFCK0DSspO3z3n/neoY0umZrG4cJMbGJ/807qnd8ZyDpz1evzywrxU76Ksp47QfPBdfM194dKhry/EcYbSXzAzwZCGyv2/g8TFyDKY7N4f3MxuhA5dsk6JqcVTirNqAt68220b8mToE6us2kvcuQxnhpUh5bMLGimoGyI8vWTQls7/isrVE/DbhNbTC+5vlznxApNeEubKa8atYoBfBtPfcmD4GoMEEKy29Swivqk+cYrGcWjAHdQO014YPcAMk6VqWZtpy+npW+BhY602dT7kwzELwyl2A3LrymG05dp8MhSzCgt5N5OS969QcbAxaLA0W3pC8rwf+7fN5GXkpHAg90WCO7EVF4HCoL/nQELmLbWFkkE=
 cache:
+  npm: true
   directories:
-    - node_modules
-    - '$HOME/.cache/electron'
-    - '$HOME/.cache/electron-builder'
+    - $ELECTRON_CACHE
+    - $ELECTRON_BUILDER_CACHE
 install:
   - npm install --silent
 # MacOS code signing works only on MacOS. If native dependencies exist and
-# pre-builts do not, it must be built on each platform separately.
+# pre-builts do not, the released must be built on each platform separately.
 jobs:
   include:
-    - stage: Build
-      script:
-        - NODE_ENV=production npm run build
     - stage: Test
       script:
+        - npm run lint || true
         - xvfb-run npm run test:coverage
     - stage: Deploy
-      if: tag IS present
+      if: tag IS present AND type = push
       os: osx
       osx_image: xcode10.2
       script:
+        - NODE_ENV=production npm run build
         - NODE_ENV=production npm run release
