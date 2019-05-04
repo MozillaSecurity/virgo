@@ -9,7 +9,9 @@ const appRoot = require('app-root-path')
 
 const build = async (targets, config) => {
   console.log(`Building on platform ${process.platform} in ${process.env.NODE_ENV} mode.`)
+  // eslint-disable-next-line no-restricted-syntax
   for (const target of targets) {
+    // eslint-disable-next-line no-await-in-loop
     await builder
       .build({ targets: target, config })
       .then(files => {
@@ -28,12 +30,10 @@ const main = async () => {
   const buildVersion = `${commitNumber} - ${commitHash}`
   const bundleShortVersion = require(appRoot.resolve('./package.json')).version
 
-  process.env.ELECTRON_BUILDER_CACHE = appRoot.resolve('.cache/electron-builder/')
-
   let targetArgs
   if (process.env.NODE_ENV === 'production') {
     targetArgs = {
-      windows64: Platform.WINDOWS.createTarget(['nsis', 'portable'], Arch.x64),
+      windows64: Platform.WINDOWS.createTarget(['nsis'], Arch.x64),
       linux64: Platform.LINUX.createTarget(['AppImage'], Arch.x64),
       macos64: Platform.MAC.createTarget(['dmg'], Arch.x64)
     }
@@ -51,6 +51,7 @@ const main = async () => {
   }
 
   const config = {
+    /* eslint-disable no-template-curly-in-string */
     productName: process.platform === 'linux' ? 'virgo' : 'Virgo',
     appId: 'org.mozilla.${name}',
     copyright: 'Copyright © 2019 ${author}',
