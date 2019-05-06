@@ -33,6 +33,9 @@ const themeLight = merge(
     },
     drawer: {
       background: '#fafafa'
+    },
+    statusBar: {
+      background: '#fbfbfb'
     }
   },
   themeBase

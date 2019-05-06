@@ -21,6 +21,9 @@ const vibrancyTheme = merge({}, themeDark, {
   },
   drawer: {
     background: 'rgba(40, 44, 52, 0.8)'
+  },
+  statusBar: {
+    background: 'rgba(40, 44, 52, 0.4)'
   }
 })
 

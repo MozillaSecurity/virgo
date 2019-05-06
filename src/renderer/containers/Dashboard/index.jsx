@@ -275,11 +275,6 @@ class DashboardPage extends React.Component {
           <Grid item xs={12}>
             {status.showSpinner ? <CircularProgress className={classes.progress} /> : null}
           </Grid>
-          <Grid item xs={12}>
-            <Typography color="textPrimary" variant="body2">
-              {status.text}
-            </Typography>
-          </Grid>
         </Grid>
       </div>
     )

@@ -34,6 +34,9 @@ const darkTheme = merge(
     },
     drawer: {
       background: '#1e2022'
+    },
+    statusBar: {
+      background: '#2a2d2f'
     }
   },
   themeBase

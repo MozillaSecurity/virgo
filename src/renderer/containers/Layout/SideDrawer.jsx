@@ -15,6 +15,7 @@ import IconButton from '@material-ui/core/IconButton'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import Menu from '@material-ui/icons/Menu'
 import { withStyles } from '@material-ui/core/styles'
+import Paper from '@material-ui/core/Paper'
 
 /* Custom UI */
 import LogoIcon from '../../components/LogoIcon'
@@ -51,12 +52,6 @@ const styles = theme => ({
     padding: '10px 10px 0px 0px',
     ...theme.mixins.Toolbar
   },
-  statusBar: {
-    width: '100%',
-    position: 'fixed',
-    bottom: 0,
-    rounded: false
-  },
   drawerFooter: {
     width: '100%',
     position: 'fixed',
@@ -67,11 +62,19 @@ const styles = theme => ({
     padding: '75px 15px 0px 15px',
     height: '100%',
     background: theme.palette.background.default
+  },
+  statusBar: {
+    width: '100%',
+    background: theme.statusBar.background,
+    padding: '4px 10px 4px 10px',
+    position: 'fixed',
+    height: '28px',
+    bottom: 0
   }
 })
 
 const SideDrawer = props => {
-  const { classes, children, items, toggleDarkMode, darkMode } = props
+  const { classes, children, items, toggleDarkMode, darkMode, status } = props
 
   const [isOpen, setIsOpen] = useState(false)
   const toggleDrawer = () => setIsOpen(!isOpen)
@@ -115,12 +118,23 @@ const SideDrawer = props => {
     </AppBar>
   )
 
+  const statusBar = (
+    <React.Fragment>
+      <Paper className={classes.statusBar} square>
+        <Typography color="textPrimary" variant="body2">
+          {status.text}
+        </Typography>
+      </Paper>
+    </React.Fragment>
+  )
+
   return (
     <div>
       <div className={classes.titleBar} />
       {appbar}
       {drawer}
       <main className={classes.content}>{children}</main>
+      {statusBar}
     </div>
   )
 }
@@ -135,7 +149,8 @@ SideDrawer.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    darkMode: state.preferences.darkMode
+    darkMode: state.preferences.darkMode,
+    status: state.docker.status
   }
 }
 
