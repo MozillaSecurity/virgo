@@ -17,9 +17,6 @@ const styles = theme => ({
   title: {
     paddingBottom: '5px'
   },
-  category: {
-    paddingBottom: '20px'
-  },
   card: {
     maxWidth: 400
   },
@@ -59,11 +56,6 @@ const ImageListItem = props => {
 const ImageList = ({ classes, images }) => {
   return (
     <div>
-      <div className={classes.category}>
-        <Typography color="primary" variant="body1" className={classes.title}>
-          Downloaded Images
-        </Typography>
-      </div>
       {images.length === 0 ? 'No images' : ''}
       {images.map(image => (
         <ImageListItem key={image.id} {...image} />

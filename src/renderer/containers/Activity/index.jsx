@@ -1,68 +1,56 @@
 /** @format */
 
-import React from 'react'
-import { chain } from 'lodash'
-import { ipcRenderer } from 'electron'
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
-import ImageList from './ImageListItem'
+/* Styles */
+import Typography from '@material-ui/core/Typography'
+import Paper from '@material-ui/core/Paper'
+import AppBar from '@material-ui/core/AppBar'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import { withStyles } from '@material-ui/core/styles'
 
-class ActivityPage extends React.Component {
-  state = {
-    images: []
-  }
+import DockerImages from './DockerImages'
 
-  componentDidMount() {
-    ipcRenderer.on('image.list', this.listImages)
-    ipcRenderer.send('image.list')
-  }
+// eslint-disable-next-line no-unused-vars
+const styles = theme => ({})
 
-  componentWillUnmount() {
-    ipcRenderer.removeListener('image.list', this.listImages)
-  }
-
-  listImages = (event, images) => {
-    this.setState({ images: images.map(image => this.mapImage(image)) })
-  }
-
-  formatBytes = (bytes, decimals = 2) => {
-    if (bytes === 0) {
-      return '0 Bytes'
-    }
-    const k = 1024
-    const dm = decimals <= 0 ? 0 : decimals
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-
-    return `${parseFloat((bytes / k ** i).toFixed(dm))} ${sizes[i]}`
-  }
-
-  mapImage = image => {
-    return {
-      id: image.Id.substr(7, 12),
-      size: this.formatBytes(image.Size),
-      date: new Date(image.Created * 1000).toLocaleDateString(),
-      containers: image.Containers === -1 ? 0 : image.Containers,
-      tags: image.RepoTags === null ? ['N/A'] : image.RepoTags
-    }
-  }
-
-  mapContainer = container => {
-    return {
-      id: container.Id,
-      name: chain(container.Names)
-        .map(n => n.substr(1))
-        .join(', ')
-        .value(),
-      state: container.State,
-      status: `${container.State} (${container.Status})`,
-      image: container.Image
-    }
-  }
-
-  render() {
-    const { images } = this.state
-    return <ImageList images={images} />
-  }
+const TabContainer = ({ children }) => {
+  return (
+    <Typography component="div" style={{ padding: 4 * 3 }}>
+      {children}
+    </Typography>
+  )
 }
 
-export default ActivityPage
+const ActivityPage = ({ classes }) => {
+  const [value, setValue] = useState(0)
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue)
+  }
+
+  return (
+    <Paper square>
+      <AppBar position="static">
+        <Tabs value={value} onChange={handleChange} textColor="primary">
+          <Tab label="Docker Images" />
+        </Tabs>
+      </AppBar>
+      {value === 0 && (
+        <TabContainer {...classes}>
+          <DockerImages />
+        </TabContainer>
+      )}
+    </Paper>
+  )
+}
+
+ActivityPage.propTypes = {
+  classes: PropTypes.shape({
+    children: PropTypes.node
+  })
+}
+
+export default withStyles(styles)(ActivityPage)
