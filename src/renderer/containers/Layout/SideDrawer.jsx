@@ -9,6 +9,7 @@ import PropTypes from 'prop-types'
 /* Styles */
 import { Drawer, AppBar, Toolbar } from '@material-ui/core'
 import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
@@ -63,7 +64,7 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: '100px 50px 100px 50px',
+    padding: '75px 15px 0px 15px',
     height: '100%',
     background: theme.palette.background.default
   }
@@ -95,7 +96,9 @@ const SideDrawer = props => {
       <div onClick={toggleDrawer}>{items}</div>
       <div className={classes.drawerFooter}>
         <List>
-          <DarkmodeSwitch onChange={toggleDarkMode} checked={darkMode} />
+          <ListItem>
+            <DarkmodeSwitch onChange={toggleDarkMode} checked={darkMode} />
+          </ListItem>
         </List>
       </div>
     </Drawer>
