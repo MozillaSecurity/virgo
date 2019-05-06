@@ -3,10 +3,14 @@ import { merge } from 'lodash'
 
 import themeBase from './Base'
 
-const themeLight = merge(
+const darkTheme = merge(
   {
+    shadows: Array(25).fill('none'),
     palette: {
-      type: 'light',
+      type: 'dark',
+      background: {
+        default: '#1e2022'
+      },
       primary: {
         main: '#00bcd4'
       },
@@ -17,18 +21,22 @@ const themeLight = merge(
     overrides: {
       MuiToolbar: {
         root: {
-          backgroundColor: '#fefefe',
+          backgroundColor: '#1e2022',
           color: '#c8c8c8'
         }
       },
       MuiAppBar: {
         colorPrimary: {
-          backgroundColor: '#fefefe'
+          backgroundColor: '#1e2022',
+          boxShadow: 'none'
         }
       }
+    },
+    drawer: {
+      background: '#1e2022'
     }
   },
   themeBase
 )
 
-export default themeLight
+export default darkTheme

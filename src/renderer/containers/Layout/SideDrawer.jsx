@@ -39,8 +39,7 @@ const styles = theme => ({
   drawerPaper: {
     position: 'relative',
     width: 240,
-    background:
-      theme.palette.type === 'dark' && theme.palette.background === 'transparent' ? 'rgba(40, 44, 52, 0.8)' : null
+    background: theme.drawer.background
   },
   drawerHeader: {
     display: 'flex',
@@ -64,7 +63,9 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: '100px 50px 100px 50px'
+    padding: '100px 50px 100px 50px',
+    height: '100%',
+    background: theme.palette.background.default
   }
 })
 

@@ -2,50 +2,61 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import { remote } from 'electron'
+import PropTypes from 'prop-types'
 
 /* Styles */
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
+import Reset from '@material-ui/core/CssBaseline'
+import '../../styles/fontface-roboto.css'
 
+/* Custom UI Themes */
 import themeDark from './Dark'
 import themeLight from './Light'
+import themeVibrance from './Vibrancy'
 
-class ThemeProvider extends React.Component {
-  adjustIfVibrance = (theme, darkMode, vibrance) => {
-    /* eslint-disable no-param-reassign */
-    if (darkMode && vibrance) {
-      theme.palette.background = 'transparent'
-      theme.overrides.MuiToolbar.root.background = 'transparent !important'
-      theme.overrides.MuiAppBar.colorPrimary.background = 'transparent !important'
-      remote.getCurrentWindow().setVibrancy('dark')
-    } else {
-      delete theme.palette.background
-      delete theme.overrides.MuiToolbar.root.background
-      delete theme.overrides.MuiAppBar.colorPrimary.background
+const styles = () => ({
+  '@global': {
+    '*, *::after, *::before': {
+      userSelect: 'none',
+      userDrag: 'none',
+      cursor: 'default !important'
     }
   }
+})
 
-  render() {
-    const { darkMode, vibrance, children } = this.props
+const ThemeProvider = props => {
+  const { toggleDarkMode, toggleVibrance, children } = props
 
-    this.adjustIfVibrance(themeDark, darkMode, vibrance)
-
-    return <MuiThemeProvider theme={createMuiTheme(darkMode ? themeDark : themeLight)}>{children}</MuiThemeProvider>
+  let theme = themeLight
+  if (toggleVibrance && toggleDarkMode) {
+    remote.getCurrentWindow().setVibrancy('dark')
+    theme = themeVibrance
   }
+  if (!toggleVibrance && toggleDarkMode) {
+    remote.getCurrentWindow().setVibrancy('')
+    theme = themeDark
+  }
+
+  return (
+    <MuiThemeProvider theme={createMuiTheme(theme)}>
+      <Reset />
+      {children}
+    </MuiThemeProvider>
+  )
 }
 
 ThemeProvider.propTypes = {
   children: PropTypes.node.isRequired,
-  darkMode: PropTypes.bool.isRequired,
-  vibrance: PropTypes.bool.isRequired
+  toggleDarkMode: PropTypes.bool.isRequired,
+  toggleVibrance: PropTypes.bool.isRequired
 }
 
 function mapStateToProps(state) {
   return {
-    darkMode: state.preferences.darkMode,
-    vibrance: state.preferences.vibrance
+    toggleDarkMode: state.preferences.darkMode,
+    toggleVibrance: state.preferences.vibrance
   }
 }
 
-export default connect(mapStateToProps)(ThemeProvider)
+export default withStyles(styles)(connect(mapStateToProps)(ThemeProvider))

@@ -34,44 +34,42 @@ const styles = theme => ({
 const PreferencesPage = props => {
   const { classes } = props
   return (
-    <div>
-      <div className={classes.category}>
-        <Typography color="primary" variant="body1" className={classes.title}>
-          Appearance
-        </Typography>
-        <Paper>
-          <List>
-            <DarkmodeSwitch onChange={props.toggleDarkMode} checked={props.darkMode} />
-          </List>
-          <Divider />
-          <List>
-            <ListItem>
-              <ListItemText primary="Restore Window Size & Position" primaryTypographyProps={{ variant: 'body2' }} />
-              <ListItemSecondaryAction>
-                <Switch onChange={props.toggleRestoreWindowSize} checked={props.restoreWindowSize} />
-              </ListItemSecondaryAction>
-            </ListItem>
-          </List>
-          <Divider />
-          <List>
-            <ListItem>
-              <ListItemText primary="Add Window Vibrance" primaryTypographyProps={{ variant: 'body2' }} />
-              <ListItemSecondaryAction>
-                <Switch onChange={props.toggleVibrance} checked={props.vibrance} />
-              </ListItemSecondaryAction>
-            </ListItem>
-          </List>
-          <Divider />
-          <List>
-            <ListItem>
-              <ListItemText primary="Always on Top" primaryTypographyProps={{ variant: 'body2' }} />
-              <ListItemSecondaryAction>
-                <Switch onChange={props.toggleAlwaysOnTop} checked={props.alwaysOnTop} />
-              </ListItemSecondaryAction>
-            </ListItem>
-          </List>
-        </Paper>
-      </div>
+    <div className={classes.category}>
+      <Typography color="primary" variant="body1" className={classes.title}>
+        Appearance
+      </Typography>
+      <Paper>
+        <List>
+          <DarkmodeSwitch onChange={props.toggleDarkMode} checked={props.darkMode} />
+        </List>
+        <Divider />
+        <List>
+          <ListItem>
+            <ListItemText primary="Restore Window Size & Position" primaryTypographyProps={{ variant: 'body2' }} />
+            <ListItemSecondaryAction>
+              <Switch onChange={props.toggleRestoreWindowSize} checked={props.restoreWindowSize} />
+            </ListItemSecondaryAction>
+          </ListItem>
+        </List>
+        <Divider />
+        <List>
+          <ListItem>
+            <ListItemText primary="Add Window Vibrance" primaryTypographyProps={{ variant: 'body2' }} />
+            <ListItemSecondaryAction>
+              <Switch onChange={props.toggleVibrance} checked={props.vibrance} />
+            </ListItemSecondaryAction>
+          </ListItem>
+        </List>
+        <Divider />
+        <List>
+          <ListItem>
+            <ListItemText primary="Always on Top" primaryTypographyProps={{ variant: 'body2' }} />
+            <ListItemSecondaryAction>
+              <Switch onChange={props.toggleAlwaysOnTop} checked={props.alwaysOnTop} />
+            </ListItemSecondaryAction>
+          </ListItem>
+        </List>
+      </Paper>
     </div>
   )
 }
