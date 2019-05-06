@@ -17,3 +17,8 @@ export const toggleRestoreWindowSize = () => ({
 export const toggleAlwaysOnTop = () => ({
   type: 'PREF_ALWAYS_ON_TOP'
 })
+
+export const updateTaskURL = value => ({
+  type: 'PREF_UPDATE_TASK_URL',
+  value
+})

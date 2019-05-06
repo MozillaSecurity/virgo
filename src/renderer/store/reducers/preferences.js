@@ -24,6 +24,11 @@ const preferences = (state = {}, action) => {
         ...state,
         alwaysOnTop: !state.alwaysOnTop
       }
+    case 'PREF_UPDATE_TASK_URL':
+      return {
+        ...state,
+        taskURL: action.value
+      }
     default:
       return state
   }
