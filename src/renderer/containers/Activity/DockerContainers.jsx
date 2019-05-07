@@ -18,7 +18,7 @@ import EnhancedTableHead from './Table/TableHead'
 import EnhancedTableToolbar from './Table/TableToolbar'
 import { stableSort, getSorting } from './Table/helpers'
 
-import { mapImages } from '../../lib/docker'
+import { mapContainers } from '../../lib/docker'
 
 const styles = theme => ({
   root: {
@@ -33,11 +33,11 @@ const styles = theme => ({
 })
 
 const rows = [
-  { id: '_id', numeric: false, disablePadding: true, label: 'ID', help: 'Image ID (truncated)' },
-  { id: 'size', numeric: false, disablePadding: false, label: 'Size', help: 'Image size' },
-  { id: 'date', numeric: false, disablePadding: false, label: 'Date', help: 'Creation date' },
-  { id: 'containers', numeric: true, disablePadding: false, label: 'Containers', help: 'Running containers' },
-  { id: 'tags', numeric: false, disablePadding: false, label: 'Tags', help: 'Image tags' }
+  { id: '_id', numeric: false, disablePadding: true, label: 'ID', help: 'Container ID (truncated)' },
+  { id: 'name', numeric: false, disablePadding: false, label: 'Name', help: 'Container name' },
+  { id: 'state', numeric: false, disablePadding: false, label: 'State', help: 'Container state' },
+  { id: 'status', numeric: false, disablePadding: false, label: 'Status', help: 'Container status' },
+  { id: 'image', numeric: false, disablePadding: false, label: 'Image', help: 'Associated Image' }
 ]
 
 class EnhancedTable extends React.Component {
@@ -51,16 +51,16 @@ class EnhancedTable extends React.Component {
   }
 
   componentDidMount() {
-    ipcRenderer.on('image.list', this.listImages)
-    ipcRenderer.send('image.list')
+    ipcRenderer.on('container.list', this.listContainers)
+    ipcRenderer.send('container.list')
   }
 
   componentWillUnmount() {
-    ipcRenderer.removeListener('image.list', this.listImages)
+    ipcRenderer.removeListener('container.list', this.listContainers)
   }
 
-  listImages = (event, images) => {
-    this.setState({ data: mapImages(images) })
+  listContainers = (event, containers) => {
+    this.setState({ data: mapContainers(containers) })
   }
 
   handleRequestSort = (event, property) => {
@@ -152,10 +152,10 @@ class EnhancedTable extends React.Component {
                       <TableCell component="th" scope="row" padding="none">
                         {n._id}
                       </TableCell>
-                      <TableCell align="right">{n.size}</TableCell>
-                      <TableCell align="right">{n.date}</TableCell>
-                      <TableCell align="right">{n.containers}</TableCell>
-                      <TableCell align="right">{n.tags}</TableCell>
+                      <TableCell align="right">{n.name}</TableCell>
+                      <TableCell align="right">{n.state}</TableCell>
+                      <TableCell align="right">{n.status}</TableCell>
+                      <TableCell align="right">{n.image}</TableCell>
                     </TableRow>
                   )
                 })}

@@ -12,16 +12,13 @@ import Tab from '@material-ui/core/Tab'
 import { withStyles } from '@material-ui/core/styles'
 
 import DockerImages from './DockerImages'
+import DockerContainers from './DockerContainers'
 
 // eslint-disable-next-line no-unused-vars
 const styles = theme => ({})
 
 const TabContainer = ({ children }) => {
-  return (
-    <Typography component="div" style={{ padding: 4 * 3 }}>
-      {children}
-    </Typography>
-  )
+  return <Typography component="div">{children}</Typography>
 }
 
 const ActivityPage = ({ classes }) => {
@@ -36,6 +33,7 @@ const ActivityPage = ({ classes }) => {
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} textColor="primary">
           <Tab label="Docker Images" />
+          <Tab label="Docker Containers" />
         </Tabs>
       </AppBar>
       {value === 0 && (
@@ -43,9 +41,15 @@ const ActivityPage = ({ classes }) => {
           <DockerImages />
         </TabContainer>
       )}
+      {value === 1 && (
+        <TabContainer {...classes}>
+          <DockerContainers />
+        </TabContainer>
+      )}
     </Paper>
   )
 }
+// <DockerImages />
 
 ActivityPage.propTypes = {
   classes: PropTypes.shape({

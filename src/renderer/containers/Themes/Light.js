@@ -36,6 +36,9 @@ const themeLight = merge(
     },
     statusBar: {
       background: '#fbfbfb'
+    },
+    tableBar: {
+      background: '#efefef'
     }
   },
   themeBase

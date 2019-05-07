@@ -37,6 +37,9 @@ const darkTheme = merge(
     },
     statusBar: {
       background: '#2a2d2f'
+    },
+    tableBar: {
+      background: '#1b1c1e'
     }
   },
   themeBase
