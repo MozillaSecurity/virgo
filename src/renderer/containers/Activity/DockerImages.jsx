@@ -36,8 +36,8 @@ const rows = [
   { id: '_id', numeric: false, disablePadding: true, label: 'ID', help: 'Image ID (truncated)' },
   { id: 'size', numeric: false, disablePadding: false, label: 'Size', help: 'Image size' },
   { id: 'date', numeric: false, disablePadding: false, label: 'Date', help: 'Creation date' },
-  { id: 'containers', numeric: true, disablePadding: false, label: 'Containers', help: 'Running containers' },
-  { id: 'tags', numeric: false, disablePadding: false, label: 'Tags', help: 'Image tags' }
+  { id: 'tags', numeric: false, disablePadding: false, label: 'Tags', help: 'Image tags' },
+  { id: 'containers', numeric: true, disablePadding: false, label: 'Containers', help: 'Running containers' }
 ]
 
 class EnhancedTable extends React.Component {
@@ -154,8 +154,8 @@ class EnhancedTable extends React.Component {
                       </TableCell>
                       <TableCell align="right">{n.size}</TableCell>
                       <TableCell align="right">{n.date}</TableCell>
-                      <TableCell align="right">{n.containers}</TableCell>
                       <TableCell align="right">{n.tags}</TableCell>
+                      <TableCell align="right">{n.containers}</TableCell>
                     </TableRow>
                   )
                 })}
