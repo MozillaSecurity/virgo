@@ -14,7 +14,7 @@ cache:
 install:
   - npm install --silent
 # MacOS code signing works only on MacOS. If native dependencies exist and
-# pre-builts do not, the released must be built on each platform separately.
+# pre-builts do not, the release must be built on each platform separately.
 jobs:
   include:
     - stage: Test
