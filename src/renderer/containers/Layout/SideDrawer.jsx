@@ -14,8 +14,9 @@ import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import Menu from '@material-ui/icons/Menu'
-import { withStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
+import Grid from '@material-ui/core/Grid'
+import { withStyles } from '@material-ui/core/styles'
 
 /* Custom UI */
 import LogoIcon from '../../components/LogoIcon'
@@ -74,7 +75,7 @@ const styles = theme => ({
 })
 
 const SideDrawer = props => {
-  const { classes, children, items, toggleDarkMode, darkMode, status } = props
+  const { classes, children, items, toggleDarkMode, darkMode, docker } = props
 
   const [isOpen, setIsOpen] = useState(false)
   const toggleDrawer = () => setIsOpen(!isOpen)
@@ -119,13 +120,24 @@ const SideDrawer = props => {
   )
 
   const statusBar = (
-    <React.Fragment>
-      <Paper className={classes.statusBar} square>
-        <Typography color="textPrimary" variant="body2">
-          {status.text}
-        </Typography>
-      </Paper>
-    </React.Fragment>
+    <div>
+      <Grid container spacing={24}>
+        <Grid item xs={10}>
+          <Paper className={classes.statusBar} square>
+            <Typography color="textPrimary" variant="body2">
+              {docker.status.text}
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={2}>
+          <Paper className={classes.statusBar} sqaure>
+            <Typography color="textPrimary" variant="body2">
+              {docker.definitions.length} Tasks
+            </Typography>
+          </Paper>
+        </Grid>
+      </Grid>
+    </div>
   )
 
   return (
@@ -150,7 +162,8 @@ SideDrawer.propTypes = {
 const mapStateToProps = state => {
   return {
     darkMode: state.preferences.darkMode,
-    status: state.docker.status
+    status: state.docker.status,
+    docker: state.docker
   }
 }
 

@@ -8,11 +8,14 @@ const initialState = {
   containerData: [],
   status: {
     state: -1,
+    delta: 0,
+    elapsed: 0,
+    start: 0,
     text: 'Launch me!',
-    showSpinner: false,
-    startTime: 0,
-    timeElapsed: 0
-  }
+    handle: -1,
+    showSpinner: false
+  },
+  history: []
 }
 
 const docker = (state = initialState, action) => {

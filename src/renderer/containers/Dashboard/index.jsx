@@ -8,18 +8,13 @@ import { ipcRenderer } from 'electron'
 import axios from 'axios'
 
 /* Styles */
-import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import IconButton from '@material-ui/core/IconButton'
-import PlayCircleFilled from '@material-ui/icons/PlayCircleFilled'
-import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled'
-import Stop from '@material-ui/icons/Stop'
 import { withStyles } from '@material-ui/core/styles'
 
 /* Custom UI */
 import Logo from '../../images/virgo-full.svg'
-import TimeCounter from '../../components/TimeCounter'
+import RunTimer from './RunTimer'
 
 import * as actionCreators from '../../store/actions'
 
@@ -28,16 +23,12 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     textAlign: 'center'
-  },
-  controlButton: {
-    fontSize: '64px'
   }
 })
 
-const IDLE = -1
+const STOPPED = -1
 const RUNNING = 0
 const PAUSED = 1
-const STOPPED = 2
 
 class DashboardPage extends React.Component {
   async componentDidMount() {
@@ -64,7 +55,6 @@ class DashboardPage extends React.Component {
     this.refreshSheduler = setInterval(() => ipcRenderer.send('container.inspect', container), 5000)
     setStatus({ text: `Task is running`, state: RUNNING })
     this.toggleSpinner()
-    this.toggleTimer()
   }
 
   inspectContainer = (event, data) => {
@@ -79,21 +69,18 @@ class DashboardPage extends React.Component {
     setContainerData([])
     setContainer({})
     this.toggleSpinner()
-    this.toggleTimer()
   }
 
   pauseContainer = (event, id) => {
     const { setStatus } = this.props
     setStatus({ text: `Container ${id} paused successfully.`, state: PAUSED })
     this.toggleSpinner()
-    this.toggleTimer()
   }
 
   unpauseContainer = (event, id) => {
     const { setStatus } = this.props
     setStatus({ text: `Container ${id} unpaused successfully.`, state: RUNNING })
     this.toggleSpinner()
-    this.toggleTimer()
   }
 
   imageError = (event, error) => {
@@ -108,87 +95,60 @@ class DashboardPage extends React.Component {
   }
 
   onStart = () => {
-    const { definitions, container, setStatus, status } = this.props
+    const { definitions, setStatus } = this.props
 
-    switch (status.state) {
-      case IDLE:
-      case STOPPED: {
-        if (definitions.length === 0) {
-          setStatus({ text: `No remote tasks available.` })
-        } else {
-          this.toggleSpinner()
-          const image = this.analyzeSuitableTask(definitions)
-          setStatus({ text: `Initializing task.` })
-          ipcRenderer.send('container.run', image)
-        }
-        break
-      }
-      case PAUSED: {
-        const { id } = container
-        if (!id) {
-          setStatus({ text: `No container ID available.` })
-        } else {
-          this.toggleSpinner()
-          setStatus({ text: `Unpausing container with ID: ${id}` })
-          ipcRenderer.send('container.unpause', { id })
-        }
-        break
-      }
-      default:
-        break
+    if (definitions.length === 0) {
+      setStatus({ text: `No remote tasks available.` })
+    } else {
+      this.toggleSpinner()
+      const image = this.analyzeSuitableTask(definitions)
+      setStatus({ text: `Initializing task.` })
+      ipcRenderer.send('container.run', image)
+    }
+  }
+
+  onResume = () => {
+    const { container, setStatus } = this.props
+    const { id } = container
+
+    if (!id) {
+      setStatus({ text: `No container ID available.` })
+    } else {
+      this.toggleSpinner()
+      setStatus({ text: `Unpausing container with ID: ${id}` })
+      ipcRenderer.send('container.unpause', { id })
     }
   }
 
   onStop = () => {
-    const { container, setStatus, status } = this.props
+    const { container, setStatus } = this.props
+    const { id } = container
 
-    switch (status.state) {
-      case PAUSED:
-      case RUNNING: {
-        const { id } = container
-        if (!id) {
-          setStatus({ text: `No container ID available.` })
-        } else {
-          this.toggleSpinner()
-          setStatus({ text: `Stopping container with ID: ${id}` })
-          ipcRenderer.send('container.stop', { id })
-        }
-        break
-      }
-      default:
-        break
+    if (!id) {
+      setStatus({ text: `No container ID available.` })
+    } else {
+      this.toggleSpinner()
+      setStatus({ text: `Stopping container with ID: ${id}` })
+      ipcRenderer.send('container.stop', { id })
     }
   }
 
   onPause = () => {
-    const { container, setStatus, status } = this.props
+    const { container, setStatus } = this.props
+    const { id } = container
 
-    switch (status.state) {
-      case RUNNING: {
-        const { id } = container
-        if (!id) {
-          setStatus({ text: `No container ID available.` })
-        } else {
-          this.toggleSpinner()
-          setStatus({ text: `Pausing container with ID: ${id}` })
-          ipcRenderer.send('container.pause', { id })
-        }
-        break
-      }
-      default:
-        break
+    if (!id) {
+      setStatus({ text: `No container ID available.` })
+    } else {
+      this.toggleSpinner()
+      setStatus({ text: `Pausing container with ID: ${id}` })
+      ipcRenderer.send('container.pause', { id })
     }
   }
 
   toggleSpinner = () => {
     const { setStatus, status } = this.props
     setStatus({ showSpinner: !status.showSpinner })
-  }
-
-  updateTimer = () => {
-    const { setStatus, status } = this.props
-    const delta = Date.now() - status.startTime
-    setStatus({ timeElapsed: status.timeElapsed + delta, startTime: Date.now() })
   }
 
   analyzeSuitableTask = definitions => {
@@ -207,31 +167,8 @@ class DashboardPage extends React.Component {
       })
   }
 
-  toggleTimer() {
-    const { setStatus, status } = this.props
-
-    switch (status.state) {
-      case RUNNING: {
-        setStatus({ startTime: Date.now() })
-        this.timer = setInterval(this.updateTimer, 1000)
-        break
-      }
-      case STOPPED: {
-        setStatus({ state: IDLE, timeElapsed: 0, startTime: 0, text: `` })
-        clearInterval(this.timer)
-        break
-      }
-      default:
-        clearInterval(this.timer)
-    }
-  }
-
   render() {
-    const { classes, definitions, status } = this.props
-
-    const isRunning = status.state === RUNNING
-    const isPaused = status.state === PAUSED
-    const isStopped = status.state === STOPPED
+    const { classes, status, setStatus } = this.props
 
     return (
       <div className={classes.root}>
@@ -239,39 +176,16 @@ class DashboardPage extends React.Component {
           <Grid item xs={12}>
             <img src={Logo} alt="Virgo" />
           </Grid>
-          <Grid item xs={12}>
-            {isRunning || isPaused ? (
-              <Typography color="textPrimary" variant="h3">
-                <TimeCounter timeElapsed={status.timeElapsed} />
-              </Typography>
-            ) : (
-              <Typography color="textPrimary" variant="body1">
-                {definitions.length} Tasks available.
-              </Typography>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container spacing={8} justify="center">
-              <Grid item>
-                {!isRunning || isStopped || isPaused ? (
-                  <IconButton onClick={this.onStart}>
-                    <PlayCircleFilled className={classes.controlButton} />
-                  </IconButton>
-                ) : (
-                  <IconButton onClick={this.onPause}>
-                    <PauseCircleFilled className={classes.controlButton} />
-                  </IconButton>
-                )}
-              </Grid>
-              <Grid item>
-                {isRunning || isPaused ? (
-                  <IconButton onClick={this.onStop}>
-                    <Stop className={classes.controlButton} />
-                  </IconButton>
-                ) : null}
-              </Grid>
-            </Grid>
-          </Grid>
+          <RunTimer
+            elapsed={status.delta}
+            setStatus={setStatus}
+            status={status}
+            startCallback={this.onStart}
+            pauseCallback={this.onPause}
+            resumeCallback={this.onResume}
+            stopCallback={this.onStop}
+          />
+
           <Grid item xs={12}>
             {status.showSpinner ? <CircularProgress className={classes.progress} /> : null}
           </Grid>
@@ -281,7 +195,6 @@ class DashboardPage extends React.Component {
   }
 }
 
-/* PropTypes */
 DashboardPage.propTypes = {
   classes: PropTypes.object.isRequired,
   setImageDefinitions: PropTypes.func.isRequired,
@@ -299,7 +212,6 @@ DashboardPage.propTypes = {
   setStatus: PropTypes.func.isRequired
 }
 
-/* States */
 const mapStateToProps = state => {
   return {
     definitions: state.docker.definitions,
@@ -312,7 +224,6 @@ const mapStateToProps = state => {
   }
 }
 
-/* Dispatchers */
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
@@ -327,7 +238,6 @@ const mapDispatchToProps = dispatch => {
   )
 }
 
-/* Connect map's to Container */
 export default connect(
   mapStateToProps,
   mapDispatchToProps
