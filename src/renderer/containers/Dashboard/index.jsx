@@ -22,6 +22,7 @@ import * as actionCreators from '../../store/actions'
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    width: '100% !important', // Beware: https://material-ui.com/layout/grid/#negative-margin
     textAlign: 'center'
   }
 })
@@ -171,26 +172,24 @@ class DashboardPage extends React.Component {
     const { classes, status, setStatus } = this.props
 
     return (
-      <div className={classes.root}>
-        <Grid container spacing={40}>
-          <Grid item xs={12}>
-            <img src={Logo} alt="Virgo" />
-          </Grid>
-          <RunTimer
-            elapsed={status.delta}
-            setStatus={setStatus}
-            status={status}
-            startCallback={this.onStart}
-            pauseCallback={this.onPause}
-            resumeCallback={this.onResume}
-            stopCallback={this.onStop}
-          />
-
-          <Grid item xs={12}>
-            {status.showSpinner ? <CircularProgress className={classes.progress} /> : null}
-          </Grid>
+      <Grid container spacing={40} className={classes.root}>
+        <Grid item xs={12}>
+          <img src={Logo} alt="Virgo" />
         </Grid>
-      </div>
+        <RunTimer
+          elapsed={status.delta}
+          setStatus={setStatus}
+          status={status}
+          startCallback={this.onStart}
+          pauseCallback={this.onPause}
+          resumeCallback={this.onResume}
+          stopCallback={this.onStop}
+        />
+
+        <Grid item xs={12}>
+          {status.showSpinner ? <CircularProgress className={classes.progress} /> : null}
+        </Grid>
+      </Grid>
     )
   }
 }

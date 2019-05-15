@@ -25,6 +25,10 @@ import DarkmodeSwitch from '../../components/DarkmodeSwitch'
 import * as actionCreators from '../../store/actions'
 
 const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    width: '100% !important'
+  },
   appBar: {
     padding: '10px 15px 0px 15px'
   },
@@ -65,12 +69,15 @@ const styles = theme => ({
     background: theme.palette.background.default
   },
   statusBar: {
+    flexGrow: 1,
+    bottom: 0,
     width: '100%',
+    position: 'fixed'
+  },
+  statusBarContent: {
     background: theme.statusBar.background,
     padding: '4px 10px 4px 10px',
-    position: 'fixed',
-    height: '28px',
-    bottom: 0
+    height: '28px'
   }
 })
 
@@ -110,7 +117,7 @@ const SideDrawer = props => {
 
   const appbar = (
     <AppBar className={classes.appBar}>
-      <Toolbar disableGutters={!isOpen} className={classes.toolBar}>
+      <Toolbar disableGutters={!isOpen}>
         <LogoIcon hide={isOpen} onClick={toggleDrawer} aria-label="Open Drawer">
           <Menu fontSize="small" />
         </LogoIcon>
@@ -120,17 +127,18 @@ const SideDrawer = props => {
   )
 
   const statusBar = (
-    <div>
-      <Grid container spacing={24}>
+    // Beware: https://material-ui.com/layout/grid/#negative-margin
+    <div className={classes.statusBar}>
+      <Grid container spacing={0} justify="space-between" alignItems="flex-end">
         <Grid item xs={10}>
-          <Paper className={classes.statusBar} square>
+          <Paper square className={classes.statusBarContent}>
             <Typography color="textPrimary" variant="body2">
               {docker.status.text}
             </Typography>
           </Paper>
         </Grid>
         <Grid item xs={2}>
-          <Paper className={classes.statusBar} sqaure>
+          <Paper square className={classes.statusBarContent}>
             <Typography color="textPrimary" variant="body2">
               {docker.definitions.length} Tasks
             </Typography>
@@ -141,7 +149,7 @@ const SideDrawer = props => {
   )
 
   return (
-    <div>
+    <div className={classes.root}>
       <div className={classes.titleBar} />
       {appbar}
       {drawer}
