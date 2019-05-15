@@ -22,3 +22,8 @@ export const updateTaskURL = value => ({
   type: 'PREF_UPDATE_TASK_URL',
   value
 })
+
+export const updateContactEmail = value => ({
+  type: 'PREF_UPDATE_CONTACT_EMAIL',
+  value
+})

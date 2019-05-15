@@ -28,6 +28,8 @@ const DockerPrefs = props => {
       .catch(error => setValue({ error: true, status: error.message }))
   }
 
+  const updateContactEmail = email => {}
+
   return (
     <form>
       <List>
@@ -50,6 +52,25 @@ const DockerPrefs = props => {
             }}
           />
         </ListItem>
+        <ListItem>
+          <TextField
+            onKeyPress={event => {
+              if (event.key === 'Enter') {
+                updateContactEmail(event.target.value)
+                event.preventDefault()
+              }
+            }}
+            error={value.error}
+            type="url"
+            label="Contact Email"
+            placeholder={props.contactEmail}
+            fullWidth
+            helperText={value.status}
+            InputLabelProps={{
+              shrink: true
+            }}
+          />
+        </ListItem>
       </List>
     </form>
   )
@@ -57,19 +78,23 @@ const DockerPrefs = props => {
 
 DockerPrefs.propTypes = {
   updateTaskURL: PropTypes.func.isRequired,
-  taskURL: PropTypes.string.isRequired
+  taskURL: PropTypes.string.isRequired,
+  updateContactEmail: PropTypes.func.isRequired,
+  contactEmail: PropTypes.string.isRequired
 }
 
 const mapStateToProps = state => {
   return {
-    taskURL: state.preferences.taskURL
+    taskURL: state.preferences.taskURL,
+    contactEmail: state.preferences.contactEmail
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      updateTaskURL: actionCreators.updateTaskURL
+      updateTaskURL: actionCreators.updateTaskURL,
+      updateContactEmail: actionCreators.contactEmail
     },
     dispatch
   )

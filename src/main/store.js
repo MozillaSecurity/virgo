@@ -9,7 +9,8 @@ const defaults = {
     restoreWindowSize: true,
     alwaysOnTop: false,
     winBounds: {},
-    taskURL: 'http://localhost:8081/tasks'
+    taskURL: 'http://localhost:8081/tasks',
+    contactEmail: 'fuzzing@mozilla.com'
   }
 }
 

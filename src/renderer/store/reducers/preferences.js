@@ -29,6 +29,11 @@ const preferences = (state = {}, action) => {
         ...state,
         taskURL: action.value
       }
+    case 'PREF_UPDATE_CONTACT_EMAIL':
+      return {
+        ...state,
+        contactEmail: action.value
+      }
     default:
       return state
   }

@@ -49,7 +49,6 @@ const ActivityPage = ({ classes }) => {
     </Paper>
   )
 }
-// <DockerImages />
 
 ActivityPage.propTypes = {
   classes: PropTypes.shape({
