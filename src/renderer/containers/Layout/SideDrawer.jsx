@@ -27,6 +27,14 @@ const styles = theme => ({
     height: '100%',
     margin: 0
   },
+  content: {
+    flexGrow: 1,
+    // Plus 5px padding-top cause drop-shadow gets cut by AppBar.
+    padding: '5px 15px 30px 15px',
+    height: '85%',
+    overflow: 'auto',
+    background: theme.palette.background.default
+  },
   icon: {
     padding: '8px'
   },
@@ -37,25 +45,17 @@ const styles = theme => ({
   },
   drawerHeader: {
     display: 'flex',
-    alignItems: 'center',
-    // To equal the height of the AppBar.
+    alignItems: 'flex-end',
+    // Equal the height of the AppBar + TitleBar.
     height: '74px',
     justifyContent: 'flex-end',
-    padding: '10px 10px 0px 0px',
+    padding: '0px 10px 10px 0px',
     ...theme.mixins.Toolbar
   },
   drawerFooter: {
     width: '100%',
     position: 'fixed',
     bottom: 0
-  },
-  content: {
-    flexGrow: 1,
-    marginTop: '74px',
-    padding: '0px 15px 0px 15px',
-    height: '85%',
-    overflow: 'auto',
-    background: theme.palette.background.default
   }
 })
 

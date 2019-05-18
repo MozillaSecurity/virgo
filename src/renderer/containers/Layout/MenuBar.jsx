@@ -9,21 +9,31 @@ import LogoIcon from '../../components/LogoIcon'
 
 const styles = theme => ({
   root: {
-    padding: '10px 15px 0px 15px'
+    flexGrow: 1
+  },
+  appBar: {
+    position: 'static'
+  },
+  toolBar: {
+    // Placement of elements inside the Toolbar.
+    padding: '0px 15px 10px 15px'
   }
 })
 
 const MenuBar = props => {
   const { classes, toggle, isOpen } = props
+
   return (
-    <AppBar className={classes.root}>
-      <Toolbar disableGutters={!isOpen}>
-        <LogoIcon hide={isOpen} onClick={toggle} aria-label="Open Drawer">
-          <Menu fontSize="small" />
-        </LogoIcon>
-        <Typography variant="h6" color="inherit" noWrap />
-      </Toolbar>
-    </AppBar>
+    <div className={classes.root}>
+      <AppBar className={classes.appBar}>
+        <Toolbar disableGutters={!isOpen} variant="dense" className={classes.toolBar}>
+          <LogoIcon hide={isOpen} onClick={toggle} aria-label="Open Drawer">
+            <Menu fontSize="small" />
+          </LogoIcon>
+          <Typography variant="h6" color="inherit" noWrap />
+        </Toolbar>
+      </AppBar>
+    </div>
   )
 }
 

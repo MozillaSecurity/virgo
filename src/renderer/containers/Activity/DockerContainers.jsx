@@ -24,9 +24,6 @@ const styles = theme => ({
   root: {
     width: '100%'
   },
-  table: {
-    minWidth: 1020
-  },
   tableWrapper: {
     overflowX: 'auto'
   }
@@ -120,7 +117,7 @@ class EnhancedTable extends React.Component {
         <EnhancedTableToolbar numSelected={selected.length} title="" />
 
         <div className={classes.tableWrapper}>
-          <Table className={classes.table} aria-labelledby="tableTitle">
+          <Table aria-labelledby="tableTitle">
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}

@@ -5,18 +5,25 @@ import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
   root: {
+    flexGrow: 1
+  },
+  titleBar: {
     width: '100%',
-    height: '30px',
+    height: '25px',
     userSelect: 'none',
     appRegion: 'drag',
-    position: 'fixed'
+    position: 'static'
   }
 })
 
 const TitleBar = props => {
   const { classes } = props
 
-  return <div className={classes.root} />
+  return (
+    <div className={classes.root}>
+      <div name="TitleBar" className={classes.titleBar} />
+    </div>
+  )
 }
 
 export default withStyles(styles, { withTheme: true })(TitleBar)
