@@ -11,7 +11,7 @@
     "esbenp.prettier-vscode",
     "christian-kohler.npm-intellisense",
     "pflannery.vscode-versionlens",
-    "vsmobile.vscode-react-native",
+    "msjsdiag.vscode-react-native",
     "alefragnani.project-manager",
     "formulahendry.code-runner"
   ]
