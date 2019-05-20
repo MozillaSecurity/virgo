@@ -1,7 +1,8 @@
 /** @format */
 import electron from 'electron'
+import { resolve } from 'app-root-path'
 
-export const appDefinition = require('../../package.json')
+export const Package = require(resolve('./package.json'))
 
 export class Environment {
   static get isPackaged() {

@@ -1,7 +1,7 @@
 /** @format */
 
 import * as url from 'url'
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, app } from 'electron'
 import { resolve } from 'app-root-path'
 
 import { Environment } from './common'
@@ -35,7 +35,7 @@ export default function createMainWindow() {
   let mainWindow = new BrowserWindow(windowOpts)
 
   const appUrl =
-    Environment.isPackaged() || Environment.isTest()
+    Environment.isPackaged || Environment.isTest
       ? url.format({
           pathname: resolve('dist/renderer/production/index.html'),
           protocol: 'file:',
@@ -45,7 +45,7 @@ export default function createMainWindow() {
 
   mainWindow.loadURL(appUrl)
 
-  if (Environment.isDevelopment()) {
+  if (Environment.isDevelopment) {
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
     ;(async () => {
       const addons = await import('./addons')
@@ -53,13 +53,38 @@ export default function createMainWindow() {
     })()
   }
 
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show()
+  /*
+   * This event is usually emitted after the did-finish-load event, but for pages with many
+   * remote resources, it may be emitted before the did-finish-load event.
+   * mainWindow.once('ready-to-show', () => {})
+   */
+  mainWindow.webContents.on('did-finish-load', () => {
+    if (!mainWindow) {
+      throw new Error('mainWindow is not defined.')
+    }
+    if (process.env.START_MINIMIZED) {
+      mainWindow.minimize()
+    } else {
+      mainWindow.show()
+      mainWindow.focus()
+    }
   })
 
-  mainWindow.on('close', () => {
+  mainWindow.on('close', event => {
     // Save window size and position.
     Store.set('preferences.winBounds', mainWindow.getBounds())
+
+    if (Environment.isMacOS) {
+      if (app.quitting) {
+        mainWindow = null
+      } else if (mainWindow !== null) {
+        event.preventDefault()
+        mainWindow.hide()
+      }
+    }
+  })
+
+  mainWindow.on('closed', () => {
     mainWindow = null
   })
 

@@ -3,7 +3,7 @@
 import { app, dialog } from 'electron'
 
 import { Sentry } from './sentry'
-import { appDefinition } from './common'
+import { Package, Environment } from './common'
 import createTray from './tray'
 import createMainWindow from './window'
 import './api/ipc'
@@ -16,8 +16,8 @@ const createWindow = () => {
   tray = createTray(mainWindow)
 
   app.setAboutPanelOptions({
-    applicationName: appDefinition.name,
-    applicationVersion: appDefinition.version
+    applicationName: Package.name,
+    applicationVersion: Package.version
   })
 }
 
@@ -26,14 +26,20 @@ app.on('ready', () => {
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  if (!Environment.isMacOS) {
     app.quit()
   }
 })
 
+app.on('before-quit', () => {
+  if (Environment.isMacOS) {
+    app.quitting = true
+  }
+})
+
 app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow()
+  if (Environment.isMacOS && mainWindow !== null) {
+    mainWindow.show()
   }
 })
 
