@@ -3,38 +3,41 @@
 import { Tray, Menu } from 'electron'
 import { resolve } from 'app-root-path'
 
-const isMacOS = process.platform === 'darwin'
+import { Environment, JS } from './common'
 
 export default function createTray(window) {
-  const tray = new Tray(resolve('resources/build/icons/16x16.png'))
-
-  const trayMenu = Menu.buildFromTemplate([
+  let template = [
     {
       label: 'Settings'
     },
     {
       label: 'Toggle Window',
       click: () => {
+        // eslint-disable-next-line no-unused-expressions
         window.isVisible() ? window.hide() : window.show()
       }
     },
     {
+      label: 'Quit',
+      accelerator: Environment.isMacOS ? 'Command+Q' : 'Ctrl+Q',
+      selector: 'terminate:'
+    }
+  ]
+
+  if (Environment.isDevelopment) {
+    template = JS.insert(template, 1, {
       label: 'Toggle DevTools',
-      accelerator: isMacOS ? 'Option+Command+I' : 'Alt+Command+I',
+      accelerator: Environment.isMacOS ? 'Option+Command+I' : 'Alt+Command+I',
       click: () => {
         window.show()
         window.toggleDevTools()
       }
-    },
-    {
-      label: 'Quit',
-      accelerator: isMacOS ? 'Command+Q' : 'Ctrl+Q',
-      selector: 'terminate:'
-    }
-  ])
+    })
+  }
 
+  const tray = new Tray(resolve('resources/build/icons/16x16.png'))
   tray.setToolTip('Virgo')
-  tray.setContextMenu(trayMenu)
+  tray.setContextMenu(Menu.buildFromTemplate(template))
 
   return tray
 }

@@ -4,19 +4,36 @@ import electron from 'electron'
 export const appDefinition = require('../../package.json')
 
 export class Environment {
-  static isPackaged = () => {
+  static get isPackaged() {
     return (electron.app || electron.remote.app).isPackaged
   }
 
-  static isTest = () => {
+  static get isTest() {
     return process.env.NODE_ENV === 'test'
   }
 
-  static isProduction = () => {
+  static get isProduction() {
     return process.env.NODE_ENV === 'production'
   }
 
-  static isDevelopment = () => {
+  static get isDevelopment() {
     return process.env.NODE_ENV === 'development'
+  }
+
+  static get isMacOS() {
+    return process.platform === 'darwin'
+  }
+}
+
+export class JS {
+  static insert(array, index, ...newItems) {
+    return [
+      // Part of the Array before the specified index.
+      ...array.slice(0, index),
+      // Inserted items.
+      ...newItems,
+      // Part of the Array after the specified index.
+      ...array.slice(index)
+    ]
   }
 }
