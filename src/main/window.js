@@ -18,6 +18,7 @@ export default function createMainWindow() {
     frame: false,
     minWidth: 800,
     minHeight: 600,
+    show: false,
     alwaysOnTop: Store.get('preferences.alwaysOnTop'),
     titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
     webPreferences: {
@@ -52,6 +53,10 @@ export default function createMainWindow() {
     })()
   }
 
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+  })
+
   mainWindow.on('close', () => {
     // Save window size and position.
     Store.set('preferences.winBounds', mainWindow.getBounds())
@@ -60,12 +65,10 @@ export default function createMainWindow() {
 
   mainWindow.on('unresponsive', () => {
     console.log('App became unresponsive.')
-    // TODO: Add a handler.
   })
 
   mainWindow.webContents.on('crashed', () => {
     console.log(`WebContents crashed.`)
-    // TODO: Add a handler.
   })
 
   return mainWindow
