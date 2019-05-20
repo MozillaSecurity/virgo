@@ -21,7 +21,8 @@ export default function createMainWindow() {
     alwaysOnTop: Store.get('preferences.alwaysOnTop'),
     titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      preload: resolve('src/main/sentry.js')
     }
   }
 

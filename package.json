@@ -128,6 +128,7 @@
     "prettier-eslint-cli": "^4.7.1",
     "react-test-renderer": "^16.8.6",
     "regenerator-runtime": "^0.13.2",
+    "@sentry/cli": "^1.43.0",
     "spectron": "^5.0.0",
     "stylelint": "^10.0.1",
     "stylelint-config-prettier": "^5.1.0",
@@ -137,6 +138,7 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
+    "@sentry/electron": "^0.17.1",
     "app-root-path": "^2.2.1",
     "axios": "^0.18.0",
     "dockerode": "^2.5.8",

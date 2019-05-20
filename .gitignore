@@ -10,3 +10,6 @@
 
 # Misc
 .DS_Store
+
+# Configs
+configs/sentry/sentryclirc

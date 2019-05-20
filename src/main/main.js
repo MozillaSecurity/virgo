@@ -1,7 +1,8 @@
 /** @format */
 
-import { app } from 'electron'
+import { app, dialog } from 'electron'
 
+import { Sentry } from './sentry'
 import { appDefinition } from './common'
 import createTray from './tray'
 import createMainWindow from './window'
@@ -20,7 +21,9 @@ const createWindow = () => {
   })
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -35,7 +38,12 @@ app.on('activate', () => {
 })
 
 process.on('uncaughtException', error => {
-  console.log('App crashed unexpectedly.')
-  console.log(`${error}`)
-  // Todo: Add a handler.
+  const message = 'Uncaught exception in the Main process. Application will shut down.'
+  const messageBoxOptions = {
+    type: 'error',
+    title: 'Main process crashed unexpectedly!',
+    message
+  }
+  console.log(message)
+  dialog.showMessageBox(messageBoxOptions)
 })
