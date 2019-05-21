@@ -35,14 +35,26 @@ class DashboardPage extends React.Component {
   async componentDidMount() {
     await this.fetchTaskDefinitions()
 
-    ipcRenderer.on('image.pull', (event, data) => this.pullImage(event, data))
-    ipcRenderer.on('container.run', (event, data) => this.runContainer(event, data))
-    ipcRenderer.on('container.inspect', (event, data) => this.inspectContainer(event, data))
-    ipcRenderer.on('container.stop', (event, data) => this.stopContainer(event, data))
-    ipcRenderer.on('container.pause', (event, data) => this.pauseContainer(event, data))
-    ipcRenderer.on('container.unpause', (event, data) => this.unpauseContainer(event, data))
-    ipcRenderer.on('image.error', (event, data) => this.imageError(event, data))
-    ipcRenderer.on('container.error', (event, data) => this.containerError(event, data))
+    ipcRenderer.on('image.pull', this.pullImage)
+    ipcRenderer.on('container.run', this.runContainer)
+    ipcRenderer.on('container.inspect', this.inspectContainer)
+    ipcRenderer.on('container.stop', this.stopContainer)
+    ipcRenderer.on('container.pause', this.pauseContainer)
+    ipcRenderer.on('container.unpause', this.unpauseContainer)
+    ipcRenderer.on('image.error', this.imageError)
+    ipcRenderer.on('container.error', this.containerError)
+  }
+
+  componentWillUnmount() {
+    ipcRenderer.removeListener('container.stop', this.stopContainer)
+    ipcRenderer.removeListener('image.pull', this.pullImage)
+    ipcRenderer.removeListener('container.run', this.runContainer)
+    ipcRenderer.removeListener('container.inspect', this.inspectContainer)
+    ipcRenderer.removeListener('container.stop', this.stopContainer)
+    ipcRenderer.removeListener('container.pause', this.pauseContainer)
+    ipcRenderer.removeListener('container.unpause', this.unpauseContainer)
+    ipcRenderer.removeListener('image.error', this.imageError)
+    ipcRenderer.removeListener('container.error', this.containerError)
   }
 
   pullImage = (event, data) => {
