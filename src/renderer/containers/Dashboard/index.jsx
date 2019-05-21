@@ -55,6 +55,11 @@ class DashboardPage extends React.Component {
     ipcRenderer.removeListener('container.unpause', this.unpauseContainer)
     ipcRenderer.removeListener('image.error', this.imageError)
     ipcRenderer.removeListener('container.error', this.containerError)
+
+    /* Unless stopContainer() was not called before. */
+    if (this.refreshScheduler) {
+      clearInterval(this.refreshScheduler)
+    }
   }
 
   pullImage = (event, data) => {
@@ -65,7 +70,7 @@ class DashboardPage extends React.Component {
   runContainer = (event, container) => {
     const { setContainer, setStatus } = this.props
     setContainer(container)
-    this.refreshSheduler = setInterval(() => ipcRenderer.send('container.inspect', container), 5000)
+    this.refreshScheduler = setInterval(() => ipcRenderer.send('container.inspect', container), 5000)
     setStatus({ text: `Task is running`, state: RUNNING })
     this.toggleSpinner()
   }
@@ -77,7 +82,7 @@ class DashboardPage extends React.Component {
 
   stopContainer = (event, id) => {
     const { setContainerData, setContainer, setStatus } = this.props
-    clearInterval(this.refreshSheduler)
+    clearInterval(this.refreshScheduler)
     setStatus({ text: `Container ${id} stopped successfully.`, state: STOPPED })
     setContainerData([])
     setContainer({})
@@ -103,7 +108,7 @@ class DashboardPage extends React.Component {
 
   containerError = (event, error) => {
     const { setStatus } = this.props
-    clearInterval(this.refreshSheduler)
+    clearInterval(this.refreshScheduler)
     setStatus({ text: `Container error: ${error.reason}` })
   }
 
