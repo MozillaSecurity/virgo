@@ -1,8 +1,9 @@
 /** @format */
+/* eslint-disable no-underscore-dangle */
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
+import { ipcRenderer } from 'electron'
 
 /* Styles */
 import Table from '@material-ui/core/Table'
@@ -12,14 +13,15 @@ import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Checkbox from '@material-ui/core/Checkbox'
+import { withStyles } from '@material-ui/core/styles'
 
-import { ipcRenderer } from 'electron'
 import EnhancedTableHead from './Table/TableHead'
 import EnhancedTableToolbar from './Table/TableToolbar'
 import { stableSort, getSorting } from './Table/helpers'
 
 import { mapImages } from '../../lib/docker'
 
+// eslint-disable-next-line no-unused-vars
 const styles = theme => ({
   root: {
     width: '100%'
@@ -114,7 +116,7 @@ class EnhancedTable extends React.Component {
     return selected.indexOf(id) !== -1
   }
 
-  onDelete = () => {
+  onRemove = () => {
     const { selected, data } = this.state
 
     const identifiers = selected.map(entry => data[entry]._id)
@@ -124,10 +126,10 @@ class EnhancedTable extends React.Component {
   imageRemove = (event, args) => {
     if (args.error) {
       console.log(`ERROR: ${JSON.stringify(args.data)}`)
-    } else {
-      this.setState({ selected: [] })
-      ipcRenderer.send('image.list')
+      return
     }
+    this.setState({ selected: [] })
+    ipcRenderer.send('image.list')
   }
 
   onRefresh = () => {
@@ -143,10 +145,9 @@ class EnhancedTable extends React.Component {
         <EnhancedTableToolbar
           numSelected={selected.length}
           title=""
-          onDeleteCallback={this.onDelete}
+          onRemoveCallback={this.onRemove}
           onRefreshListCallback={this.onRefresh}
         />
-
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"

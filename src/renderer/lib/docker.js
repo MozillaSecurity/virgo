@@ -40,7 +40,7 @@ export const mapContainers = containers => {
         .join(', ')
         .value(),
       state: container.State,
-      status: `${container.State} | (${container.Status})`,
+      status: container.Status,
       image: container.Image
     }
   })

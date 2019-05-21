@@ -49,7 +49,7 @@ ipcMain.on('container.run', (event, args) => {
 })
 
 /*
- * Stop and remove a running container.
+ * Stop a running container.
  */
 ipcMain.on('container.stop', (event, args) => {
   const { id } = args
@@ -102,6 +102,25 @@ ipcMain.on('container.unpause', (event, args) => {
     })
     .catch(error => {
       event.sender.send('container.error', error)
+    })
+})
+
+/**
+ * Remove a container.
+ */
+ipcMain.on('container.remove', (event, args) => {
+  const { id } = args
+
+  docker
+    .getContainer(id)
+    .then(container => {
+      return container.remove({ force: true })
+    })
+    .then(() => {
+      event.sender.send('container.remove', { data: null, error: false })
+    })
+    .catch(error => {
+      event.sender.send('container.remove', { data: error, error: true })
     })
 })
 

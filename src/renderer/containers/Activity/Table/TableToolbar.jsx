@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import RefreshIcon from '@material-ui/icons/Refresh'
+import StopIcon from '@material-ui/icons/Stop'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import { lighten } from '@material-ui/core/styles/colorManipulator'
 import { withStyles } from '@material-ui/core/styles'
@@ -44,7 +45,15 @@ const styles = theme => ({
 })
 
 const EnhancedTableToolbar = props => {
-  const { classes, numSelected, title, onDeleteCallback, onRefreshListCallback, onFilterListCallback } = props
+  const {
+    classes,
+    numSelected,
+    title,
+    onRemoveCallback,
+    onStopCallback,
+    onRefreshListCallback,
+    onFilterListCallback
+  } = props
 
   return (
     <Toolbar className={`${classes.root} ${numSelected > 0 ? classes.highlight : ''} `}>
@@ -62,11 +71,20 @@ const EnhancedTableToolbar = props => {
       <div className={classes.spacer} />
       <div className={classes.actions}>
         {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton aria-label="Delete" onClick={onDeleteCallback}>
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
+          <React.Fragment>
+            {onStopCallback && (
+              <Tooltip title="Stop Container">
+                <IconButton aria-label="Stop container" onClick={onStopCallback}>
+                  <StopIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Tooltip title="Remove">
+              <IconButton aria-label="Remove" onClick={onRemoveCallback}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </React.Fragment>
         ) : (
           <React.Fragment>
             <Tooltip title="Refresh List">
