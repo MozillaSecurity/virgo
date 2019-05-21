@@ -128,11 +128,15 @@ ipcMain.on('image.list', (event, args) => {
  */
 ipcMain.on('image.remove', (event, args) => {
   const { name } = args
+
   docker.docker
     .getImage(name)
     .remove()
     .then(image => {
-      event.sender.send('image.remove', name)
+      event.sender.send('image.remove', { data: image, error: false })
+    })
+    .catch(error => {
+      event.sender.send('image.remove', { data: error, error: true })
     })
 })
 

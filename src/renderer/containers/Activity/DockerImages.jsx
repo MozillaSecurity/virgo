@@ -24,9 +24,7 @@ const styles = theme => ({
   root: {
     width: '100%'
   },
-  table: {
-    minWidth: 1020
-  },
+  table: {},
   tableWrapper: {
     overflowX: 'auto'
   }
@@ -52,11 +50,13 @@ class EnhancedTable extends React.Component {
 
   componentDidMount() {
     ipcRenderer.on('image.list', this.listImages)
+    ipcRenderer.on('image.remove', this.imageRemove)
     ipcRenderer.send('image.list')
   }
 
   componentWillUnmount() {
     ipcRenderer.removeListener('image.list', this.listImages)
+    ipcRenderer.removeListener('image.remove', this.imageRemove)
   }
 
   listImages = (event, images) => {
@@ -108,17 +108,60 @@ class EnhancedTable extends React.Component {
     this.setState({ rowsPerPage: event.target.value })
   }
 
-  isSelected = id => this.state.selected.indexOf(id) !== -1
+  isSelected = id => {
+    const { selected } = this.state
+
+    return selected.indexOf(id) !== -1
+  }
+
+  onDelete = () => {
+    const { selected, data } = this.state
+
+    const identifiers = selected.map(entry => data[entry]._id)
+    identifiers.map(id => ipcRenderer.send('image.remove', { name: id }))
+  }
+
+  imageRemove = (event, args) => {
+    if (args.error) {
+      console.log(`ERROR: ${JSON.stringify(args.data)}`)
+    } else {
+      this.setState({ selected: [] })
+      ipcRenderer.send('image.list')
+    }
+  }
+
+  onRefresh = () => {
+    ipcRenderer.send('image.list')
+  }
 
   render() {
     const { classes } = this.props
     const { data, order, orderBy, selected, rowsPerPage, page } = this.state
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 
     return (
       <Paper className={classes.root}>
-        <EnhancedTableToolbar numSelected={selected.length} title="" />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          title=""
+          onDeleteCallback={this.onDelete}
+          onRefreshListCallback={this.onRefresh}
+        />
 
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          backIconButtonProps={{
+            'aria-label': 'Previous Page'
+          }}
+          nextIconButtonProps={{
+            'aria-label': 'Next Page'
+          }}
+          onChangePage={this.handleChangePage}
+          onChangeRowsPerPage={this.handleChangeRowsPerPage}
+        />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
             <EnhancedTableHead
@@ -159,29 +202,9 @@ class EnhancedTable extends React.Component {
                     </TableRow>
                   )
                 })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </TableBody>
           </Table>
         </div>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          backIconButtonProps={{
-            'aria-label': 'Previous Page'
-          }}
-          nextIconButtonProps={{
-            'aria-label': 'Next Page'
-          }}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
       </Paper>
     )
   }
