@@ -3,6 +3,7 @@
 const builder = require('electron-builder')
 const appRoot = require('app-root-path')
 
+// eslint-disable-next-line import/no-dynamic-require
 const appInfo = require(appRoot.resolve('./package.json'))
 
 const { Platform, Arch } = builder
@@ -12,12 +13,22 @@ const config = {
   appId: `org.mozilla.${appInfo.name.toLowerCase()}`,
   copyright: 'Copyright © 2019 ${author}',
   artifactName: '${name}-${version}-${os}-${arch}.${ext}',
-  files: ['dist/main/main.js', { from: 'dist/renderer/production' }, { from: 'resources/build' }, '!**/*.map'],
+  files: [
+    'dist/main/main.js',
+    { from: 'dist/renderer/production' },
+    { from: 'resources/build' },
+    '!**/*.map'
+  ],
   directories: {
     output: 'dist/releases/${os}/${arch}',
     buildResources: 'resources/build'
   },
   compression: 'normal',
+  publish: [
+    {
+      provider: 'github'
+    }
+  ],
   nsis: {
     oneClick: false,
     perMachine: true,
@@ -39,7 +50,7 @@ const main = async () => {
     targetArgs = {
       windows64: Platform.WINDOWS.createTarget(['nsis'], Arch.x64),
       linux64: Platform.LINUX.createTarget(['AppImage'], Arch.x64),
-      macos64: Platform.MAC.createTarget(['dmg'], Arch.x64)
+      macos64: Platform.MAC.createTarget(['dmg', 'zip'], Arch.x64)
     }
   } else {
     targetArgs = {
