@@ -32,8 +32,8 @@ export const setStatus = value => ({
   status: value
 })
 
-export const reset = () => ({
-  type: 'RESET'
+export const resetStatus = () => ({
+  type: 'RESET_STATUS'
 })
 
 export const setVisibilityFilter = filter => ({

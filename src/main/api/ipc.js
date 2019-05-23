@@ -160,10 +160,6 @@ ipcMain.on('image.remove', (event, args) => {
 })
 
 /**
- * Update a running or paused container.
- */
-
-/**
  * Get container information.
  */
 ipcMain.on('container.inspect', (event, args) => {
@@ -172,16 +168,12 @@ ipcMain.on('container.inspect', (event, args) => {
   docker
     .getContainer(id)
     .then(container => {
-      container
-        .inspect()
-        .then(data => {
-          event.sender.send('container.inspect', data)
-        })
-        .catch(error => {
-          event.sender.send('container.error', error)
-        })
+      return container.inspect()
+    })
+    .then(data => {
+      event.sender.send('container.inspect', { data, error: false })
     })
     .catch(error => {
-      event.sender.send('container.error', error)
+      event.sender.send('container.inspect', { data: error, error: true })
     })
 })

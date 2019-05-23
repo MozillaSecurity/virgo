@@ -29,7 +29,6 @@ const PAUSED = 1
 
 class RunTimer extends React.Component {
   getInitialState() {
-    // status, needs to be in redux
     return {
       state: STOPPED,
       delta: 0,
@@ -42,9 +41,43 @@ class RunTimer extends React.Component {
   state = this.getInitialState()
 
   componentDidMount() {
-    const { elapsed, setStatus } = this.props
+    const { elapsed, status, setStatus } = this.props
 
     setStatus({ elapsed })
+
+    /* Re-initialize timer with previous time spent. */
+    if (status.state === RUNNING) {
+      setStatus({
+        handle: setInterval(this.update, 1000),
+        state: RUNNING,
+        elapsed
+      })
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { status } = this.props
+
+    /*
+     * This needs serious improvements. The setInterval() handle needs to get destroyed
+     * if no callback was fired. Which can be the case if the container was terminated
+     * outside of the normal workflow, i.e by terminating the container in the Activity
+     * tab or outside of the application.
+     */
+    if (status.state === STOPPED) {
+      clearInterval(status.handle)
+    }
+  }
+
+  componentWillUnmount() {
+    const { status, setStatus } = this.props
+
+    clearInterval(status.handle)
+
+    /* Save current spent time for a late re-initialization. */
+    if (status.state === RUNNING) {
+      setStatus({ elapsed: status.delta })
+    }
   }
 
   onStart = () => {
@@ -68,7 +101,7 @@ class RunTimer extends React.Component {
     if (status.state === RUNNING || status.state === PAUSED) {
       stopCallback()
       clearInterval(status.handle)
-      setStatus({ ...this.getInitialState() }) // 1) save elpased to redux?
+      setStatus({ ...this.getInitialState() })
     }
   }
 
@@ -81,7 +114,7 @@ class RunTimer extends React.Component {
       clearInterval(status.handle)
       setStatus({
         state: PAUSED,
-        elapsed: status.delta // 1) save elapsed to redux?
+        elapsed: status.delta
       })
     }
   }
@@ -103,16 +136,11 @@ class RunTimer extends React.Component {
   update = () => {
     const { setStatus, status } = this.props
 
-    setStatus({
-      delta: Date.now() - status.start + status.elapsed // 2) ... or write delta to redux on every interval?
-    })
-  }
-
-  componentUnmount() {
-    const { status } = this.props
-
-    clearInterval(status.handle)
-    // 1) save elpased to redux?
+    if (status.state === RUNNING) {
+      setStatus({
+        delta: Date.now() - status.start + status.elapsed
+      })
+    }
   }
 
   render() {
@@ -173,7 +201,8 @@ RunTimer.propTypes = {
   pauseCallback: PropTypes.func.isRequired,
   resumeCallback: PropTypes.func.isRequired,
   setStatus: PropTypes.func.isRequired,
-  status: PropTypes.object.isRequired
+  status: PropTypes.object.isRequired,
+  elapsed: PropTypes.number
 }
 
 const mapStateToProps = state => {

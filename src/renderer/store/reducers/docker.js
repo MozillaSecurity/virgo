@@ -7,6 +7,7 @@ const initialState = {
   container: {},
   containerData: [],
   status: {
+    id: null,
     state: -1,
     delta: 0,
     elapsed: 0,
@@ -53,8 +54,13 @@ const docker = (state = initialState, action) => {
           ...action.status
         }
       }
-    case 'RESET':
-      return initialState
+    case 'RESET_STATUS':
+      return {
+        ...state,
+        status: {
+          ...initialState.status
+        }
+      }
     case 'SET_VISIBILITY_FILTER':
       return action.filter
     default:

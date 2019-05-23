@@ -35,6 +35,8 @@ class DashboardPage extends React.Component {
   async componentDidMount() {
     await this.fetchTaskDefinitions()
 
+    this.startInspectScheduler()
+
     ipcRenderer.on('image.pull', this.pullImage)
     ipcRenderer.on('container.run', this.runContainer)
     ipcRenderer.on('container.inspect', this.inspectContainer)
@@ -46,6 +48,8 @@ class DashboardPage extends React.Component {
   }
 
   componentWillUnmount() {
+    this.stopInspectScheduler()
+
     ipcRenderer.removeListener('container.stop', this.stopContainer)
     ipcRenderer.removeListener('image.pull', this.pullImage)
     ipcRenderer.removeListener('container.run', this.runContainer)
@@ -55,74 +59,93 @@ class DashboardPage extends React.Component {
     ipcRenderer.removeListener('container.unpause', this.unpauseContainer)
     ipcRenderer.removeListener('image.error', this.imageError)
     ipcRenderer.removeListener('container.error', this.containerError)
-
-    /* Unless stopContainer() was not called before. */
-    if (this.refreshScheduler) {
-      clearInterval(this.refreshScheduler)
-    }
   }
 
+  /*
+   * IPC Event Handlers
+   */
   pullImage = (event, data) => {
     const { setStatus } = this.props
+
     setStatus({ text: `Downloading task: ${data}` })
   }
 
   runContainer = (event, container) => {
     const { setContainer, setStatus } = this.props
+
     setContainer(container)
-    this.refreshScheduler = setInterval(() => ipcRenderer.send('container.inspect', container), 5000)
-    setStatus({ text: `Task is running`, state: RUNNING })
+    this.startInspectScheduler(container.id)
+    setStatus({ text: `Task is running`, id: container.id, state: RUNNING })
     this.toggleSpinner()
   }
 
   inspectContainer = (event, data) => {
-    const { setContainerData } = this.props
+    const { setContainerData, setContainer, setStatus, resetStatus, status } = this.props
+
+    if (data.error && status.id) {
+      setContainerData([])
+      setContainer({})
+      this.stopInspectScheduler()
+      resetStatus()
+      setStatus({ text: `Task stopped outside of normal workflow.`, state: STOPPED, id: null, delta: 0 })
+      return
+    }
+
     setContainerData(data)
   }
 
   stopContainer = (event, id) => {
     const { setContainerData, setContainer, setStatus } = this.props
-    clearInterval(this.refreshScheduler)
+
     setStatus({ text: `Container ${id} stopped successfully.`, state: STOPPED })
+    this.stopInspectScheduler()
+    this.toggleSpinner()
     setContainerData([])
     setContainer({})
-    this.toggleSpinner()
   }
 
   pauseContainer = (event, id) => {
     const { setStatus } = this.props
+
     setStatus({ text: `Container ${id} paused successfully.`, state: PAUSED })
     this.toggleSpinner()
   }
 
   unpauseContainer = (event, id) => {
     const { setStatus } = this.props
+
     setStatus({ text: `Container ${id} unpaused successfully.`, state: RUNNING })
     this.toggleSpinner()
   }
 
   imageError = (event, error) => {
     const { setStatus } = this.props
-    setStatus({ text: `Image error: ${error.reason}` })
+
+    setStatus({ text: `Image error: ${error.reason}`, state: STOPPED })
   }
 
   containerError = (event, error) => {
     const { setStatus } = this.props
-    clearInterval(this.refreshScheduler)
-    setStatus({ text: `Container error: ${error.reason}` })
+
+    setStatus({ text: `Container error: ${error.reason}`, state: STOPPED })
+    this.stopInspectScheduler()
   }
 
+  /*
+   * Action initiators
+   */
   onStart = () => {
     const { definitions, setStatus } = this.props
 
     if (definitions.length === 0) {
       setStatus({ text: `No remote tasks available.` })
-    } else {
-      this.toggleSpinner()
-      const image = this.analyzeSuitableTask(definitions)
-      setStatus({ text: `Initializing task.` })
-      ipcRenderer.send('container.run', image)
+      return
     }
+
+    this.toggleSpinner()
+    const image = this.analyzeSuitableTask(definitions)
+    setStatus({ text: `Initializing task.` })
+    ipcRenderer.send('container.run', image)
   }
 
   onResume = () => {
@@ -131,11 +154,12 @@ class DashboardPage extends React.Component {
 
     if (!id) {
       setStatus({ text: `No container ID available.` })
-    } else {
-      this.toggleSpinner()
-      setStatus({ text: `Unpausing container with ID: ${id}` })
-      ipcRenderer.send('container.unpause', { id })
+      return
     }
+
+    this.toggleSpinner()
+    setStatus({ text: `Unpausing container with ID: ${id}` })
+    ipcRenderer.send('container.unpause', { id })
   }
 
   onStop = () => {
@@ -144,11 +168,12 @@ class DashboardPage extends React.Component {
 
     if (!id) {
       setStatus({ text: `No container ID available.` })
-    } else {
-      this.toggleSpinner()
-      setStatus({ text: `Stopping container with ID: ${id}` })
-      ipcRenderer.send('container.stop', { id })
+      return
     }
+
+    this.toggleSpinner()
+    setStatus({ text: `Stopping container with ID: ${id}` })
+    ipcRenderer.send('container.stop', { id })
   }
 
   onPause = () => {
@@ -157,10 +182,37 @@ class DashboardPage extends React.Component {
 
     if (!id) {
       setStatus({ text: `No container ID available.` })
-    } else {
-      this.toggleSpinner()
-      setStatus({ text: `Pausing container with ID: ${id}` })
-      ipcRenderer.send('container.pause', { id })
+      return
+    }
+
+    this.toggleSpinner()
+    setStatus({ text: `Pausing container with ID: ${id}` })
+    ipcRenderer.send('container.pause', { id })
+  }
+
+  /*
+   * Component specifc actions
+   */
+  startInspectScheduler = containerId => {
+    const { status } = this.props
+    const id = containerId || status.id
+
+    if (!id) {
+      console.log(`No container is running at the moment.`)
+      return
+    }
+
+    if (id && status.state !== STOPPED) {
+      console.log(`Starting inspection scheduler for container: ${id}`)
+      this.inspectScheduler = setInterval(() => ipcRenderer.send('container.inspect', { id }), 5000)
+    }
+  }
+
+  stopInspectScheduler = () => {
+    if (this.inspectScheduler) {
+      console.log(`Removing inspection scheduler.`)
+      clearInterval(this.inspectScheduler)
+      this.inspectScheduler = null
     }
   }
 
@@ -175,6 +227,7 @@ class DashboardPage extends React.Component {
 
   fetchTaskDefinitions() {
     const { taskURL, setImageDefinitions } = this.props
+
     axios
       .get(taskURL)
       .then(response => {
@@ -202,7 +255,6 @@ class DashboardPage extends React.Component {
           resumeCallback={this.onResume}
           stopCallback={this.onStop}
         />
-
         <Grid item xs={12}>
           {status.showSpinner ? <CircularProgress className={classes.progress} /> : null}
         </Grid>
@@ -225,7 +277,8 @@ DashboardPage.propTypes = {
   containerError: PropTypes.object,
   taskURL: PropTypes.string.isRequired,
   status: PropTypes.object.isRequired,
-  setStatus: PropTypes.func.isRequired
+  setStatus: PropTypes.func.isRequired,
+  resetStatus: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
@@ -248,7 +301,8 @@ const mapDispatchToProps = dispatch => {
       setContainerError: actionCreators.setContainerError,
       setContainerData: actionCreators.setContainerData,
       setContainer: actionCreators.setContainer,
-      setStatus: actionCreators.setStatus
+      setStatus: actionCreators.setStatus,
+      resetStatus: actionCreators.resetStatus
     },
     dispatch
   )
