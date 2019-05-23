@@ -58,7 +58,11 @@ class ErrorBoundary extends React.Component {
     if (error) {
       return (
         <div>
-          <ErrorDialog show content={this.errorContent(error, errorInfo)} onSuccessCallback={() => this.sendReport()} />
+          <ErrorDialog
+            show
+            content={this.errorContent(error, errorInfo)}
+            onSuccessCallback={() => this.sendReport()}
+          />
         </div>
       )
     }

@@ -10,7 +10,11 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { Typography } from '@material-ui/core'
 
-const errorTitles = ['Abort mission, back to base.', 'We have a problem ...', 'Stay calm and do not panic!']
+const errorTitles = [
+  'Abort mission, back to base.',
+  'We have a problem ...',
+  'Stay calm and do not panic!'
+]
 
 export const randomErrorTitle = () => {
   return errorTitles[Math.floor(Math.random() * errorTitles.length)]

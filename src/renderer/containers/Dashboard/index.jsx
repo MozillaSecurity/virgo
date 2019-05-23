@@ -87,7 +87,12 @@ class DashboardPage extends React.Component {
       setContainer({})
       this.stopInspectScheduler()
       resetStatus()
-      setStatus({ text: `Task stopped outside of normal workflow.`, state: STOPPED, id: null, delta: 0 })
+      setStatus({
+        text: `Task stopped outside of normal workflow.`,
+        state: STOPPED,
+        id: null,
+        delta: 0
+      })
       return
     }
 

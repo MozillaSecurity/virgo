@@ -32,7 +32,10 @@ const AppearancePrefs = props => {
       <Divider />
       <List>
         <ListItem>
-          <ListItemText primary="Restore Window Size & Position" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText
+            primary="Restore Window Size & Position"
+            primaryTypographyProps={{ variant: 'body2' }}
+          />
           <ListItemSecondaryAction>
             <Switch onChange={props.toggleRestoreWindowSize} checked={props.restoreWindowSize} />
           </ListItemSecondaryAction>
@@ -41,7 +44,10 @@ const AppearancePrefs = props => {
       <Divider />
       <List>
         <ListItem>
-          <ListItemText primary="Add Window Vibrance" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText
+            primary="Add Window Vibrance"
+            primaryTypographyProps={{ variant: 'body2' }}
+          />
           <ListItemSecondaryAction>
             <Switch onChange={props.toggleVibrance} checked={props.vibrance} />
           </ListItemSecondaryAction>

@@ -20,7 +20,10 @@ const DarkmodeSwitch = props => {
   return (
     <React.Fragment>
       <ListItemIcon>{checked ? <LightIcon /> : <DarkIcon />}</ListItemIcon>
-      <ListItemText primary={checked ? label1 : label2} primaryTypographyProps={{ variant: 'body2' }} />
+      <ListItemText
+        primary={checked ? label1 : label2}
+        primaryTypographyProps={{ variant: 'body2' }}
+      />
       <ListItemSecondaryAction>
         <Switch checked={checked} onChange={onChange} />
       </ListItemSecondaryAction>

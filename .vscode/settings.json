@@ -57,5 +57,6 @@
 
   /* Misc */
   "debug.inlineValues": false,
-  "search.runInExtensionHost": true
+  "search.runInExtensionHost": true,
+  "editor.rulers": [100]
 }

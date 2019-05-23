@@ -1,5 +1,9 @@
 /** @format */
 
+/*
+ * Changes to the configuration require a restart in VSCode to be effective.
+ */
+
 const pkg = require('../../package.json')
 
 const version = dependency => {
@@ -9,6 +13,8 @@ const version = dependency => {
   if (pkg.devDependencies && pkg.devDependencies[dependency]) {
     return pkg.devDependencies[dependency].replace(/[^0-9.]/g, '')
   }
+  console.log(`Unable to find dependency in package.json for "${dependency}".`)
+  return undefined
 }
 
 /* New base configuration. */
@@ -32,7 +38,7 @@ module.exports = {
     'plugin:jest/recommended',
     'plugin:flowtype/recommended',
     'plugin:prettier/recommended',
-    'prettier/flowtype',
+    // 'prettier/flowtype', // Causes issues with prettier.printWidth
     'prettier/react'
   ],
   plugins: ['react', 'jest', 'flowtype', 'prettier'],

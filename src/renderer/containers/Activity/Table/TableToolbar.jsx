@@ -107,7 +107,11 @@ const EnhancedTableToolbar = props => {
 EnhancedTableToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  onRemoveCallback: PropTypes.func.isRequired,
+  onRefreshListCallback: PropTypes.func.isRequired,
+  onFilterListCallback: PropTypes.func,
+  onStopCallback: PropTypes.func
 }
 
 export default withStyles(styles)(EnhancedTableToolbar)

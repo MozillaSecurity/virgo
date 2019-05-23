@@ -6,13 +6,15 @@ import PropTypes from 'prop-types'
 import { ipcRenderer } from 'electron'
 
 /* Styles */
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TablePagination from '@material-ui/core/TablePagination'
-import TableRow from '@material-ui/core/TableRow'
-import Paper from '@material-ui/core/Paper'
-import Checkbox from '@material-ui/core/Checkbox'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TablePagination,
+  TableRow,
+  Paper,
+  Checkbox
+} from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
 import EnhancedTableHead from './Table/TableHead'
@@ -33,11 +35,41 @@ const styles = theme => ({
 })
 
 const rows = [
-  { id: '_id', numeric: false, disablePadding: true, label: 'ID', help: 'Image ID (truncated)' },
-  { id: 'size', numeric: false, disablePadding: false, label: 'Size', help: 'Image size' },
-  { id: 'date', numeric: false, disablePadding: false, label: 'Date', help: 'Creation date' },
-  { id: 'tags', numeric: false, disablePadding: false, label: 'Tags', help: 'Image tags' },
-  { id: 'containers', numeric: true, disablePadding: false, label: 'Containers', help: 'Running containers' }
+  {
+    id: '_id',
+    numeric: false,
+    disablePadding: true,
+    label: 'ID',
+    help: 'Image ID (truncated)'
+  },
+  {
+    id: 'size',
+    numeric: false,
+    disablePadding: false,
+    label: 'Size',
+    help: 'Image size'
+  },
+  {
+    id: 'date',
+    numeric: false,
+    disablePadding: false,
+    label: 'Date',
+    help: 'Creation date'
+  },
+  {
+    id: 'tags',
+    numeric: false,
+    disablePadding: false,
+    label: 'Tags',
+    help: 'Image tags'
+  },
+  {
+    id: 'containers',
+    numeric: true,
+    disablePadding: false,
+    label: 'Containers',
+    help: 'Running containers'
+  }
 ]
 
 class EnhancedTable extends React.Component {
@@ -96,7 +128,10 @@ class EnhancedTable extends React.Component {
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1))
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1))
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      )
     }
 
     this.setState({ selected: newSelected })
