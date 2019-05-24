@@ -4,8 +4,8 @@ import * as url from 'url'
 import { BrowserWindow, app } from 'electron'
 import { resolve } from 'app-root-path'
 
-import { Environment } from './common'
-import Store from './store'
+import { Environment } from '../common'
+import Store from '../store'
 
 export default function createMainWindow() {
   const PROTOCOL = process.env.HTTPS === 'true' ? 'https' : 'http'
@@ -48,7 +48,7 @@ export default function createMainWindow() {
   if (Environment.isDevelopment) {
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
     ;(async () => {
-      const addons = await import('./addons')
+      const addons = await import('../addons')
       addons.installDeveloperTools(['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'])
     })()
   }

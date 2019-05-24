@@ -5,11 +5,17 @@ import { app, dialog } from 'electron'
 import { Sentry } from './sentry'
 import { Package, Environment } from './common'
 import createTray from './tray'
-import createMainWindow from './window'
+import createMainWindow from './windows/main'
 import './api/ipc'
 
 let mainWindow
 let tray
+
+const instanceLock = app.requestSingleInstanceLock()
+
+if (!instanceLock) {
+  app.quit()
+}
 
 const createWindow = () => {
   mainWindow = createMainWindow()
@@ -20,6 +26,15 @@ const createWindow = () => {
     applicationVersion: Package.version
   })
 }
+
+app.on('second-instance', (event, argv, cwd) => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore()
+    }
+    mainWindow.focus()
+  }
+})
 
 app.on('ready', () => {
   createWindow()
