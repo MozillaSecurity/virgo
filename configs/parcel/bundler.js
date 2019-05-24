@@ -7,7 +7,7 @@ const Server = require('express')()
 const appRoot = require('app-root-path')
 
 const options = {
-  outDir: appRoot.resolve('dist/renderer/development'), // The out directory to put the build files in, defaults to dist
+  outDir: appRoot.resolve('build/app/renderer/development'), // The out directory to put the build files in, defaults to dist
   outFile: 'index.html', // The name of the outputFile
   //  publicUrl: './', // The url to server on, defaults to dist
   watch: true, // whether to watch the files and rebuild them on change, defaults to process.env.NODE_ENV !== 'production'

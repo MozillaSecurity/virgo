@@ -23,9 +23,9 @@ async function main() {
       'files',
       `${PACKAGE.name}-${PACKAGE.version}`,
       'upload-sourcemaps',
-      'dist',
+      'build/app',
       '--url-prefix',
-      '~/dist/',
+      '~/build/app',
       '--rewrite',
       '--validate'
     ],

@@ -37,7 +37,7 @@ export default function createMainWindow() {
   const appUrl =
     Environment.isPackaged || Environment.isTest
       ? url.format({
-          pathname: resolve('dist/renderer/production/index.html'),
+          pathname: resolve('build/app/renderer/production/index.html'),
           protocol: 'file:',
           slashes: true
         })

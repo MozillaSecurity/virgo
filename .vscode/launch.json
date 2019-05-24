@@ -18,7 +18,7 @@
       "timeout": 100000,
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run-script", "debug:launch"],
-      "outFiles": ["${workspaceFolder}/dist/main/**/*.js", "${workspaceFolder}/src/renderer/**/*.js"],
+      "outFiles": ["${workspaceFolder}/build/app/main/**/*.js", "${workspaceFolder}/src/renderer/**/*.js"],
       "sourceMaps": true,
       "sourceMapPathOverrides": {
         "*": "${workspaceFolder}/src/main/*"
@@ -46,7 +46,7 @@
       "windows": {
         "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
       },
-      "outFiles": ["${workspaceFolder}/dist/main/**/*.js", "${workspaceFolder}/src/renderer/**/*.js"],
+      "outFiles": ["${workspaceFolder}/build/app/main/**/*.js", "${workspaceFolder}/src/renderer/**/*.js"],
       "sourceMaps": true,
       "sourceMapPathOverrides": {
         "*": "${workspaceFolder}/src/main/*"
@@ -63,7 +63,7 @@
       "cwd": "${workspaceFolder}",
       "smartStep": true,
       "timeout": 100000,
-      "outFiles": ["${workspaceFolder}/dist/main/**/*.js", "${workspaceFolder}/src/renderer/**/*.js"],
+      "outFiles": ["${workspaceFolder}/build/app/main/**/*.js", "${workspaceFolder}/src/renderer/**/*.js"],
       "sourceMaps": true,
       "sourceMapPathOverrides": {
         "*": "${workspaceFolder}/src/main/*"
@@ -80,7 +80,7 @@
       "disableNetworkCache": true,
       "timeout": 100000,
       "url": "http://127.0.0.1:3000/#/",
-      "webRoot": "${workspaceFolder}/dist/renderer/development",
+      "webRoot": "${workspaceFolder}/build/app/renderer/development",
       "sourceMaps": true,
       "sourceMapPathOverrides": {
         // Use the ".scripts" command in the Debug Console to verify the mapped path.

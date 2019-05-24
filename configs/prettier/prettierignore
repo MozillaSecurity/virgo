@@ -1,5 +1,5 @@
 packages-lock.json
 flow-typed/
+build/
 .cache/
-dist/
 .github/

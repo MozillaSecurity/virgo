@@ -2,14 +2,16 @@
 /node_modules
 
 # Generated
-/dist
+/build
 /.cache
 /coverage
 *.map
 *.log
+.electron-symbols
 
 # Misc
 .DS_Store
 
 # Configs
 configs/sentry/sentryclirc
+configs/electron/certs

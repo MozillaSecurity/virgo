@@ -9,7 +9,7 @@ module.exports = {
    */
   verbose: true,
   rootDir: '../../',
-  coverageDirectory: '<rootDir>/dist/coverage',
+  coverageDirectory: '<rootDir>/build/coverage',
   collectCoverageFrom: ['src/**/*.js?(x)'],
   transform: {
     '^.+\\.jsx?$': 'babel-jest',

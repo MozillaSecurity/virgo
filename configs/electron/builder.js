@@ -7,20 +7,18 @@ const appRoot = require('app-root-path')
 const appInfo = require(appRoot.resolve('./package.json'))
 
 const { Platform, Arch } = builder
-const config = {
+const userConfig = {
   /* eslint-disable no-template-curly-in-string */
-  productName: process.platform === 'linux' ? appInfo.name.toLowerCase() : appInfo.name,
-  appId: `org.mozilla.${appInfo.name.toLowerCase()}`,
+  productName: appInfo.name.charAt(0).toUpperCase() + appInfo.name.slice(1),
+  appId: `org.mozilla.${appInfo.name}`,
   copyright: 'Copyright © 2019 ${author}',
   artifactName: '${name}-${version}-${os}-${arch}.${ext}',
   files: [
-    'dist/main/main.js',
-    { from: 'dist/renderer/production' },
-    { from: 'resources/build' },
-    '!**/*.map'
+    "build/app/**/*",
+    'resources/build/'
   ],
   directories: {
-    output: 'dist/releases/${os}/${arch}',
+    output: 'build/releases/${os}/${arch}',
     buildResources: 'resources/build'
   },
   compression: 'normal',
@@ -40,6 +38,7 @@ const config = {
     category: 'public.app-category.security'
   },
   linux: {
+    executableName: appInfo.name,
     category: 'Security'
   }
 }
@@ -50,7 +49,7 @@ const main = async () => {
     targetArgs = {
       windows64: Platform.WINDOWS.createTarget(['nsis'], Arch.x64),
       linux64: Platform.LINUX.createTarget(['AppImage'], Arch.x64),
-      macos64: Platform.MAC.createTarget(['dmg', 'zip'], Arch.x64)
+      macos64: Platform.MAC.createTarget(['dmg'], Arch.x64)
     }
   } else {
     targetArgs = {
@@ -68,6 +67,7 @@ const main = async () => {
   console.log(`Building on platform ${process.platform} in ${process.env.NODE_ENV} mode.`)
   // eslint-disable-next-line no-restricted-syntax
   for (const target of targets) {
+    let config = JSON.parse(JSON.stringify(userConfig))
     // eslint-disable-next-line no-await-in-loop
     await builder
       .build({ targets: target, config })

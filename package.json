@@ -20,7 +20,7 @@
   "engines": {
     "node": ">=11"
   },
-  "main": "dist/main/main.js",
+  "main": "build/app/main/main.js",
   "scripts": {
     "\n# Development": "",
     "start": "cross-env NODE_ENV=development run-p -r parcel:launch electron:launch",
@@ -30,8 +30,8 @@
     "\n# Production": "",
     "build": "run-s parcel:main parcel:renderer",
     "release": "node configs/electron/builder.js",
-    "parcel:main": "parcel build src/main/main.js --out-dir dist/main --out-file=main --target=electron",
-    "parcel:renderer": "parcel build src/renderer/index.html --log-level 3 --no-cache --public-url ./ --out-dir dist/renderer/production --target=electron",
+    "parcel:main": "parcel build src/main/main.js --out-dir build/app/main --out-file=main --target=electron",
+    "parcel:renderer": "parcel build src/renderer/index.html --log-level 3 --no-cache --public-url ./ --out-dir build/app/renderer/production --target=electron",
     "\n# Debug": "",
     "debug:electron": "electron --inspect-brk=9222 --enable-logging --remote-debugging-port=9223 .",
     "debug:launch": "run-p parcel:main parcel:launch debug:electron",

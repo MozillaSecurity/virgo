@@ -1,6 +1,6 @@
 {
   "source": "./src",
-  "destination": "./dist/docs",
+  "destination": "./build/docs",
   "includes": [".*\\.js", ".*\\.jsx"],
   "package": "./package.json",
   "index": "./README.md",
