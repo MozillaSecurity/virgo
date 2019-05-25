@@ -244,7 +244,7 @@ class DashboardPage extends React.Component {
   }
 
   render() {
-    const { classes, status, setStatus } = this.props
+    const { classes, status, setStatus, definitions } = this.props
 
     return (
       <Grid container spacing={40} className={classes.root}>
@@ -252,6 +252,7 @@ class DashboardPage extends React.Component {
           <img src={Logo} alt="Virgo" />
         </Grid>
         <RunTimer
+          disabled={definitions.length === 0}
           elapsed={status.delta}
           setStatus={setStatus}
           status={status}

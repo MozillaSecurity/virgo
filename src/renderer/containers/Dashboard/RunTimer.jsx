@@ -144,7 +144,7 @@ class RunTimer extends React.Component {
   }
 
   render() {
-    const { classes, status } = this.props
+    const { classes, status, disabled } = this.props
 
     const isStopped = status.state === STOPPED
     const isRunning = status.state === RUNNING
@@ -163,7 +163,7 @@ class RunTimer extends React.Component {
           <Grid container spacing={8} justify="center">
             <Grid item>
               {isStopped ? (
-                <IconButton onClick={this.onStart}>
+                <IconButton disabled={disabled} onClick={this.onStart}>
                   <PlayCircleFilled className={classes.controlButton} />
                 </IconButton>
               ) : null}
@@ -201,6 +201,7 @@ RunTimer.propTypes = {
   pauseCallback: PropTypes.func.isRequired,
   resumeCallback: PropTypes.func.isRequired,
   setStatus: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired,
   status: PropTypes.object.isRequired,
   elapsed: PropTypes.number
 }
