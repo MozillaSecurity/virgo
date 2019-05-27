@@ -37,7 +37,7 @@ const PreferencesPage = ({ classes }) => {
     <Paper square>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} textColor="primary">
-          <Tab label="Docker" />
+          <Tab label="Virgo" />
           <Tab label="Appearance" />
         </Tabs>
       </AppBar>

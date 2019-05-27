@@ -13,10 +13,7 @@ const userConfig = {
   appId: `org.mozilla.${appInfo.name}`,
   copyright: 'Copyright © 2019 ${author}',
   artifactName: '${name}-${version}-${os}-${arch}.${ext}',
-  files: [
-    "build/app/**/*",
-    'resources/build/'
-  ],
+  files: ['build/app/**/*', 'resources/build/', 'src/main/sentry.js'],
   directories: {
     output: 'build/releases/${os}/${arch}',
     buildResources: 'resources/build'
@@ -43,13 +40,24 @@ const userConfig = {
   }
 }
 
+/* To test the update process in packaged production builds, locally via Minio. */
+if (process.env.APP_TEST_PUBLISHER === 'S3') {
+  userConfig.publish = [
+    {
+      provider: 's3',
+      bucket: 'electron-builder',
+      endpoint: 'http://127.0.0.1:9000'
+    }
+  ]
+}
+
 const main = async () => {
   let targetArgs
   if (process.env.NODE_ENV === 'production') {
     targetArgs = {
       windows64: Platform.WINDOWS.createTarget(['nsis'], Arch.x64),
       linux64: Platform.LINUX.createTarget(['AppImage'], Arch.x64),
-      macos64: Platform.MAC.createTarget(['dmg'], Arch.x64)
+      macos64: Platform.MAC.createTarget(['dmg', 'zip'], Arch.x64)
     }
   } else {
     targetArgs = {
@@ -67,7 +75,7 @@ const main = async () => {
   console.log(`Building on platform ${process.platform} in ${process.env.NODE_ENV} mode.`)
   // eslint-disable-next-line no-restricted-syntax
   for (const target of targets) {
-    let config = JSON.parse(JSON.stringify(userConfig))
+    const config = JSON.parse(JSON.stringify(userConfig))
     // eslint-disable-next-line no-await-in-loop
     await builder
       .build({ targets: target, config })

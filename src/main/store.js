@@ -10,7 +10,8 @@ const defaults = {
     alwaysOnTop: false,
     winBounds: {},
     taskURL: 'http://localhost:8081/tasks',
-    contactEmail: 'fuzzing@mozilla.com'
+    contactEmail: 'fuzzing@mozilla.com',
+    allowPreRelease: false
   }
 }
 

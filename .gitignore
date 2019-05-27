@@ -8,6 +8,7 @@
 *.map
 *.log
 .electron-symbols
+.minio
 
 # Misc
 .DS_Store
@@ -15,3 +16,4 @@
 # Configs
 configs/sentry/sentryclirc
 configs/electron/certs
+configs/minio/minio.sh

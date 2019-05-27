@@ -16,8 +16,8 @@ export default function createMainWindow() {
   let windowOpts = {
     autoHideMenuBar: true,
     frame: false,
-    minWidth: 800,
-    minHeight: 600,
+    minWidth: 940,
+    minHeight: 780,
     show: false,
     alwaysOnTop: Store.get('preferences.alwaysOnTop'),
     titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
@@ -76,8 +76,10 @@ export default function createMainWindow() {
 
     if (Environment.isMacOS) {
       if (app.quitting) {
+        /* User tried to quit the app for real. */
         mainWindow = null
       } else if (mainWindow !== null) {
+        /* User tried to close the window and we hide the main Window instead. */
         event.preventDefault()
         mainWindow.hide()
       }

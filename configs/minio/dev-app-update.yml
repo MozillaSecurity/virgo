@@ -1,0 +1,9 @@
+# @format
+
+# To prevent exception raising about missing `dev-app-update.yml` during `npm start`.
+# We do not want to disable the updater for development environment in order to do UI work
+# on the updater. In order to test the updater in production packaged environments
+# set `APP_TEST_PUBLISHER=S3`.
+provider: 's3'
+bucket: 'electron-builder'
+endpoint: 'http://127.0.0.1:9000'

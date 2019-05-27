@@ -3,6 +3,7 @@
 import { app, dialog } from 'electron'
 
 import { Sentry } from './sentry'
+import { setupUpdater } from './updater'
 import { Package, Environment } from './common'
 import createTray from './tray'
 import createMainWindow from './windows/main'
@@ -12,7 +13,6 @@ let mainWindow
 let tray
 
 const instanceLock = app.requestSingleInstanceLock()
-
 if (!instanceLock) {
   app.quit()
 }
@@ -38,6 +38,7 @@ app.on('second-instance', (event, argv, cwd) => {
 
 app.on('ready', () => {
   createWindow()
+  setupUpdater(mainWindow)
 })
 
 app.on('window-all-closed', () => {
