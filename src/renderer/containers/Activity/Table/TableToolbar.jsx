@@ -127,7 +127,7 @@ EnhancedTableToolbar.propTypes = {
   onRefreshListCallback: PropTypes.func.isRequired,
   onFilterListCallback: PropTypes.func,
   onStopCallback: PropTypes.func,
-  onSearchCallback: PropTypes.fun,
+  onSearchCallback: PropTypes.func,
   search: PropTypes.string
 }
 
