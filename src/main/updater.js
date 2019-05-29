@@ -1,6 +1,6 @@
 /** @format */
 
-import { app, dialog, BrowserWindow } from 'electron'
+import { app, dialog, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import logger from 'electron-log'
 import appRoot from 'app-root-path'
@@ -12,7 +12,7 @@ autoUpdater.logger = logger
 autoUpdater.logger.transports.file.level = 'info'
 autoUpdater.allowPrerelease = Store.get('allowPreRelease', false)
 
-if (!Environment.isProduction) {
+if (Environment.isDevelopment) {
   autoUpdater.updateConfigPath = appRoot.resolve('./configs/minio/dev-app-update.yml')
 }
 
@@ -32,7 +32,7 @@ export const setupUpdater = window => {
   }
 
   autoUpdater.on('error', error => {
-    dispatch({ msg: `😱 Error: ${error}` })
+    dispatch({ msg: `😱 ${error}` })
   })
 
   autoUpdater.on('checking-for-update', () => {
@@ -75,5 +75,9 @@ export const setupUpdater = window => {
   dispatch({ msg: `🖥 App version: ${app.getVersion()}` })
   autoUpdater.checkForUpdates()
 }
+
+ipcMain.on('updateCheck', () => {
+  autoUpdater.checkForUpdates()
+})
 
 export default autoUpdater

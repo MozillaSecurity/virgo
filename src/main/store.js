@@ -11,7 +11,7 @@ const defaults = {
     winBounds: {},
     taskURL: 'http://localhost:8081/tasks',
     contactEmail: 'fuzzing@mozilla.com',
-    allowPreRelease: false
+    earlyReleases: false
   }
 }
 

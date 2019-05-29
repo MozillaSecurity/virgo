@@ -27,3 +27,7 @@ export const updateContactEmail = value => ({
   type: 'PREF_UPDATE_CONTACT_EMAIL',
   value
 })
+
+export const toggleEarlyReleases = () => ({
+  type: 'PREF_EARLY_RELEASES_UPDATE'
+})

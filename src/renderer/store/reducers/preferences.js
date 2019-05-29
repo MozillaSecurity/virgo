@@ -34,6 +34,11 @@ const preferences = (state = {}, action) => {
         ...state,
         contactEmail: action.value
       }
+    case 'PREF_EARLY_RELEASES_UPDATE':
+      return {
+        ...state,
+        earlyReleases: !state.earlyReleases
+      }
     default:
       return state
   }
