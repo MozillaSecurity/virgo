@@ -29,6 +29,8 @@ const styles = theme => ({
 })
 
 const MyTextField = ({ ...props }) => {
+  delete props.isInvalid
+
   return (
     <TextField
       {...props}
