@@ -7,9 +7,12 @@ import PropTypes from 'prop-types'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import TextField from '@material-ui/core/TextField'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import RefreshIcon from '@material-ui/icons/Refresh'
+import SearchIcon from '@material-ui/icons/Search'
 import StopIcon from '@material-ui/icons/Stop'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import { lighten } from '@material-ui/core/styles/colorManipulator'
@@ -47,12 +50,13 @@ const styles = theme => ({
 const EnhancedTableToolbar = props => {
   const {
     classes,
+    search,
     numSelected,
-    title,
     onRemoveCallback,
     onStopCallback,
     onRefreshListCallback,
-    onFilterListCallback
+    onFilterListCallback,
+    onSearchCallback
   } = props
 
   return (
@@ -64,7 +68,19 @@ const EnhancedTableToolbar = props => {
           </Typography>
         ) : (
           <Typography variant="h6" id="tableTitle">
-            {title}
+            {onSearchCallback && (
+              <TextField
+                value={search}
+                onChange={onSearchCallback}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  )
+                }}
+              />
+            )}
           </Typography>
         )}
       </div>
@@ -107,11 +123,12 @@ const EnhancedTableToolbar = props => {
 EnhancedTableToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
   onRemoveCallback: PropTypes.func.isRequired,
   onRefreshListCallback: PropTypes.func.isRequired,
   onFilterListCallback: PropTypes.func,
-  onStopCallback: PropTypes.func
+  onStopCallback: PropTypes.func,
+  onSearchCallback: PropTypes.fun,
+  search: PropTypes.string
 }
 
 export default withStyles(styles)(EnhancedTableToolbar)

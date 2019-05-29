@@ -79,7 +79,8 @@ class EnhancedTable extends React.Component {
     selected: [],
     data: [],
     page: 0,
-    rowsPerPage: 5
+    rowsPerPage: 5,
+    search: ''
   }
 
   componentDidMount() {
@@ -189,18 +190,23 @@ class EnhancedTable extends React.Component {
     ipcRenderer.send('container.list')
   }
 
+  onSearchChange = event => {
+    this.setState({ search: event.target.value })
+  }
+
   render() {
     const { classes } = this.props
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state
+    const { data, search, order, orderBy, selected, rowsPerPage, page } = this.state
 
     return (
       <Paper className={classes.root}>
         <EnhancedTableToolbar
           numSelected={selected.length}
-          title=""
+          search={search}
           onRemoveCallback={this.onRemove}
           onRefreshListCallback={this.onRefresh}
           onStopCallback={this.onStop}
+          onSearchCallback={this.onSearchChange}
         />
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
@@ -231,6 +237,7 @@ class EnhancedTable extends React.Component {
             <TableBody>
               {stableSort(data, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .filter(item => !search || item.image.includes(search))
                 .map(n => {
                   const isSelected = this.isSelected(n.id)
                   return (
