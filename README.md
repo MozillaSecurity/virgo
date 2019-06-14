@@ -55,5 +55,6 @@ For a detailed list of commands run `npm run`
 
 ## Screenshots
 
-![alt text](resources/light.png)
-![alt text](resources/dark.png)
+![alt text](resources/dashboard.png)
+![alt text](resources/activity.png)
+![alt text](resources/settings.png)
