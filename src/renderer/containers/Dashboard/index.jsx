@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { ipcRenderer } from 'electron'
 import axios from 'axios'
+import { random } from '@mozillasecurity/octo'
 
 /* Styles */
 import Grid from '@material-ui/core/Grid'
@@ -17,6 +18,7 @@ import Logo from '../../images/virgo-full.svg'
 import RunTimer from './RunTimer'
 
 import * as actionCreators from '../../store/actions'
+import FuzzManagerConf from '../../lib/fuzzmanager'
 
 // eslint-disable-next-line no-unused-vars
 const styles = theme => ({
@@ -33,6 +35,7 @@ const PAUSED = 1
 
 class DashboardPage extends React.Component {
   async componentDidMount() {
+    random.init()
     await this.fetchTaskDefinitions()
 
     this.startInspectScheduler()
@@ -140,17 +143,27 @@ class DashboardPage extends React.Component {
    * Action initiators
    */
   onStart = () => {
-    const { definitions, setStatus } = this.props
+    const { definitions, setStatus, contactEmail } = this.props
 
     if (definitions.length === 0) {
       setStatus({ text: `No remote tasks available.` })
       return
     }
 
+    /* Retrieve a random task. */
+    const taskDefinition = this.analyzeSuitableTask(definitions)
+
+    const fuzzmanagerconf = new FuzzManagerConf({ configName: 'fuzzmanagerconf' })
+
+    /* Mount point for our FuzzManager backend configuration. */
+    const volumes = [`${fuzzmanagerconf.path}:/home/worker/.fuzzmanagerconf`]
+
+    /* Indicating that we treat setting `clientid` differently. */
+    taskDefinition.environment.push(`VIRGO=True`)
+
     this.toggleSpinner()
-    const image = this.analyzeSuitableTask(definitions)
     setStatus({ text: `Initializing task.` })
-    ipcRenderer.send('container.run', image)
+    ipcRenderer.send('container.run', { task: taskDefinition, volumes })
   }
 
   onResume = () => {
@@ -227,7 +240,7 @@ class DashboardPage extends React.Component {
   }
 
   analyzeSuitableTask = definitions => {
-    return definitions[0]
+    return random.item(definitions)
   }
 
   fetchTaskDefinitions() {
@@ -236,7 +249,7 @@ class DashboardPage extends React.Component {
     axios
       .get(taskURL)
       .then(response => {
-        setImageDefinitions(response.data)
+        setImageDefinitions(response.data.tasks)
       })
       .catch(error => {
         console.log(`Error fetching task definitions: ${error}`)
@@ -295,6 +308,7 @@ const mapStateToProps = state => {
     containerData: state.docker.containerData,
     container: state.docker.container,
     taskURL: state.preferences.taskURL,
+    contactEmail: state.preferences.contactEmail,
     status: state.docker.status
   }
 }

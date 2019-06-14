@@ -9,9 +9,18 @@ const defaults = {
     restoreWindowSize: true,
     alwaysOnTop: false,
     winBounds: {},
-    taskURL: 'http://localhost:8081/tasks',
+    taskURL: 'https://virgo-tasks.herokuapp.com/tasks',
     contactEmail: 'fuzzing@mozilla.com',
-    earlyReleases: false
+    earlyReleases: false,
+    backend: {
+      fuzzmanager: {
+        serverhost: 'virgo-f.fuzzing.mozilla.org',
+        serverport: 443,
+        serverproto: 'https',
+        serverauthtoken: '13374cc355',
+        clientid: ''
+      }
+    }
   }
 }
 

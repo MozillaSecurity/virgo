@@ -9,6 +9,8 @@ import Store from 'electron-store'
 /* Combined Redux Reducers */
 import rootReducer from './reducers'
 
+import FuzzManagerConf from '../lib/fuzzmanager'
+
 export const saveState = (state, store) => {
   try {
     store.set(state)
@@ -22,8 +24,22 @@ export const saveState = (state, store) => {
 export const initState = () => {
   const persistendStore = new Store()
 
+  /* Initial write of FuzzManager configuration with default values. */
+  const fuzzmanagerconf = new FuzzManagerConf({
+    configName: 'fuzzmanagerconf',
+    defaults: persistendStore.store.preferences.backend.fuzzmanager
+  })
+  if (!fuzzmanagerconf.exists()) {
+    fuzzmanagerconf.saveFile()
+  } else {
+    fuzzmanagerconf.readFile()
+    persistendStore.store.preferences.backend.fuzzmanager = fuzzmanagerconf.data
+  }
+
   /* eslint-disable no-underscore-dangle */
-  const enhancers = compose(window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+  const enhancers = compose(
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
 
   /* Hydrate */
   const store = createStore(rootReducer, Object.assign({}, persistendStore.store), enhancers)

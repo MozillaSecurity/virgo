@@ -16,7 +16,10 @@ const docker = new DockerManager()
  * Pull an image, create a container and start that container.
  */
 ipcMain.on('container.run', (event, args) => {
-  const { name } = args
+  const {
+    task: { name, environment },
+    volumes
+  } = args
 
   docker
     .pull(name)
@@ -29,21 +32,31 @@ ipcMain.on('container.run', (event, args) => {
         .createContainer({
           Image: name,
           Tty: true,
-          HostConfig: { AutoRemove: true }
+          Env: environment || [],
+          Volumes: {
+            '/home/worker': {}
+          },
+          HostConfig: {
+            AutoRemove: false,
+            Binds: [...volumes]
+          }
         })
         .then(container => {
+          console.log('Launching container...')
           return container.start()
         })
         .then(container => {
-          console.log(container.id)
+          console.log(`Container ${container.id} started!`)
           event.sender.send('container.run', container)
         })
         .catch(error => {
+          console.log(`Container error: ${JSON.stringify(error)}`)
           event.sender.send('container.error', error)
         })
       /* */
     })
     .catch(error => {
+      console.log(`Image error: ${JSON.stringify(error)}`)
       event.sender.send('image.error', error)
     })
 })

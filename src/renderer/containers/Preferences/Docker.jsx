@@ -12,7 +12,6 @@ import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import Divider from '@material-ui/core/Divider'
-
 import Tooltip from '@material-ui/core/Tooltip'
 import Checkbox from '@material-ui/core/Checkbox'
 import RefreshIcon from '@material-ui/icons/Refresh'
@@ -20,6 +19,7 @@ import { withStyles, Typography } from '@material-ui/core'
 
 import * as actionCreators from '../../store/actions'
 import { URLValidator, EmailValidator } from '../../lib/validators'
+import BackendFuzzManagerPrefs from './Backends/FuzzManager'
 
 // eslint-disable-next-line no-unused-vars
 const styles = theme => ({
@@ -170,6 +170,7 @@ class DockerPrefs extends React.Component {
         <ListItem>
           <MyTextField {...contactEmail} onChange={this.onChange} onBlur={this.onBlur} />
         </ListItem>
+        <BackendFuzzManagerPrefs />
       </List>
     )
   }
@@ -189,7 +190,8 @@ const mapStateToProps = state => {
   return {
     taskURL: state.preferences.taskURL,
     contactEmail: state.preferences.contactEmail,
-    earlyReleases: state.preferences.earlyReleases
+    earlyReleases: state.preferences.earlyReleases,
+    backend: state.preferences.backend
   }
 }
 
