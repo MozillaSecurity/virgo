@@ -2,59 +2,69 @@
 
 <p align="center">
     <img src="src/renderer/images/virgo-full.svg"><br/>
-    A crowdfuzz solution for everyone. 🚀
+    Crowdsourced  fuzzing cluster. 🚀
 <p>
 
 <p align="center">
-     <a href="https://travis-ci.org/mozillasecurity/virgo"><img src="https://img.shields.io/travis/mozillasecurity/virgo/master.svg?style=flat-square"/></a> <a href="https://img.shields.io/github/release/mozillasecurity/virgo.svg"><img src="https://img.shields.io/github/release/mozillasecurity/virgo.svg" alt="Current Release"></a> <a href="https://david-dm.org/mozillasecurity/virgo"><img src="https://img.shields.io/david/mozillasecurity/virgo.svg?style=flat-square"/></a> <a href="https://coveralls.io/github/MozillaSecurity/virgo?branch=master"><img src="https://coveralls.io/repos/github/MozillaSecurity/virgo/badge.svg?branch=master" alt="Coverage Status"></a> <a href="https://www.irccloud.com/invite?channel=%23fuzzing&amp;hostname=irc.mozilla.org&amp;port=6697&amp;ssl=1"><img src="https://img.shields.io/badge/IRC-%23fuzzing-1e72ff.svg?style=flat" alt="IRC"></a>
+     <a href="https://travis-ci.org/mozillasecurity/virgo"><img src="https://img.shields.io/travis/mozillasecurity/virgo/master.svg?style=flat-square"/></a> <a href="https://github.com/MozillaSecurity/virgo/releases"><img src="https://img.shields.io/github/release/mozillasecurity/virgo.svg" alt="Current Release"></a> <a href="https://david-dm.org/mozillasecurity/virgo"><img src="https://img.shields.io/david/mozillasecurity/virgo.svg?style=flat-square"/></a> <a href="https://coveralls.io/github/MozillaSecurity/virgo?branch=master"><img src="https://coveralls.io/repos/github/MozillaSecurity/virgo/badge.svg?branch=master" alt="Coverage Status"></a>
 </p>
 
 ## Overview
 
-- [Virgo]()
-  - [What is Virgo?](#What-Is-Virgo?)
-  - [How does it work?](#How-Does-It-Work?)
-  - [Why should I participate?](#Why-Should-I-Participate?)
-- [Developer Usage](#Developer-Usage)
-  - [Commands](#Commands)
+- [What is Virgo?](#🤔What-Is-Virgo?)
+- [How does it work?](#💡How-Does-It-Work?)
+- [Contributing](#Contributing)
 - [Screenshots](#Screenshots)
 
-## What is Virgo?
+## 🤔What is Virgo?
 
-[Virgo](https://en.wikipedia.org/wiki/Virgo_Supercluster) aims to be a concept for creating a cluster of fuzzers made by people who are willing to trade and contribute IDLE times of their workstations to a greater good.
+[Virgo](https://en.wikipedia.org/wiki/Virgo_Supercluster) is a concept for creating a cluster of fuzzers made by users who are willing to trade and contribute their CPU resources of their workstations to a greater good.
 
-## How does it work?
+**Use Cases**
 
-Virgo's infrastructure is based on Docker containers. Virgo fetches routinely a remote server for new tasks by downloading a `Task Definition File`. This file contains information in how to run a certain Docker image and what host preferences are required. If the hosts preferences met the criterias for a certain task, Virgo will download the Docker image, create a container and run that container until the user either pauses or stops that task manually or by having a sheduler setup to automate this routine.
+- Intracompany fuzz testing by using office workstations after-hours without additional spending on cloud providers.
+- Software developers can point Virgo to their own Task Definition Server and quickly test among colleagues newly developed features.
+- Bug bounty hunters and open source supporters creating a collective supercluster in testing features more quickly and more intensively, and potentially get rewarded for providing their CPU time.
 
-## Why should I participate?
+Virgo can theoretically be used for any arbitrary work task defined in a container. However, Virgo was built as a fuzzing solution in mind.
 
-Virgo can theoretically be used for any arbitrary work task defined in a container. However, Virgo was built as a fuzzing solution in mind. The more people participate, the faster and more intesively we can test a particular feature in our products. Besides that, you can earn a bounty once your task discovered a security issue. If multiple users found the same issue, the bounty will be shared across the pool of finders.
+## 💡How does it work?
 
-## Developer Usage
+Virgo's infrastructure is based on Docker. Virgo fetches routinely a remote server for new tasks by downloading a [Task Definition File](https://virgo-tasks.herokuapp.com/tasks) which contains information on how to run a task and which host preferences are required.
+If the required hosts preferences meet the constraints for a certain task, Virgo will download the image, create a container and run that container until a user action intervenes or run "indefinitely". An intervention can be pause, stop, a scheduler, observed system or network activity. If a crash is found during a run, it immediately is sent to our backend for further analyzation and in case of a security issue, you will be informed by the provided contact email address.
+
+## Contributing
+
+### Launch Virgo
 
 ```
-git clone --depth=1 https://github.com/mozillasecurity/virgo <project-name>
-cd <project-name>
-npm install --silent
+git clone https://github.com/mozillasecurity/virgo && cd virgo && npm -s install
+npm start
 ```
-
-### Task Definition Server
-
-```
-json-server -p 8081 --watch tasks.json
-```
-
-You have now successfully checked-out Virgo. To run the development version use `npm start` and to produce a production build run first `npm run build` and optionally `npm run release <platform>`. Where `platform` can be `macos64`, `windows64`, `linux64` or `''` to create a release for all platforms.
 
 > Developer extensions are enabled in non-production builds, except Devtron for analyzing IPC traffic. You can enable it by entering `require('devtron').install()` in the Developer Console.
 
-## Commands
+To produce a production build run first `npm run build` and optionally `npm run release <platform>`. Where `platform` can be `macos64`, `windows64`, `linux64` or `''` to create a release for all platforms.
 
 For a detailed list of commands run `npm run`
 
+### Launch Task Definition Server
+
+```
+cd heroku && npm -s install && npm start
+```
+
+See [Wiki](https://github.com/MozillaSecurity/virgo/wiki) for detailed setup instructions including Minio for testing in-app updates, Sentry.io for in-app crashes and FuzzManager as custom crash collector backend.
+
 ## Screenshots
 
-![alt text](resources/dashboard.png)
-![alt text](resources/activity.png)
-![alt text](resources/settings.png)
+![Dashboard](resources/dashboard.png)
+![Activity](resources/activity.png)
+![Settings](resources/settings.png)
+
+## Author
+
+👤 **Christoph Diehl &lt;cdiehl@mozilla.com&gt;**
+
+- Twitter: [@posidron](https://twitter.com/posidron)
+- Github: [@posidron](https://github.com/posidron)
