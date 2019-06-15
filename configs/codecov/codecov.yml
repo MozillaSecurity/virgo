@@ -1,6 +1,14 @@
 # @format
-
+parsers:
+  javascript:
+    enable_partials: yes
 coverage:
-  parsers:
-    javascript:
-      enable_partials: yes
+  status:
+    project:
+      default: false
+      main:
+        paths:
+          - src/main/
+      renderer:
+        paths:
+          - src/renderer/
