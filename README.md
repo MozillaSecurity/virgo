@@ -6,7 +6,7 @@
 <p>
 
 <p align="center">
-     <a href="https://travis-ci.org/mozillasecurity/virgo"><img src="https://img.shields.io/travis/mozillasecurity/virgo/master.svg?style=flat-square"/></a> <a href="https://github.com/MozillaSecurity/virgo/releases"><img src="https://img.shields.io/github/release/mozillasecurity/virgo.svg" alt="Current Release"></a> <a href="https://david-dm.org/mozillasecurity/virgo"><img src="https://img.shields.io/david/mozillasecurity/virgo.svg?style=flat-square"/></a> <a href="https://coveralls.io/github/MozillaSecurity/virgo?branch=master"><img src="https://coveralls.io/repos/github/MozillaSecurity/virgo/badge.svg?branch=master" alt="Coverage Status"></a>
+     <a href="https://travis-ci.org/mozillasecurity/virgo"><img src="https://img.shields.io/travis/mozillasecurity/virgo/master.svg?style=flat-square"/></a> <a href="https://github.com/MozillaSecurity/virgo/releases"><img src="https://img.shields.io/github/release/mozillasecurity/virgo.svg" alt="Current Release"></a> <a href="https://david-dm.org/mozillasecurity/virgo"><img src="https://img.shields.io/david/mozillasecurity/virgo.svg?style=flat-square"/></a> <a href="https://codecov.io/gh/MozillaSecurity/virgo"><img src="https://codecov.io/gh/MozillaSecurity/virgo/branch/master/graph/badge.svg" /></a>
 </p>
 
 ## Overview

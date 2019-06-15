@@ -23,6 +23,7 @@ jobs:
       script:
         - npm run lint || true
         - xvfb-run npm run test:coverage
+        - npm run test:coverage:upload
     - stage: Deploy
       if: tag IS present AND type = push
       os: osx

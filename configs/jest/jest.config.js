@@ -11,6 +11,7 @@ module.exports = {
   rootDir: '../../',
   coverageDirectory: '<rootDir>/build/coverage',
   collectCoverageFrom: ['src/**/*.js?(x)'],
+  coverageReporters: ['json', 'html', 'text', 'lcov'],
   transform: {
     '^.+\\.jsx?$': 'babel-jest',
     '\\.(jpg|png|gif|eot|otf|webp|svg|ttf|woff|mp4|webm|wav|mp3|m4a|aac|oga|css|less)$':
