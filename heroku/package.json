@@ -1,0 +1,15 @@
+{
+  "name": "virgo-tds",
+  "version": "1.0.0",
+  "description": "Task Definition Server",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Christoph Diehl <cdiehl@mozilla.com>",
+  "license": "MPL-2.0"
+}

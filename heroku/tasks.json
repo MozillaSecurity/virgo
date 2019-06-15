@@ -1,0 +1,40 @@
+{
+  "tasks": [
+    {
+      "name": "mozillasecurity/libfuzzer:latest",
+      "environment": ["FUZZER=ContentParentIPC"]
+    },
+    {
+      "name": "mozillasecurity/libfuzzer:latest",
+      "environment": ["TOKENS=dicts/sdp.dict", "CORPORA=samples/sdp/", "FUZZER=SdpParser"]
+    },
+    {
+      "name": "mozillasecurity/libfuzzer:latest",
+      "environment": ["TOKENS=dicts/stun.dict", "CORPORA=samples/stun/", "FUZZER=StunParser"]
+    },
+    {
+      "name": "mozillasecurity/libfuzzer:latest",
+      "environment": [
+        "TOKENS=dicts/qcms.dict",
+        "CORPORA=samples/icc/profiles/common",
+        "FUZZER=Qcms"
+      ]
+    },
+    {
+      "name": "mozillasecurity/libfuzzer:latest",
+      "environment": ["FUZZER=NetworkHttp"]
+    },
+    {
+      "name": "mozillasecurity/libfuzzer:latest",
+      "environment": ["FUZZER=Dav1dDecode"]
+    },
+    {
+      "name": "mozillasecurity/libfuzzer:latest",
+      "environment": [
+        "TOKENS=dicts/content_security_policy.dict",
+        "CORPORA=samples/",
+        "FUZZER=ContentSecurityPolicyParser"
+      ]
+    }
+  ]
+}
