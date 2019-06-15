@@ -1,0 +1,10 @@
+# NOTE: Run `source ./configs/sentry/sentryclirc` before any Sentry tool.
+#
+# https://gist.github.com/DarrenN/8c6a5b969481725a4413
+# export PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
+
+export SENTRY_ORG=mozillasecurity
+export SENTRY_PROJECT="virgo"
+export SENTRY_URL="https://sentry.io"
+export SENTRY_AUTH_TOKEN=""
+export SENTRY_LOG_LEVEL=info
