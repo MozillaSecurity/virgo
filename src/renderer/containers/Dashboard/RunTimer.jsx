@@ -43,8 +43,6 @@ class RunTimer extends React.Component {
   componentDidMount() {
     const { elapsed, status, setStatus } = this.props
 
-    setStatus({ elapsed })
-
     /* Re-initialize timer with previous time spent. */
     if (status.state === RUNNING) {
       setStatus({
@@ -126,7 +124,7 @@ class RunTimer extends React.Component {
     if (status.state === PAUSED) {
       resumeCallback()
       setStatus({
-        start: Date.now(),
+        start: Date.now() - status.elapsed,
         handle: setInterval(this.update, 1000),
         state: RUNNING
       })
@@ -137,9 +135,7 @@ class RunTimer extends React.Component {
     const { setStatus, status } = this.props
 
     if (status.state === RUNNING) {
-      setStatus({
-        delta: Date.now() - status.start + status.elapsed
-      })
+      setStatus({ delta: Date.now() - (status.start + status.elapsed) + status.elapsed })
     }
   }
 

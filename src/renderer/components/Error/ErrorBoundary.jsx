@@ -19,7 +19,6 @@ class ErrorBoundary extends React.Component {
 
   sendReport = () => {
     const { error, errorInfo, eventId } = this.state
-
     if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
       /* Send the crash report to Sentry. */
       Sentry.withScope(scope => {

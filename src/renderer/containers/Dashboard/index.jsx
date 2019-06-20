@@ -301,6 +301,7 @@ DashboardPage.propTypes = {
 }
 
 const mapStateToProps = state => {
+  // return ...docker
   return {
     definitions: state.docker.definitions,
     imageError: state.docker.imageError,
