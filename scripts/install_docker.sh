@@ -16,3 +16,6 @@ mkdir -p ~/.docker && echo $'{\n    "experimental": enabled\n}' | sudo tee -a ~/
 
 sudo systemctl daemon-reload
 sudo systemctl restart docker
+
+echo "Please log out and back in."
+
