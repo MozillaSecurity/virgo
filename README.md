@@ -2,7 +2,7 @@
 
 <p align="center">
     <img src="src/renderer/images/virgo-full.svg"><br/>
-    Crowdsourced  fuzzing cluster. 🚀
+    Crowdsourced fuzzing cluster. 🚀
 <p>
 
 <p align="center">
@@ -13,6 +13,8 @@
 
 - [What is Virgo?](#🤔What-Is-Virgo?)
 - [How does it work?](#💡How-Does-It-Work?)
+- [Usage](#🚀Usage)
+- [Issues](#Issues)
 - [Contributing](#Contributing)
 - [Screenshots](#Screenshots)
 
@@ -32,6 +34,78 @@ Virgo can theoretically be used for any arbitrary work task defined in a contain
 
 Virgo's infrastructure is based on Docker. Virgo fetches routinely a remote server for new tasks by downloading a [Task Definition File](https://virgo-tasks.herokuapp.com/tasks) which contains information on how to run a task and which host preferences are required.
 If the required hosts preferences meet the constraints for a certain task, Virgo will download the image, create a container and run that container until a user action intervenes or run "indefinitely". An intervention can be pause, stop, a scheduler, observed system or network activity. If a crash is found during a run, it immediately is sent to our backend for further analyzation and in case of a security issue, you will be informed by the provided contact email address.
+
+## 🚀Usage
+
+Virgo is in its beta stage, obscure bugs may occur. We urge you to file these in our GitHub [issue tracker](https://github.com/MozillaSecurity/virgo/issues) along with any suggestions or feature requests you might have.
+
+You need to have the Docker engine installed and running on your computer. If you do not have it installed, here are some quick steps to get ready quickly.
+
+### Preparation
+
+#### MacOS
+
+```
+brew cask install docker
+```
+
+Alternatively: https://download.docker.com/mac/stable/Docker.dmg
+
+#### Windows
+
+```
+choco install docker-desktop
+```
+
+Alternatively: https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe
+
+#### Linux
+
+```
+./scripts/install_docker.sh
+```
+
+> Do not forget to log out/in after this step.
+
+To make sure Docker is setup and running, you can run the following command: `docker run hello-world`. If you see the `"Hello from Docker!"` message after some seconds, you are good to go.
+
+### Launch
+
+You can now launch Virgo which you downloaded for your platform from the release page.
+
+> Note: If you are on Linux run `chmod a+x virgo*.AppImage` before you try to launch it.
+
+If you want to get notified about found security issues discovered by your machine, provide your email address in the Preferences. This step is optional but if your workstation has found a security related issue we will add you to the Bugzilla report to get notified.
+
+## Issues
+
+In case of abnormal behaviour of the application you can reset Virgo to factory default settings.
+
+### Common
+
+#### MacOS
+
+```
+rm ~/Library/Application\ Support/virgo/config.json
+```
+
+#### Windows
+
+```
+rm C:\Users\%USERNAME%\AppData\Local\virgo\config.json
+```
+
+#### Linux
+
+```
+rm ~/.config/virgo
+```
+
+If a task was still running before you closed Virgo, then you can find the task in the `Activity` tab, where you can manually stop and delete it.
+
+### Debugging
+
+If you want to take a glimpse in what is happening under the hood, go to the `Activity` tab and copy the container id of the running task. You can then in the Terminal run: `docker logs <id> --follow` to see what is happening.
 
 ## Contributing
 
@@ -53,6 +127,8 @@ For a detailed list of commands run `npm run`
 ```
 cd heroku && npm -s install && npm start
 ```
+
+> You will need to point Virgo to your custom Task Definition Server in the Preferences.
 
 See [Wiki](https://github.com/MozillaSecurity/virgo/wiki) for detailed setup instructions including Minio for testing in-app updates, Sentry.io for in-app crashes and FuzzManager as custom crash collector backend.
 
