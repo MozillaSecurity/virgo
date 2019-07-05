@@ -11,9 +11,9 @@
 
 ## Overview
 
-- [What is Virgo?](#🤔What-Is-Virgo?)
-- [How does it work?](#💡How-Does-It-Work?)
-- [Usage](#🚀Usage)
+- [What is Virgo?](#What-Is-Virgo?)
+- [How does it work?](#How-Does-It-Work?)
+- [Usage](#Usage)
 - [Issues](#Issues)
 - [Contributing](#Contributing)
 - [Screenshots](#Screenshots)
