@@ -24,6 +24,14 @@ export class Environment {
   static get isMacOS() {
     return process.platform === 'darwin'
   }
+
+  static get isWindows() {
+    return process.platform === 'win32'
+  }
+
+  static get isLinux() {
+    return process.platform === 'linux'
+  }
 }
 
 export class JS {

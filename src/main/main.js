@@ -21,10 +21,12 @@ const createWindow = () => {
   mainWindow = createMainWindow()
   tray = createTray(mainWindow)
 
-  app.setAboutPanelOptions({
-    applicationName: Package.name,
-    applicationVersion: Package.version
-  })
+  if (!Environment.isWindows) {
+    app.setAboutPanelOptions({
+      applicationName: Package.name,
+      applicationVersion: Package.version
+    })
+  }
 }
 
 app.on('second-instance', (event, argv, cwd) => {
