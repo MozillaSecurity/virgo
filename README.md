@@ -59,6 +59,8 @@ choco install docker-desktop
 
 Alternatively: https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe
 
+> Make sure that in `Settings -> Shared Drives` the Volume is enabled on which you installed Virgo.
+
 #### Linux
 
 ```
@@ -92,7 +94,7 @@ rm ~/Library/Application\ Support/virgo/config.json
 #### Windows
 
 ```
-rm C:\Users\%USERNAME%\AppData\Local\virgo\config.json
+rm C:\Users\%USERNAME%\AppData\Roaming\virgo\config.json
 ```
 
 #### Linux
