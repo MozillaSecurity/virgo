@@ -94,7 +94,7 @@ rm ~/Library/Application\ Support/virgo/config.json
 #### Windows
 
 ```
-rm C:\Users\%USERNAME%\AppData\Roaming\virgo\config.json
+rm ~\AppData\Roaming\virgo\config.json
 ```
 
 #### Linux
