@@ -9,7 +9,11 @@ Thank you for reporting an issue.
 This issue tracker is for bugs and issues found within Virgo.
 -->
 
-- **Version**:
-- **Platform**:
+- **App Version**:
+- **App Platform**:
+- **Docker Engine**:
+```
+// Run `docker version` on your Terminal
+```
 
 <!-- Enter your issue details below this comment. -->
