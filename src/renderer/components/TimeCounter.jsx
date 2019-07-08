@@ -11,7 +11,6 @@ const styles = theme => ({})
 
 class TimeCounter extends React.Component {
   getUnits = timeElapsed => {
-    console.log(timeElapsed)
     const seconds = timeElapsed / 1000
     const hh = Math.floor(seconds / 3600).toString()
     const mm = Math.floor((seconds - hh * 3600) / 60).toString()
@@ -30,7 +29,6 @@ class TimeCounter extends React.Component {
   render() {
     const { timeElapsed } = this.props
     const units = this.getUnits(timeElapsed)
-    console.log(JSON.stringify(units))
     return (
       <div>
         {this.leftPad(units.hh)}:{this.leftPad(units.mm)}:{this.leftPad(units.ss)}
