@@ -11,16 +11,16 @@ const styles = theme => ({})
 
 class TimeCounter extends React.Component {
   getUnits = timeElapsed => {
+    console.log(timeElapsed)
     const seconds = timeElapsed / 1000
-    return {
-      hh: Math.floor(seconds / 60 / 60).toString(),
-      min: Math.floor(seconds / 60).toString(),
-      sec: Math.floor(seconds % 60).toString()
-    }
+    const hh = Math.floor(seconds / 3600).toString()
+    const mm = Math.floor((seconds - hh * 3600) / 60).toString()
+    const ss = Math.floor(seconds - hh * 3600 - mm * 60).toString()
+    return { hh, mm, ss }
   }
 
   leftPad = (n, width = 2) => {
-    if (`${n}`.length > width) {
+    if (n.length > width) {
       return n
     }
     const padding = new Array(width).join('0')
@@ -30,10 +30,10 @@ class TimeCounter extends React.Component {
   render() {
     const { timeElapsed } = this.props
     const units = this.getUnits(timeElapsed)
-
+    console.log(JSON.stringify(units))
     return (
       <div>
-        {this.leftPad(units.hh)}:{this.leftPad(units.min)}:{this.leftPad(units.sec)}
+        {this.leftPad(units.hh)}:{this.leftPad(units.mm)}:{this.leftPad(units.ss)}
       </div>
     )
   }
