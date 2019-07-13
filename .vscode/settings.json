@@ -16,6 +16,7 @@
   /* Prettier */
   "prettier.ignorePath": "configs/prettier/prettierignore",
   "prettier.disableLanguages": ["javascript", "javascriptreact"],
+  "editor.rulers": [100], // .prettierrc printWidth setting does somehow not apply.
 
   /* ESLint */
   "eslint.options": {
@@ -57,6 +58,5 @@
 
   /* Misc */
   "debug.inlineValues": false,
-  "search.runInExtensionHost": true,
-  "editor.rulers": [100]
+  "search.runInExtensionHost": true
 }
