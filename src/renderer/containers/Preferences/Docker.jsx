@@ -19,7 +19,10 @@ import { withStyles, Typography } from '@material-ui/core'
 
 import * as actionCreators from '../../store/actions'
 import { URLValidator, EmailValidator } from '../../lib/validators'
+import Logger from '../../../shared/logger'
 import BackendFuzzManagerPrefs from './Backends/FuzzManager'
+
+const logger = new Logger('Prefs.Docker')
 
 // eslint-disable-next-line no-unused-vars
 const styles = theme => ({
@@ -101,25 +104,21 @@ class DockerPrefs extends React.Component {
   }
 
   onBlur = ({ target: { id } }) => {
-    console.log('Validating ...')
-
     const source = this.state[id]
 
     switch (id) {
       case 'taskURL':
         if (!source.error) {
           this.props.updateTaskURL(source.value || source.placeholder)
-          console.log('Saved.')
         }
         break
       case 'contactEmail':
         if (!source.error) {
           this.props.updateContactEmail(source.value || source.placeholder)
-          console.log('Saved.')
         }
         break
       default:
-        console.log('Unrecognized target id for validating.')
+        logger.error('Unrecognized target id for validating.')
     }
   }
 

@@ -6,7 +6,10 @@ import * as Sentry from '@sentry/electron'
 
 import { withStyles } from '@material-ui/core/styles'
 
+import Logger from '../../../shared/logger'
 import ErrorDialog from './ErrorDialog'
+
+const logger = new Logger('ErrorBoundary')
 
 const styles = theme => ({
   summary: {
@@ -28,8 +31,8 @@ class ErrorBoundary extends React.Component {
       /* Collect user feedback as follow up. */
       Sentry.showReportDialog({ eventId })
     } else {
-      console.log(`Error: ${error}`)
-      console.log(`ErrorInfo: ${JSON.stringify(errorInfo)}`)
+      logger.error(`Error: ${error}`)
+      logger.error(`ErrorInfo: ${JSON.stringify(errorInfo)}`)
     }
   }
 

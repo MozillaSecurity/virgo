@@ -1,7 +1,13 @@
 /** @format */
 
-import logger from 'electron-log'
-import installExtension, { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS, REACT_PERF } from 'electron-devtools-installer'
+import installExtension, {
+  REACT_DEVELOPER_TOOLS,
+  REDUX_DEVTOOLS,
+  REACT_PERF
+} from 'electron-devtools-installer'
+import Logger from '../shared/logger'
+
+const logger = new Logger('Addons')
 
 const toolMap = {
   REACT_DEVELOPER_TOOLS,

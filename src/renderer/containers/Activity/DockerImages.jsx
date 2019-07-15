@@ -21,7 +21,10 @@ import EnhancedTableHead from './Table/TableHead'
 import EnhancedTableToolbar from './Table/TableToolbar'
 import { stableSort, getSorting } from './Table/helpers'
 
+import Logger from '../../../shared/logger'
 import { mapImages } from '../../lib/docker'
+
+const logger = new Logger('DockerImages')
 
 // eslint-disable-next-line no-unused-vars
 const styles = theme => ({
@@ -161,7 +164,7 @@ class EnhancedTable extends React.Component {
 
   imageRemove = (event, args) => {
     if (args.error) {
-      console.log(`ERROR: ${JSON.stringify(args.data)}`)
+      logger.error(JSON.stringify(args.data))
       return
     }
     this.setState({ selected: [] })

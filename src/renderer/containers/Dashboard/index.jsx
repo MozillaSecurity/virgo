@@ -17,8 +17,11 @@ import { withStyles } from '@material-ui/core/styles'
 import Logo from '../../images/virgo-full.svg'
 import RunTimer from './RunTimer'
 
+import Logger from '../../../shared/logger'
 import * as actionCreators from '../../store/actions'
 import FuzzManagerConf from '../../lib/fuzzmanager'
+
+const logger = new Logger('Dashboard')
 
 // eslint-disable-next-line no-unused-vars
 const styles = theme => ({
@@ -86,6 +89,7 @@ class DashboardPage extends React.Component {
     const { setContainerData, setContainer, setStatus, resetStatus, status } = this.props
 
     if (data.error && status.id) {
+      // ExitCode !== 0
       setContainerData([])
       setContainer({})
       this.stopInspectScheduler()
@@ -129,13 +133,14 @@ class DashboardPage extends React.Component {
   imageError = (event, error) => {
     const { setStatus } = this.props
 
-    setStatus({ text: `Image error: ${error.reason}`, state: STOPPED })
+    setStatus({ text: `Error: ${error.message}`, state: STOPPED })
+    this.toggleSpinner()
   }
 
   containerError = (event, error) => {
     const { setStatus } = this.props
 
-    setStatus({ text: `Container error: ${error.reason}`, state: STOPPED })
+    setStatus({ text: `Error: ${error.message}`, state: STOPPED })
     this.stopInspectScheduler()
   }
 
@@ -216,19 +221,19 @@ class DashboardPage extends React.Component {
     const id = containerId || status.id
 
     if (!id) {
-      console.log(`No container is running at the moment.`)
+      logger.info(`No container is running at the moment.`)
       return
     }
 
     if (id && status.state !== STOPPED) {
-      console.log(`Starting inspection scheduler for container: ${id}`)
+      logger.info(`Starting inspection scheduler for container: ${id}`)
       this.inspectScheduler = setInterval(() => ipcRenderer.send('container.inspect', { id }), 5000)
     }
   }
 
   stopInspectScheduler = () => {
     if (this.inspectScheduler) {
-      console.log(`Removing inspection scheduler.`)
+      logger.info(`Removing inspection scheduler.`)
       clearInterval(this.inspectScheduler)
       this.inspectScheduler = null
     }
@@ -252,7 +257,7 @@ class DashboardPage extends React.Component {
         setImageDefinitions(response.data.tasks)
       })
       .catch(error => {
-        console.log(`Error fetching task definitions: ${error}`)
+        logger.error(`Error fetching task definitions: ${error}`)
       })
   }
 

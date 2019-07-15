@@ -4,6 +4,8 @@ import React from 'react'
 import { HashRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
+// eslint-disable-next-line no-unused-vars
+import Sentry from '../../shared/sentry'
 import ContentRoutes from './ContentRoutes'
 import SideDrawer from './Layout/SideDrawer'
 import SideDrawerList from './Layout/SideDrawerList'

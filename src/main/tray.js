@@ -3,7 +3,7 @@
 import { Tray, Menu } from 'electron'
 import { resolve } from 'app-root-path'
 
-import { Environment, JS } from './common'
+import { Environment, JS } from '../shared/common'
 
 export default function createTray(window) {
   let template = [

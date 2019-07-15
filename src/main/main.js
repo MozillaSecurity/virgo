@@ -2,15 +2,25 @@
 
 import { app, dialog } from 'electron'
 
-import { Sentry } from './sentry'
+// eslint-disable-next-line no-unused-vars
+import Sentry from '../shared/sentry'
 import { setupUpdater } from './updater'
-import { Package, Environment } from './common'
+import { Package, Environment } from '../shared/common'
+import Logger from '../shared/logger'
 import createTray from './tray'
 import createMainWindow from './windows/main'
 import './api/ipc'
 
-let mainWindow
+const logger = new Logger('MainProcess')
+
+if (Environment.isDevelopment) {
+  /* Disable annoying security warnings because we run a development server. */
+  process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
+}
+
+// eslint-disable-next-line no-unused-vars
 let tray
+let mainWindow
 
 const instanceLock = app.requestSingleInstanceLock()
 if (!instanceLock) {
@@ -29,6 +39,7 @@ const createWindow = () => {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 app.on('second-instance', (event, argv, cwd) => {
   if (mainWindow) {
     if (mainWindow.isMinimized()) {
@@ -68,6 +79,6 @@ process.on('uncaughtException', error => {
     title: 'Main process crashed unexpectedly!',
     message
   }
-  console.log(message)
+  logger.error(message)
   dialog.showMessageBox(messageBoxOptions)
 })

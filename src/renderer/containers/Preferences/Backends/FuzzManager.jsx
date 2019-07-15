@@ -14,7 +14,10 @@ import { withStyles, Typography } from '@material-ui/core'
 
 import { PortValidator, ProtocolValidator } from '../../../lib/validators'
 import * as actionCreators from '../../../store/actions'
+import Logger from '../../../../shared/logger'
 import FuzzManagerConf from '../../../lib/fuzzmanager'
+
+const logger = new Logger('Prefs.FuzzManager')
 
 // eslint-disable-next-line no-unused-vars
 const styles = theme => ({
@@ -103,8 +106,6 @@ class BackendFuzzManagerPrefs extends React.Component {
   }
 
   onBlur = ({ target: { id } }) => {
-    console.log('Validating ...')
-
     const source = this.state[id]
 
     switch (id) {
@@ -124,7 +125,7 @@ class BackendFuzzManagerPrefs extends React.Component {
         }
         break
       default:
-        console.log('Unrecognized target id for validating.')
+        logger.error('Unrecognized target id for validating.')
     }
   }
 

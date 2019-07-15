@@ -3,14 +3,57 @@
 import { ipcMain } from 'electron'
 
 import DockerManager from './docker'
+import Logger from '../../shared/logger'
+
+const logger = new Logger('IPC')
 
 // try {
-const docker = new DockerManager()
+const dockerManager = new DockerManager()
 // } catch (error) {
 // Error: ENOENT: no such file or directory, stat '/var/run/docker.sock'
 // Call setup routines for Docker engine.
 // console.log(error)
 // }
+
+const getErrorMessage = error => {
+  /*
+  Variation #1
+  error -> {"statusCode":502,"json":"Bad response from Docker engine\n"}
+  error.message -> "(HTTP code 502) unexpected - Bad response from Docker engine\n "
+  error.statusCode -> 502
+  error.json -> "Bad response from Docker engine\n"
+
+  Variation #2
+  error -> {"reason":"no such container","statusCode":404,"json":{"message":"..."}}
+
+  Variation #3
+  error -> {"statusCode":502,"json":null}
+  */
+  if (Object.prototype.hasOwnProperty.call(error, 'json')) {
+    switch (typeof error.json) {
+      case 'string':
+        return error.json
+      case 'object':
+        if (error.json !== null && 'message' in error.json) {
+          return error.json.message
+        }
+        break
+      default:
+        return 'Unknown error message.'
+    }
+  }
+  if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+    return error.message
+  }
+  if (typeof error === 'string') {
+    return error
+  }
+  return 'Unknown error type.'
+}
+
+const getError = error => {
+  return { code: error.statusCode, message: getErrorMessage(error) }
+}
 
 /**
  * Pull an image, create a container and start that container.
@@ -18,46 +61,48 @@ const docker = new DockerManager()
 ipcMain.on('container.run', (event, args) => {
   const {
     task: { name, environment },
-    volumes
+    volumes,
+    pullOptions
   } = args
 
-  docker
-    .pull(name)
+  const createOptions = {
+    Image: name,
+    Tty: true,
+    Env: environment || [],
+    Volumes: {
+      '/home/worker': {}
+    },
+    HostConfig: {
+      AutoRemove: true,
+      Binds: [...volumes]
+    }
+  }
+
+  dockerManager
+    .pull(name, pullOptions || {})
     .then(() => {
       event.sender.send('image.pull', name)
       /**
        * Create a container of the pulled image. Each container removes itself on error or on stop.
        */
-      docker.docker
-        .createContainer({
-          Image: name,
-          Tty: true,
-          Env: environment || [],
-          Volumes: {
-            '/home/worker': {}
-          },
-          HostConfig: {
-            AutoRemove: false,
-            Binds: [...volumes]
-          }
-        })
+      dockerManager.docker
+        .createContainer(createOptions)
         .then(container => {
-          console.log('Launching container...')
+          logger.info('Launching container...')
           return container.start()
         })
         .then(container => {
-          console.log(`Container ${container.id} started!`)
+          logger.info(`Container ${container.id} started!`)
           event.sender.send('container.run', container)
         })
         .catch(error => {
-          console.log(`Container error: ${JSON.stringify(error)}`)
-          event.sender.send('container.error', error)
+          logger.error(`Container error: ${JSON.stringify(error)}`)
+          event.sender.send('container.error', getError(error))
         })
-      /* */
     })
     .catch(error => {
-      console.log(`Image error: ${JSON.stringify(error)}`)
-      event.sender.send('image.error', error)
+      logger.error(`Image error: ${JSON.stringify(error)}`)
+      event.sender.send('image.error', getError(error))
     })
 })
 
@@ -67,7 +112,7 @@ ipcMain.on('container.run', (event, args) => {
 ipcMain.on('container.stop', (event, args) => {
   const { id } = args
 
-  docker
+  dockerManager
     .getContainer(id)
     .then(container => {
       return container.stop()
@@ -76,7 +121,8 @@ ipcMain.on('container.stop', (event, args) => {
       event.sender.send('container.stop', id)
     })
     .catch(error => {
-      event.sender.send('container.error', error)
+      logger.error(`Container error: ${JSON.stringify(error)}`)
+      event.sender.send('container.error', getError(error))
     })
 })
 
@@ -86,7 +132,7 @@ ipcMain.on('container.stop', (event, args) => {
 ipcMain.on('container.pause', (event, args) => {
   const { id } = args
 
-  docker
+  dockerManager
     .getContainer(id)
     .then(container => {
       return container.pause()
@@ -95,7 +141,7 @@ ipcMain.on('container.pause', (event, args) => {
       event.sender.send('container.pause', id)
     })
     .catch(error => {
-      event.sender.send('container.error', error)
+      event.sender.send('container.error', getError(error))
     })
 })
 
@@ -105,7 +151,7 @@ ipcMain.on('container.pause', (event, args) => {
 ipcMain.on('container.unpause', (event, args) => {
   const { id } = args
 
-  docker
+  dockerManager
     .getContainer(id)
     .then(container => {
       return container.unpause()
@@ -114,7 +160,7 @@ ipcMain.on('container.unpause', (event, args) => {
       event.sender.send('container.unpause', id)
     })
     .catch(error => {
-      event.sender.send('container.error', error)
+      event.sender.send('container.error', getError(error))
     })
 })
 
@@ -124,7 +170,7 @@ ipcMain.on('container.unpause', (event, args) => {
 ipcMain.on('container.remove', (event, args) => {
   const { id } = args
 
-  docker
+  dockerManager
     .getContainer(id)
     .then(container => {
       return container.remove({ force: true })
@@ -140,8 +186,9 @@ ipcMain.on('container.remove', (event, args) => {
 /**
  * List stopped and started containers.
  */
+// eslint-disable-next-line no-unused-vars
 ipcMain.on('container.list', (event, args) => {
-  docker.listContainers().then(containers => {
+  dockerManager.docker.listContainers({ all: true }).then(containers => {
     event.sender.send('container.list', containers)
   })
 })
@@ -149,8 +196,9 @@ ipcMain.on('container.list', (event, args) => {
 /**
  * List downloaded images.
  */
+// eslint-disable-next-line no-unused-vars
 ipcMain.on('image.list', (event, args) => {
-  docker.docker.listImages().then(images => {
+  dockerManager.docker.listImages().then(images => {
     event.sender.send('image.list', images)
   })
 })
@@ -161,7 +209,7 @@ ipcMain.on('image.list', (event, args) => {
 ipcMain.on('image.remove', (event, args) => {
   const { name } = args
 
-  docker.docker
+  dockerManager.docker
     .getImage(name)
     .remove()
     .then(image => {
@@ -178,7 +226,7 @@ ipcMain.on('image.remove', (event, args) => {
 ipcMain.on('container.inspect', (event, args) => {
   const { id } = args
 
-  docker
+  dockerManager
     .getContainer(id)
     .then(container => {
       return container.inspect()

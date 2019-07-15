@@ -2,14 +2,15 @@
 
 import { app, dialog, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
-import logger from 'electron-log'
 import appRoot from 'app-root-path'
 
+import Logger from '../shared/logger'
 import Store from './store'
-import { Environment } from './common'
+import { Environment } from '../shared/common'
+
+const logger = new Logger('Updater')
 
 autoUpdater.logger = logger
-autoUpdater.logger.transports.file.level = 'info'
 autoUpdater.allowPrerelease = Store.get('allowPreRelease', false)
 
 if (Environment.isDevelopment) {
@@ -25,9 +26,31 @@ const ensureSafeQuitAndInstall = () => {
   autoUpdater.quitAndInstall(isSilent, isForceRunAfter)
 }
 
+export const isNetworkError = error => {
+  return (
+    error.message === 'net::ERR_CONNECTION_REFUSED' ||
+    error.message === 'net::ERR_INTERNET_DISCONNECTED' ||
+    error.message === 'net::ERR_PROXY_CONNECTION_FAILED' ||
+    error.message === 'net::ERR_CONNECTION_RESET' ||
+    error.message === 'net::ERR_CONNECTION_CLOSE' ||
+    error.message === 'net::ERR_NAME_NOT_RESOLVED' ||
+    error.message === 'net::ERR_CONNECTION_TIMED_OUT'
+  )
+}
+
+export const checkUpdates = () => {
+  autoUpdater.checkForUpdates().catch(error => {
+    if (isNetworkError(error)) {
+      logger.error('Network error.')
+    } else {
+      logger.error(`Error: ${error === null ? 'Unknown' : (error.message || error).toString()}`)
+    }
+  })
+}
+
 export const setupUpdater = window => {
   const dispatch = data => {
-    console.log(JSON.stringify(data))
+    logger.info(`Dispatch: ${JSON.stringify(data)}`)
     window.webContents.send('updateMessage', data)
   }
 
@@ -73,11 +96,14 @@ export const setupUpdater = window => {
   })
 
   dispatch({ msg: `🖥 App version: ${app.getVersion()}` })
-  autoUpdater.checkForUpdates()
+
+  if (!Environment.isDevelopment) {
+    checkUpdates()
+  }
 }
 
 ipcMain.on('updateCheck', () => {
-  autoUpdater.checkForUpdates()
+  checkUpdates()
 })
 
 export default autoUpdater

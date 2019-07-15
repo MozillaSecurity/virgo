@@ -4,16 +4,14 @@ import * as url from 'url'
 import { BrowserWindow, app } from 'electron'
 import { resolve } from 'app-root-path'
 
-import { Environment } from '../common'
+import { Environment } from '../../shared/common'
 import Store from '../store'
+import Logger from '../../shared/logger'
+
+const logger = new Logger('Window:Main')
 
 export default function createMainWindow() {
-  const PROTOCOL = process.env.HTTPS === 'true' ? 'https' : 'http'
-  const PORT = parseInt(process.env.PORT || '', 10) || 3000
-  const HOST = process.env.HOST || '127.0.0.1'
-
-  // Window options.
-  let windowOpts = {
+  let options = {
     autoHideMenuBar: true,
     frame: false,
     minWidth: 940,
@@ -22,17 +20,16 @@ export default function createMainWindow() {
     alwaysOnTop: Store.get('preferences.alwaysOnTop'),
     titleBarStyle: process.platform === 'darwin' ? 'hidden' : 'default',
     webPreferences: {
-      nodeIntegration: true,
-      preload: resolve('src/main/sentry.js')
+      nodeIntegration: true
     }
   }
 
   // Restore window size and position.
   if (Store.get('preferences.restoreWindowSize') === true) {
-    windowOpts = Object.assign(windowOpts, Store.get('preferences.winBounds'))
+    options = Object.assign(options, Store.get('preferences.winBounds'))
   }
 
-  let mainWindow = new BrowserWindow(windowOpts)
+  let window = new BrowserWindow(options)
 
   const appUrl =
     Environment.isPackaged || Environment.isTest
@@ -41,12 +38,11 @@ export default function createMainWindow() {
           protocol: 'file:',
           slashes: true
         })
-      : `${PROTOCOL}://${HOST}:${PORT}`
+      : Environment.developmentURL
 
-  mainWindow.loadURL(appUrl)
+  window.loadURL(appUrl)
 
   if (Environment.isDevelopment) {
-    process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
     ;(async () => {
       const addons = await import('../addons')
       addons.installDeveloperTools(['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'])
@@ -56,47 +52,49 @@ export default function createMainWindow() {
   /*
    * This event is usually emitted after the did-finish-load event, but for pages with many
    * remote resources, it may be emitted before the did-finish-load event.
-   * mainWindow.once('ready-to-show', () => {})
+   * window.once('ready-to-show', () => {})
    */
-  mainWindow.webContents.on('did-finish-load', () => {
-    if (!mainWindow) {
-      throw new Error('mainWindow is not defined.')
+  window.webContents.on('did-finish-load', () => {
+    if (!window) {
+      throw new Error('window is not defined.')
     }
     if (process.env.START_MINIMIZED) {
-      mainWindow.minimize()
+      window.minimize()
     } else {
-      mainWindow.show()
-      mainWindow.focus()
+      window.show()
+      window.focus()
     }
   })
 
-  mainWindow.on('close', event => {
+  window.on('close', event => {
     // Save window size and position.
-    Store.set('preferences.winBounds', mainWindow.getBounds())
+    Store.set('preferences.winBounds', window.getBounds())
 
     if (Environment.isMacOS) {
       if (app.quitting) {
         /* User tried to quit the app for real. */
-        mainWindow = null
-      } else if (mainWindow !== null) {
+        window = null
+      } else if (window !== null) {
         /* User tried to close the window and we hide the main Window instead. */
+        logger.info('Simulating App close on MacOS.')
         event.preventDefault()
-        mainWindow.hide()
+        window.hide()
       }
     }
   })
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
+  window.on('closed', () => {
+    logger.info('App closed.')
+    window = null
   })
 
-  mainWindow.on('unresponsive', () => {
-    console.log('App became unresponsive.')
+  window.on('unresponsive', () => {
+    logger.warn('App became unresponsive.')
   })
 
-  mainWindow.webContents.on('crashed', () => {
-    console.log(`WebContents crashed.`)
+  window.webContents.on('crashed', () => {
+    logger.error(`WebContents crashed.`)
   })
 
-  return mainWindow
+  return window
 }

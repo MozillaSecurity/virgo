@@ -8,14 +8,16 @@ import Store from 'electron-store'
 
 /* Combined Redux Reducers */
 import rootReducer from './reducers'
-
 import FuzzManagerConf from '../lib/fuzzmanager'
+import Logger from '../../shared/logger'
+
+const logger = new Logger('Store')
 
 export const saveState = (state, store) => {
   try {
     store.set(state)
   } catch (error) {
-    console.error(`ERROR: ${error}`)
+    logger.error(error)
     return false
   }
   return true

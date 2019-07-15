@@ -3,12 +3,16 @@
 import fs from 'fs'
 import Docker from 'dockerode'
 
+import Logger from '../../shared/logger'
+
+const logger = new Logger('DockerManager')
+
 class DockerManager {
   constructor(userOptions = {}) {
     let status
     let options = {}
 
-    console.log(`Initializing DockerManager for Platform: ${process.platform}`)
+    logger.info(`Initializing DockerManager for Platform: ${process.platform}`)
 
     if (process.platform === 'win32') {
       options = {
@@ -19,8 +23,7 @@ class DockerManager {
         socketPath: process.env.DOCKER_SOCKET || '/var/run/docker.sock'
       }
     }
-
-    options = Object.assign(options, userOptions)
+    options = Object.assign({}, options, userOptions)
 
     try {
       if (process.platform === 'win32') {
@@ -39,33 +42,36 @@ class DockerManager {
     this.docker = new Docker(options)
   }
 
-  async listContainers() {
-    return await this.docker.listContainers({ all: true })
+  async info() {
+    return this.docker.info()
   }
 
   async getContainer(id) {
-    return await this.docker.getContainer(id)
+    return this.docker.getContainer(id)
   }
 
-  pull(name) {
+  pull(name, options) {
     return new Promise((resolve, reject) => {
-      this.docker.pull(name, (error, stream) => {
+      this.docker.pull(name, options, (error, stream) => {
         if (error) {
-          console.log(`Premature PULL error!`)
+          logger.error(`Premature pull error!`)
           reject(error)
           return
         }
 
+        // eslint-disable-next-line no-shadow,no-unused-vars
         const onFinished = (error, output) => {
           if (error) {
-            console.log(`PULL error in onFinished.`)
+            logger.error(`Pull error in onFinished..`)
             reject(error)
+
             return
           }
-          console.log(`Successfully pulled ${name}.`)
+          logger.info(`Successfully pulled  ${name}.`)
           resolve()
         }
 
+        // eslint-disable-next-line no-unused-vars
         const onProgress = event => {}
 
         this.docker.modem.followProgress(stream, onFinished, onProgress)
