@@ -28,7 +28,7 @@ const AppearancePrefs = props => {
     <React.Fragment>
       <List>
         <ListItem>
-          <DarkmodeSwitch onChange={props.toggleDarkMode} checked={props.darkMode} />
+          <DarkmodeSwitch onChange={props.toggleDarkMode} checked={props.darkMode} helpText />
         </ListItem>
       </List>
       <Divider />

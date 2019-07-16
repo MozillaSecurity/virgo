@@ -16,14 +16,14 @@ import { withStyles } from '@material-ui/core/styles'
 const styles = theme => ({})
 
 const DarkmodeSwitch = props => {
-  const { label1, label2, checked, onChange } = props
+  const { label1, label2, checked, onChange, helpText } = props
   return (
     <React.Fragment>
       <ListItemIcon>{checked ? <LightIcon /> : <DarkIcon />}</ListItemIcon>
       <ListItemText
         primary={checked ? label1 : label2}
         primaryTypographyProps={{ variant: 'body2' }}
-        secondary="Switches between dark mode and light mode."
+        secondary={helpText ? "Switches between dark mode and light mode." : ""}
         secondaryTypographyProps={{ variant: 'subtitle2' }}
       />
       <ListItemSecondaryAction>
