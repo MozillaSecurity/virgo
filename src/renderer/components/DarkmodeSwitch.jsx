@@ -23,6 +23,8 @@ const DarkmodeSwitch = props => {
       <ListItemText
         primary={checked ? label1 : label2}
         primaryTypographyProps={{ variant: 'body2' }}
+        secondary="Switches between dark mode and light mode."
+        secondaryTypographyProps={{ variant: 'subtitle2' }}
       />
       <ListItemSecondaryAction>
         <Switch checked={checked} onChange={onChange} />

@@ -13,6 +13,8 @@ import Divider from '@material-ui/core/Divider'
 import Switch from '@material-ui/core/Switch'
 import { withStyles } from '@material-ui/core/styles'
 
+import {Environment} from '../../../shared/common'
+
 /* Custom UI */
 import DarkmodeSwitch from '../../components/DarkmodeSwitch'
 
@@ -35,6 +37,8 @@ const AppearancePrefs = props => {
           <ListItemText
             primary="Restore Window Size & Position"
             primaryTypographyProps={{ variant: 'body2' }}
+            secondary="The window size and position stay the same after restarts."
+            secondaryTypographyProps={{ variant: 'subtitle2' }}
           />
           <ListItemSecondaryAction>
             <Switch onChange={props.toggleRestoreWindowSize} checked={props.restoreWindowSize} />
@@ -45,18 +49,29 @@ const AppearancePrefs = props => {
       <List>
         <ListItem>
           <ListItemText
-            primary="Add Window Vibrance"
+            primary="Add Window Vibrancy"
             primaryTypographyProps={{ variant: 'body2' }}
+            secondary="Adds a dark vibrancy effect to Windows. (MacOS only)"
+            secondaryTypographyProps={{ variant: 'subtitle2' }}
           />
           <ListItemSecondaryAction>
-            <Switch onChange={props.toggleVibrance} checked={props.vibrance} />
+            <Switch
+              onChange={props.toggleVibrance}
+              disabled={Environment.isLinux || Environment.isWindows}
+              checked={props.vibrance}
+            />
           </ListItemSecondaryAction>
         </ListItem>
       </List>
       <Divider />
       <List>
         <ListItem>
-          <ListItemText primary="Always on Top" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText
+            primary="Always on Top"
+            primaryTypographyProps={{ variant: 'body2' }}
+            secondary="The main Window will stay on top."
+            secondaryTypographyProps={{ variant: 'subtitle2' }}
+          />
           <ListItemSecondaryAction>
             <Switch onChange={props.toggleAlwaysOnTop} checked={props.alwaysOnTop} />
           </ListItemSecondaryAction>
