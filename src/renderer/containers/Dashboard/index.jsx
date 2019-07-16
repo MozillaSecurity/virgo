@@ -56,7 +56,6 @@ class DashboardPage extends React.Component {
   componentWillUnmount() {
     this.stopInspectScheduler()
 
-    ipcRenderer.removeListener('container.stop', this.stopContainer)
     ipcRenderer.removeListener('image.pull', this.pullImage)
     ipcRenderer.removeListener('container.run', this.runContainer)
     ipcRenderer.removeListener('container.inspect', this.inspectContainer)
@@ -82,20 +81,26 @@ class DashboardPage extends React.Component {
     setContainer(container)
     this.startInspectScheduler(container.id)
     setStatus({ text: `Task is running`, id: container.id, state: RUNNING })
-    this.toggleSpinner()
+    this.toggleSpinner(false)
   }
 
   inspectContainer = (event, data) => {
     const { setContainerData, setContainer, setStatus, resetStatus, status } = this.props
 
     if (data.error && status.id) {
-      // ExitCode !== 0
+      let text
+      if (data.code === 404) {
+        text = `Task terminated previously.`
+      } else {
+        text = `Task stopped outside of normal workflow.`
+      }
+
       setContainerData([])
       setContainer({})
       this.stopInspectScheduler()
       resetStatus()
       setStatus({
-        text: `Task stopped outside of normal workflow.`,
+        text,
         state: STOPPED,
         id: null,
         delta: 0
@@ -111,7 +116,7 @@ class DashboardPage extends React.Component {
 
     setStatus({ text: `Container ${id} stopped successfully.`, state: STOPPED })
     this.stopInspectScheduler()
-    this.toggleSpinner()
+    this.toggleSpinner(false)
     setContainerData([])
     setContainer({})
   }
@@ -120,27 +125,29 @@ class DashboardPage extends React.Component {
     const { setStatus } = this.props
 
     setStatus({ text: `Container ${id} paused successfully.`, state: PAUSED })
-    this.toggleSpinner()
+    this.toggleSpinner(false)
   }
 
   unpauseContainer = (event, id) => {
     const { setStatus } = this.props
 
     setStatus({ text: `Container ${id} unpaused successfully.`, state: RUNNING })
-    this.toggleSpinner()
+    this.toggleSpinner(false)
   }
 
   imageError = (event, error) => {
     const { setStatus } = this.props
 
     setStatus({ text: `Error: ${error.message}`, state: STOPPED })
-    this.toggleSpinner()
+    this.toggleSpinner(false)
   }
 
   containerError = (event, error) => {
-    const { setStatus } = this.props
+    const { setStatus, resetStatus } = this.props
 
+    resetStatus()
     setStatus({ text: `Error: ${error.message}`, state: STOPPED })
+    this.toggleSpinner(false)
     this.stopInspectScheduler()
   }
 
@@ -148,7 +155,7 @@ class DashboardPage extends React.Component {
    * Action initiators
    */
   onStart = () => {
-    const { definitions, setStatus, contactEmail } = this.props
+    const { definitions, setStatus } = this.props
 
     if (definitions.length === 0) {
       setStatus({ text: `No remote tasks available.` })
@@ -166,7 +173,7 @@ class DashboardPage extends React.Component {
     /* Indicating that we treat setting `clientid` differently. */
     taskDefinition.environment.push(`VIRGO=True`)
 
-    this.toggleSpinner()
+    this.toggleSpinner(true)
     setStatus({ text: `Initializing task.` })
     ipcRenderer.send('container.run', { task: taskDefinition, volumes })
   }
@@ -176,11 +183,12 @@ class DashboardPage extends React.Component {
     const { id } = container
 
     if (!id) {
+      this.toggleSpinner(false)
       setStatus({ text: `No container ID available.` })
       return
     }
 
-    this.toggleSpinner()
+    this.toggleSpinner(true)
     setStatus({ text: `Unpausing container with ID: ${id}` })
     ipcRenderer.send('container.unpause', { id })
   }
@@ -190,11 +198,12 @@ class DashboardPage extends React.Component {
     const { id } = container
 
     if (!id) {
+      this.toggleSpinner(false)
       setStatus({ text: `No container ID available.` })
       return
     }
 
-    this.toggleSpinner()
+    this.toggleSpinner(true)
     setStatus({ text: `Stopping container with ID: ${id}` })
     ipcRenderer.send('container.stop', { id })
   }
@@ -204,17 +213,18 @@ class DashboardPage extends React.Component {
     const { id } = container
 
     if (!id) {
+      this.toggleSpinner(false)
       setStatus({ text: `No container ID available.` })
       return
     }
 
-    this.toggleSpinner()
+    this.toggleSpinner(true)
     setStatus({ text: `Pausing container with ID: ${id}` })
     ipcRenderer.send('container.pause', { id })
   }
 
   /*
-   * Component specifc actions
+   * Component Actions
    */
   startInspectScheduler = containerId => {
     const { status } = this.props
@@ -225,23 +235,27 @@ class DashboardPage extends React.Component {
       return
     }
 
-    if (id && status.state !== STOPPED) {
-      logger.info(`Starting inspection scheduler for container: ${id}`)
-      this.inspectScheduler = setInterval(() => ipcRenderer.send('container.inspect', { id }), 5000)
-    }
+    /**
+     * If the components switches while the user pressed Stop, then the inspection scheduler
+     * is removed. If the user switches back to this component, it will pick up the status.id
+     * and reinitiate the scheduler, even if the container already stopped in the background.
+     */
+    logger.info(`Starting inspection scheduler for container: ${id}`)
+    this.inspectScheduler = setInterval(() => ipcRenderer.send('container.inspect', { id }), 5000)
   }
 
   stopInspectScheduler = () => {
-    if (this.inspectScheduler) {
-      logger.info(`Removing inspection scheduler.`)
-      clearInterval(this.inspectScheduler)
-      this.inspectScheduler = null
+    if (!this.inspectScheduler) {
+      return
     }
+    logger.info(`Removing inspection scheduler.`)
+    clearInterval(this.inspectScheduler)
+    this.inspectScheduler = null
   }
 
-  toggleSpinner = () => {
+  toggleSpinner = manualToggle => {
     const { setStatus, status } = this.props
-    setStatus({ showSpinner: !status.showSpinner })
+    setStatus({ showSpinner: manualToggle !== undefined ? manualToggle : !status.showSpinner })
   }
 
   analyzeSuitableTask = definitions => {

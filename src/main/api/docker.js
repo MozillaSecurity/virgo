@@ -54,7 +54,6 @@ class DockerManager {
     return new Promise((resolve, reject) => {
       this.docker.pull(name, options, (error, stream) => {
         if (error) {
-          logger.error(`Premature pull error!`)
           reject(error)
           return
         }
@@ -62,9 +61,7 @@ class DockerManager {
         // eslint-disable-next-line no-shadow,no-unused-vars
         const onFinished = (error, output) => {
           if (error) {
-            logger.error(`Pull error in onFinished..`)
             reject(error)
-
             return
           }
           logger.info(`Successfully pulled  ${name}.`)

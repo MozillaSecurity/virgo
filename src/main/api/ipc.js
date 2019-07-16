@@ -20,8 +20,6 @@ const getErrorMessage = error => {
   Variation #1
   error -> {"statusCode":502,"json":"Bad response from Docker engine\n"}
   error.message -> "(HTTP code 502) unexpected - Bad response from Docker engine\n "
-  error.statusCode -> 502
-  error.json -> "Bad response from Docker engine\n"
 
   Variation #2
   error -> {"reason":"no such container","statusCode":404,"json":{"message":"..."}}
@@ -52,7 +50,7 @@ const getErrorMessage = error => {
 }
 
 const getError = error => {
-  return { code: error.statusCode, message: getErrorMessage(error) }
+  return { error: true, code: error.statusCode, message: getErrorMessage(error) }
 }
 
 /**
@@ -96,12 +94,12 @@ ipcMain.on('container.run', (event, args) => {
           event.sender.send('container.run', container)
         })
         .catch(error => {
-          logger.error(`Container error: ${JSON.stringify(error)}`)
+          logger.error(`Container start error: ${JSON.stringify(error)}`)
           event.sender.send('container.error', getError(error))
         })
     })
     .catch(error => {
-      logger.error(`Image error: ${JSON.stringify(error)}`)
+      logger.error(`Image pull error: ${JSON.stringify(error)}`)
       event.sender.send('image.error', getError(error))
     })
 })
@@ -121,7 +119,7 @@ ipcMain.on('container.stop', (event, args) => {
       event.sender.send('container.stop', id)
     })
     .catch(error => {
-      logger.error(`Container error: ${JSON.stringify(error)}`)
+      logger.error(`Container stop error: ${JSON.stringify(error)}`)
       event.sender.send('container.error', getError(error))
     })
 })
@@ -141,6 +139,7 @@ ipcMain.on('container.pause', (event, args) => {
       event.sender.send('container.pause', id)
     })
     .catch(error => {
+      logger.error(`Container pause error: ${JSON.stringify(error)}`)
       event.sender.send('container.error', getError(error))
     })
 })
@@ -160,6 +159,7 @@ ipcMain.on('container.unpause', (event, args) => {
       event.sender.send('container.unpause', id)
     })
     .catch(error => {
+      logger.error(`Container unpause error: ${JSON.stringify(error)}`)
       event.sender.send('container.error', getError(error))
     })
 })
@@ -179,7 +179,8 @@ ipcMain.on('container.remove', (event, args) => {
       event.sender.send('container.remove', { data: null, error: false })
     })
     .catch(error => {
-      event.sender.send('container.remove', { data: error, error: true })
+      logger.error(`Container remove error: ${JSON.stringify(error)}`)
+      event.sender.send('container.remove', getError(error))
     })
 })
 
@@ -216,7 +217,8 @@ ipcMain.on('image.remove', (event, args) => {
       event.sender.send('image.remove', { data: image, error: false })
     })
     .catch(error => {
-      event.sender.send('image.remove', { data: error, error: true })
+      logger.error(`Image remove error: ${JSON.stringify(error)}`)
+      event.sender.send('image.remove', getError(error))
     })
 })
 
@@ -235,6 +237,7 @@ ipcMain.on('container.inspect', (event, args) => {
       event.sender.send('container.inspect', { data, error: false })
     })
     .catch(error => {
-      event.sender.send('container.inspect', { data: error, error: true })
+      logger.error(`Container inspect error: ${JSON.stringify(error)}`)
+      event.sender.send('container.inspect', getError(error))
     })
 })
