@@ -42,7 +42,7 @@ const userConfig = {
   linux: {
     synopsis: appInfo.description,
     executableName: appInfo.name,
-    category: 'Security',
+    category: 'Security'
   }
 }
 
@@ -62,8 +62,12 @@ const main = async () => {
   if (process.env.NODE_ENV === 'production') {
     targetArgs = {
       windows64: Platform.WINDOWS.createTarget(['nsis'], Arch.x64),
-      linux64: Platform.LINUX.createTarget([/*'snap' */ 'AppImage'], Arch.x64),
-      macos64: Platform.MAC.createTarget(['dmg' /* 'pkg' */], Arch.x64)
+      linux64: Platform.LINUX.createTarget([/* 'snap' */ 'AppImage'], Arch.x64),
+      /*
+       * MacOS needs zip for updating.
+       * Generating DMGs on MacOS Catalina is not possible currently due to abadonment of 32bit support.
+       */
+      macos64: Platform.MAC.createTarget(['zip', 'dmg' /* 'pkg' */], Arch.x64)
     }
   } else {
     targetArgs = {
