@@ -18,9 +18,9 @@ class Logger {
   /**
    * Logger constructor.
    *
-   * @param moduleName {String} Module name of caller.
+   * @param moduleName {string} Module name of caller.
    * @param level {Number} Log level number.
-   * @param logName {String} Log file name.
+   * @param logName {string} Log file name.
    */
   constructor(moduleName = 'root', level = 'info', logName = `${Package.name}.log`) {
     this.moduleName = moduleName

@@ -62,12 +62,14 @@ export const setupUpdater = window => {
     dispatch({ msg: `🔎 Checking for updates ...` })
   })
 
+  // eslint-disable-next-line no-unused-vars
   autoUpdater.on('update-available', info => {
     dispatch({ msg: `🎉 Update available. Downloading ...`, hide: false })
   })
 
+  // eslint-disable-next-line no-unused-vars
   autoUpdater.on('update-not-available', info => {
-    dispatch({ msg: '👎 Update not available.' })
+    dispatch({ msg: '😊 You are using the latest version.' })
   })
 
   autoUpdater.on('download-progress', progress => {
@@ -77,6 +79,7 @@ export const setupUpdater = window => {
     })
   })
 
+  // eslint-disable-next-line no-unused-vars
   autoUpdater.on('update-downloaded', info => {
     dispatch({ msg: `🤘 Update downloaded.` })
 

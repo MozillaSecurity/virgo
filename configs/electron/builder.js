@@ -13,7 +13,7 @@ const userConfig = {
   appId: `org.mozilla.${appInfo.name}`,
   copyright: 'Copyright © 2019 ${author}',
   artifactName: '${name}-${version}-${os}-${arch}.${ext}',
-  files: ['build/app/**/*', 'resources/build/', 'src/main/sentry.js'],
+  files: ['build/app/**/*', 'resources/build/'],
   directories: {
     output: 'build/releases/${os}/${arch}',
     buildResources: 'resources/build'
@@ -24,19 +24,25 @@ const userConfig = {
       provider: 'github'
     }
   ],
+  snap: {
+    confinement: 'classic',
+    grade: 'devel'
+  },
   nsis: {
     oneClick: false,
     perMachine: true,
     allowToChangeInstallationDirectory: true,
-    createDesktopShortcut: 'always'
+    createDesktopShortcut: 'always',
+    deleteAppDataOnUninstall: true
   },
   win: {},
   mac: {
     category: 'public.app-category.security'
   },
   linux: {
+    synopsis: appInfo.description,
     executableName: appInfo.name,
-    category: 'Security'
+    category: 'Security',
   }
 }
 
@@ -56,8 +62,8 @@ const main = async () => {
   if (process.env.NODE_ENV === 'production') {
     targetArgs = {
       windows64: Platform.WINDOWS.createTarget(['nsis'], Arch.x64),
-      linux64: Platform.LINUX.createTarget(['AppImage'], Arch.x64),
-      macos64: Platform.MAC.createTarget(['dmg', 'zip'], Arch.x64)
+      linux64: Platform.LINUX.createTarget([/*'snap' */ 'AppImage'], Arch.x64),
+      macos64: Platform.MAC.createTarget(['dmg' /* 'pkg' */], Arch.x64)
     }
   } else {
     targetArgs = {
