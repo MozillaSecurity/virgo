@@ -65,23 +65,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "linters": {
-      "*.{js,jsx}": [
-        "npm run eslint -- --fix",
-        "git add"
-      ],
-      "*.{css,scss}": [
-        "npm run stylelint -- --fix",
-        "git add"
-      ],
-      "*.{json,md}": [
-        "npm run prettier -- --write",
-        "git add"
-      ]
+      "pre-commit": "lint-staged --config configs/lintstaged/lintstaged.json"
     }
   },
   "devDependencies": {
