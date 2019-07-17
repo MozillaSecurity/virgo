@@ -1,0 +1,5 @@
+{
+  "*.{js,jsx}": ["npm run eslint -- --fix", "git add"],
+  "*.{css,scss}": ["npm run stylelint -- --fix", "git add"],
+  "*.{json,md}": ["npm run prettier -- --write", "git add"]
+}
