@@ -19,7 +19,7 @@ import RunTimer from './RunTimer'
 
 import Logger from '../../../shared/logger'
 import * as actionCreators from '../../store/actions'
-import FuzzManagerConf from '../../lib/fuzzmanager'
+import FuzzManagerConf from '../../../shared/fuzzmanager'
 
 const logger = new Logger('Dashboard')
 

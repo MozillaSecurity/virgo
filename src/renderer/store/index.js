@@ -8,7 +8,7 @@ import Store from 'electron-store'
 
 /* Combined Redux Reducers */
 import rootReducer from './reducers'
-import FuzzManagerConf from '../lib/fuzzmanager'
+import FuzzManagerConf from '../../shared/fuzzmanager'
 import Logger from '../../shared/logger'
 
 const logger = new Logger('Store')

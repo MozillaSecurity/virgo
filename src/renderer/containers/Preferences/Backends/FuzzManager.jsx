@@ -13,7 +13,7 @@ import { withStyles } from '@material-ui/core'
 import { PortValidator, ProtocolValidator } from '../../../lib/validators'
 import * as actionCreators from '../../../store/actions'
 import Logger from '../../../../shared/logger'
-import FuzzManagerConf from '../../../lib/fuzzmanager'
+import FuzzManagerConf from '../../../../shared/fuzzmanager'
 
 const logger = new Logger('Prefs.FuzzManager')
 

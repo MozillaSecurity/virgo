@@ -22,7 +22,7 @@ import EnhancedTableToolbar from './Table/TableToolbar'
 import { stableSort, getSorting } from './Table/helpers'
 
 import Logger from '../../../shared/logger'
-import { mapImages } from '../../lib/docker'
+import { mapImages } from '../../../shared/docker'
 
 const logger = new Logger('DockerImages')
 
