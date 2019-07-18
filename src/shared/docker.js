@@ -20,8 +20,8 @@ export const mapImages = images => {
     return {
       id: key,
       _id: image.Id.slice(7, 15), // sha256:
-      size: formatBytes(image.Size),
-      date: new Date(image.Created * 1000).toLocaleDateString(),
+      size: image.Size,
+      date: new Date(image.Created * 1000),
       containers: image.Containers === -1 ? 0 : image.Containers,
       tags: image.RepoTags === null ? ['N/A'] : image.RepoTags
     }

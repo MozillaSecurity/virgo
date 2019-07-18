@@ -22,7 +22,7 @@ import EnhancedTableToolbar from './Table/TableToolbar'
 import { stableSort, getSorting } from './Table/helpers'
 
 import Logger from '../../../shared/logger'
-import { mapImages } from '../../../shared/docker'
+import { mapImages, formatBytes } from '../../../shared/docker'
 
 const logger = new Logger('DockerImages')
 
@@ -54,7 +54,7 @@ const rows = [
   },
   {
     id: 'date',
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: 'Date',
     help: 'Creation date'
@@ -241,8 +241,8 @@ class EnhancedTable extends React.Component {
                       <TableCell component="th" scope="row" padding="none">
                         {n._id}
                       </TableCell>
-                      <TableCell align="right">{n.size}</TableCell>
-                      <TableCell align="right">{n.date}</TableCell>
+                      <TableCell align="right">{formatBytes(n.size)}</TableCell>
+                      <TableCell align="right">{n.date.toLocaleDateString()}</TableCell>
                       <TableCell align="right">{n.tags.join(', ')}</TableCell>
                       <TableCell align="right">{n.containers}</TableCell>
                     </TableRow>
