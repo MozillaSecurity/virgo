@@ -30,7 +30,7 @@ class ElectronFileHandler {
   }
 
   readFile = () => {
-    this.data = JSON.parse(this.readFileSync(this.path))
+    this.data = JSON.parse(fs.readFileSync(this.path))
   }
 }
 

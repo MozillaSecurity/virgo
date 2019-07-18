@@ -18,7 +18,7 @@ if (Environment.isDevelopment) {
 }
 
 const ensureSafeQuitAndInstall = () => {
-  /* Close windows more agressively because of the custom MacOS window close functionlity. */
+  /* Close windows more aggressively because of the custom MacOS window close functionality. */
   const isSilent = true
   const isForceRunAfter = true
   app.removeAllListeners('window-all-closed')

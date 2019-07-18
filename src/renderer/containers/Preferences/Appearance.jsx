@@ -115,7 +115,7 @@ const mapDispatchToProps = dispatch => {
   )
 }
 
-/* Connecto to Redux */
+/* Connect to to Redux */
 export default connect(
   mapStateToProps,
   mapDispatchToProps

@@ -21,7 +21,7 @@ const TitleBar = props => {
 
   return (
     <div className={classes.root}>
-      <div name="TitleBar" className={classes.titleBar} />
+      <div className={classes.titleBar} />
     </div>
   )
 }

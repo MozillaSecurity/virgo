@@ -24,18 +24,18 @@ export const saveState = (state, store) => {
 }
 
 export const initState = () => {
-  const persistendStore = new Store()
+  const persistentStore = new Store()
 
   /* Initial write of FuzzManager configuration with default values. */
   const fuzzmanagerconf = new FuzzManagerConf({
     configName: 'fuzzmanagerconf',
-    defaults: persistendStore.store.preferences.backend.fuzzmanager
+    defaults: persistentStore.store.preferences.backend.fuzzmanager
   })
   if (!fuzzmanagerconf.exists()) {
     fuzzmanagerconf.saveFile()
   } else {
     fuzzmanagerconf.readFile()
-    persistendStore.store.preferences.backend.fuzzmanager = fuzzmanagerconf.data
+    persistentStore.store.preferences.backend.fuzzmanager = fuzzmanagerconf.data
   }
 
   /* eslint-disable no-underscore-dangle */
@@ -44,10 +44,10 @@ export const initState = () => {
   )
 
   /* Hydrate */
-  const store = createStore(rootReducer, Object.assign({}, persistendStore.store), enhancers)
+  const store = createStore(rootReducer, Object.assign({}, persistentStore.store), enhancers)
 
   store.subscribe(() => {
-    saveState(store.getState(), persistendStore)
+    saveState(store.getState(), persistentStore)
   })
   return store
 }

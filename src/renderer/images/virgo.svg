@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" baseProfile="full">
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full">
     <g transform="scale(1,-1) translate(0,-512)">
-        <path d="M 2.999998 457.000017 L 109.937255 457.000017 L 306.428567 2.999998 L 203.675438 2.999998 Z" transform="scale(1.000000,1.000000) translate(-3.000000,21.000000)" fill="#f355c6" opacity="1.000000"></path>
-        <path d="M 313.999989 457.000047 L 204.890098 457.000047 L 2.825978 2.999998 L 105.854727 2.999998 Z" transform="scale(1.000000,1.000000) translate(198.000000,21.000000)" fill="#98357c" opacity="1.000000"></path>
+        <path d="M 2.999998 457.000017 L 109.937255 457.000017 L 306.428567 2.999998 L 203.675438 2.999998 Z"
+              transform="scale(1.000000,1.000000) translate(-3.000000,21.000000)" fill="#f355c6" opacity="1.000000"/>
+        <path d="M 313.999989 457.000047 L 204.890098 457.000047 L 2.825978 2.999998 L 105.854727 2.999998 Z"
+              transform="scale(1.000000,1.000000) translate(198.000000,21.000000)" fill="#98357c" opacity="1.000000"/>
     </g>
 </svg>

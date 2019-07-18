@@ -74,10 +74,10 @@ export class JS {
   }
 
   /**
-   * Deep diff between two objects, returing missing objects as dot notation.
+   * Deep diff between two objects, returning missing objects as dot notation.
    * @param {Object} base Object compared
    * @param {Object} object Object to compare with
-   * @param {Object} result Return Array of missing objects as strings in dot notation.
+   * @returns {Array} Missing objects as strings in dot notation.
    */
   static compareJSON = (base, object) => {
     const result = []

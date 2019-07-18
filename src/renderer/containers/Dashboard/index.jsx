@@ -238,7 +238,7 @@ class DashboardPage extends React.Component {
     /**
      * If the components switches while the user pressed Stop, then the inspection scheduler
      * is removed. If the user switches back to this component, it will pick up the status.id
-     * and reinitiate the scheduler, even if the container already stopped in the background.
+     * and re-initiate the scheduler, even if the container already stopped in the background.
      */
     logger.info(`Starting inspection scheduler for container: ${id}`)
     this.inspectScheduler = setInterval(() => ipcRenderer.send('container.inspect', { id }), 5000)
