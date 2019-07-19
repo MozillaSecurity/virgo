@@ -8,13 +8,15 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import { Typography } from '@material-ui/core'
+import { Typography, withStyles } from '@material-ui/core'
 
 const errorTitles = [
   'Abort mission, back to base.',
   'We have a problem ...',
   'Stay calm and do not panic!'
 ]
+
+const styles = theme => ({})
 
 export const randomErrorTitle = () => {
   return errorTitles[Math.floor(Math.random() * errorTitles.length)]
@@ -67,7 +69,7 @@ class ErrorDialog extends React.Component {
               Cancel
             </Button>
             <Button onClick={this.onSuccess} color="primary" autoFocus>
-              Submit
+              Feedback
             </Button>
           </DialogActions>
         </Dialog>
@@ -82,4 +84,4 @@ ErrorDialog.propTypes = {
   title: PropTypes.string
 }
 
-export default ErrorDialog
+export default withStyles(styles, { withTheme: true })(ErrorDialog)

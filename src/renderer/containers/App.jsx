@@ -15,17 +15,17 @@ import ErrorBoundary from '../components/Error/ErrorBoundary'
 
 const App = () => {
   return (
-    <ErrorBoundary>
-      <Provider store={initState()}>
-        <ThemeProvider>
-          <HashRouter>
+    <Provider store={initState()}>
+      <ThemeProvider>
+        <HashRouter>
+          <ErrorBoundary>
             <SideDrawer items={SideDrawerList()}>
               <ContentRoutes />
             </SideDrawer>
-          </HashRouter>
-        </ThemeProvider>
-      </Provider>
-    </ErrorBoundary>
+          </ErrorBoundary>
+        </HashRouter>
+      </ThemeProvider>
+    </Provider>
   )
 }
 

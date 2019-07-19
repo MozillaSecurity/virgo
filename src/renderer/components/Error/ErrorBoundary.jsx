@@ -3,11 +3,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import * as Sentry from '@sentry/electron'
-
+import { withRouter } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 
 import Logger from '../../../shared/logger'
+import { Environment } from '../../../shared/common'
 import ErrorDialog from './ErrorDialog'
+import CrashPage from '../CrashPage'
 
 const logger = new Logger('ErrorBoundary')
 
@@ -22,7 +24,7 @@ class ErrorBoundary extends React.Component {
 
   sendReport = () => {
     const { error, errorInfo, eventId } = this.state
-    if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
+    if (!Environment.isTest) {
       /* Send the crash report to Sentry. */
       Sentry.withScope(scope => {
         scope.setExtra(errorInfo)
@@ -50,7 +52,15 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
+    const { history } = this.props
+
     this.setState({ error, errorInfo })
+
+    history.listen((location, action) => {
+      if (this.state.error) {
+        this.setState({ error: null })
+      }
+    })
   }
 
   render() {
@@ -60,6 +70,7 @@ class ErrorBoundary extends React.Component {
     if (error) {
       return (
         <div>
+          <CrashPage />
           <ErrorDialog
             show
             content={this.errorContent(error, errorInfo)}
@@ -78,4 +89,4 @@ ErrorBoundary.propTypes = {
   classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles, { withTheme: true })(ErrorBoundary)
+export default withRouter(withStyles(styles, { withTheme: true })(ErrorBoundary))
