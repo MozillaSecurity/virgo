@@ -1,6 +1,8 @@
 /** @format */
 
 import fs from 'fs'
+import stream from 'stream'
+
 import Docker from 'dockerode'
 
 import Logger from '../../shared/logger'
