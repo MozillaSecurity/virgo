@@ -91,12 +91,18 @@ class EnhancedTable extends React.Component {
     ipcRenderer.on('container.remove', this.containerRemove)
     ipcRenderer.on('container.stop', this.containerStop)
     ipcRenderer.send('container.list')
+
+    // Automatically refresh the container list.
+    this.refreshHandle = setInterval(() => this.onRefresh(), 2000)
   }
 
   componentWillUnmount() {
     ipcRenderer.removeListener('container.list', this.listContainers)
     ipcRenderer.removeListener('container.remove', this.containerRemove)
     ipcRenderer.removeListener('container.stop', this.containerStop)
+
+    /* Remove any handles. */
+    clearInterval(this.refreshHandle)
   }
 
   listContainers = (event, containers) => {

@@ -90,11 +90,17 @@ class EnhancedTable extends React.Component {
     ipcRenderer.on('image.list', this.listImages)
     ipcRenderer.on('image.remove', this.imageRemove)
     ipcRenderer.send('image.list')
+
+    // Automatically refresh the image list.
+    this.refreshHandle = setInterval(() => this.onRefresh(), 2000)
   }
 
   componentWillUnmount() {
     ipcRenderer.removeListener('image.list', this.listImages)
     ipcRenderer.removeListener('image.remove', this.imageRemove)
+
+    /* Remove any handles. */
+    clearInterval(this.refreshHandle)
   }
 
   listImages = (event, images) => {
