@@ -75,6 +75,36 @@ class DockerManager {
       })
     })
   }
+
+  async runCommand(container, command, timeout = -1) {
+    const options = {
+      Cmd: ['bash', '-c', command],
+      AttachStdout: true,
+      AttachStderr: true
+    }
+    return container.exec(options).then(exec => {
+      return new Promise((resolve, reject) => {
+        exec.start((error, containerStream) => {
+          if (error) {
+            reject(error)
+          }
+          let data = ''
+          const outStream = new stream.PassThrough()
+          outStream.on('data', chunk => {
+            data += chunk.toString('utf-8')
+          })
+          containerStream.on('end', () => {
+            outStream.end()
+            resolve(data)
+          })
+          container.modem.demuxStream(containerStream, outStream, outStream)
+          if (timeout > 0) {
+            setTimeout(() => containerStream.destroy(), timeout)
+          }
+        })
+      })
+    })
+  }
 }
 
 export default DockerManager
