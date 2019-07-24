@@ -4,6 +4,7 @@ import { ipcMain } from 'electron'
 
 import DockerManager from './docker'
 import Logger from '../../shared/logger'
+import Serializers from '../../shared/serializers'
 
 const logger = new Logger('IPC')
 
@@ -76,8 +77,10 @@ ipcMain.on('container.run', (event, args) => {
     }
   }
 
+  logger.info(`Task environment: ${environment}`)
+
   dockerManager
-    .pull(name, pullOptions || {})
+    .pull(name, pullOptions || {}) //  || { platform: 'linux' }
     .then(() => {
       event.sender.send('image.pull', name)
       /**
@@ -240,4 +243,28 @@ ipcMain.on('container.inspect', (event, args) => {
       logger.error(`Container inspect error: ${JSON.stringify(error)}`)
       event.sender.send('container.inspect', getError(error))
     })
+})
+
+ipcMain.on('container.stats', async (event, args) => {
+  const { serializerName, customCommand, id } = args
+
+  let result = {
+    data: null,
+    error: false
+  }
+
+  if (Object.keys(Serializers).includes(serializerName)) {
+    try {
+      const serializer = Serializers[serializerName]
+      const container = await dockerManager.getContainer(id)
+      const commandOutput = await dockerManager.runCommand(container, customCommand || serializer.command)
+      result.data = serializer.serialize(commandOutput)
+    } catch (error) {
+      result.error = true
+      logger.error(error)
+    }
+  }
+
+  logger.debug(`Serialized command output: ${JSON.stringify(result)}`)
+  event.sender.send('container.stats', result)
 })

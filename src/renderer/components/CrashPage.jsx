@@ -20,9 +20,6 @@ const styles = theme => ({
     height: '100%',
     margin: 0
   },
-  button: {
-    justifyContent: 'center'
-  },
   grid: {
     paddingTop: '100px'
   },

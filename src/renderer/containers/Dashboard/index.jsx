@@ -16,6 +16,7 @@ import { withStyles } from '@material-ui/core/styles'
 /* Custom UI */
 import Logo from '../../images/virgo-full.svg'
 import RunTimer from './RunTimer'
+import TaskInfo from './TaskInfo'
 
 import Logger from '../../../shared/logger'
 import * as actionCreators from '../../store/actions'
@@ -131,7 +132,7 @@ class DashboardPage extends React.Component {
   unpauseContainer = (event, id) => {
     const { setStatus } = this.props
 
-    setStatus({ text: `Container ${id} unpaused successfully.`, state: RUNNING })
+    setStatus({ text: `Container ${id} resumed successfully.`, state: RUNNING })
     this.toggleSpinner(false)
   }
 
@@ -174,7 +175,7 @@ class DashboardPage extends React.Component {
     taskDefinition.environment.push(`VIRGO=True`)
 
     this.toggleSpinner(true)
-    setStatus({ text: `Initializing task.` })
+    setStatus({ text: `Initializing task.`, definition: taskDefinition })
     ipcRenderer.send('container.run', { task: taskDefinition, volumes })
   }
 
@@ -189,7 +190,7 @@ class DashboardPage extends React.Component {
     }
 
     this.toggleSpinner(true)
-    setStatus({ text: `Unpausing container with ID: ${id}` })
+    setStatus({ text: `Resuming container with ID: ${id}` })
     ipcRenderer.send('container.unpause', { id })
   }
 
@@ -296,6 +297,9 @@ class DashboardPage extends React.Component {
         <Grid item xs={12}>
           {status.showSpinner ? <CircularProgress className={classes.progress} /> : null}
         </Grid>
+        {status.state === RUNNING || status.state === PAUSED ? (
+          <TaskInfo id={status.id} state={status.state} taskDefinition={status.definition}/>
+        ) : null}
       </Grid>
     )
   }
