@@ -83,7 +83,7 @@
     "codecov": "^3.5.0",
     "cross-env": "^5.2.0",
     "devtron": "^1.4.0",
-    "electron": "^5.0.7",
+    "electron": "^7.2.4",
     "electron-builder": "^21.0.15",
     "electron-devtools-installer": "^2.2.4",
     "esdoc": "^1.1.0",
