@@ -127,7 +127,7 @@
     "@mozillasecurity/octo": "^2.0.0",
     "@sentry/electron": "^0.17.1",
     "app-root-path": "^2.2.1",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "dockerode": "^2.5.8",
     "electron-log": "^3.0.6",
     "electron-store": "^4.0.0",
